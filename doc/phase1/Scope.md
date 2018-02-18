@@ -10,7 +10,7 @@
 * Since we all had our own respective flaws in web development, we determined the group division based on both on what we wanted to learn and what we already knew.
 * Every team member expressed their learning goals and weaknesses and based on that, we divided into two groups: frontend and backend. 
 * Our learning goals within these groups matched.
-* If someone in the group has a weakness, they would still be partly focusing (not as much) and learning that weakness in order to strengthen it 
+* If someone in the group has a weakness, they would still be partly focusing (not as much) and learning that weakness in order to strengthen it.
 
 ## Application Scope
 
