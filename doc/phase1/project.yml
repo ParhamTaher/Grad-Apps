@@ -59,7 +59,7 @@ paths:
           description: Invalid input
     put:
       tags:
-        - budget
+        - GAPF
       summary: Update existing GAPF budget information
       description: ''
       operationId: updateGAPF
