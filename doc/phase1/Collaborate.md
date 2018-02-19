@@ -1,58 +1,22 @@
-# Collaboration
+﻿# Collaboration
 
-## Team Competencies and Constraints
 
-TODO: List out experience, strengths, skills, schedule conflicts and/or other relevant information about individual team members.
 
-## Meeting History
+Team’s competencies: All of us have basic web experience in HTML, CSS, Javascript. Individual members are familiar with React, Node.js, SQL, NoSQL (Mongo), jsp. 
 
-TODO: Describe your meetings so far: 
+Constraints/Conflicts: We don’t have any schedule conflicts, some of us are not available during the Reading Week.
 
-* When, where (online, phone, physical location) of meetings
-* Who was there?
-* Rough meeting minutes/notes.
+Meetings:
+Short meeting after the first tutorial(09.02): getting to know each other, discussing our experience and what each person wants to focus on(frontend/backend etc.), setting up another meeting to discuss P1 in detail.
+Meeting on campus to discuss P1 (14.02) especially the API design, use cases triage and slicing the app.
+Meeting during the tutorial (16.02) - confirming the API design and deciding on how to divide rest of the work for P1.
 
-## Shared Documents
+Shared docs: google doc
 
-* Google Drive
+Next meetings: Weekly meetings on campus, Wednesdays after class at 5pm 
 
-## Logistics
-
-When and where will you meet?
-
-### Development Methodology
-
-Agile/Scrum/Kanban?
-	* There are excellent tools available to support your process, many offer free educational licenses for classroom use.
-		* JIRA for scrum and/or kanban. (Our class can obtain a free JIRA classroom instance for you to use.)
-		* Trello
-		* Asana
-	* If you decide to follow the scrum process:
-		* What might you prime your backlog with?
-		* Hint: figuring out how to set up TDD, CI..
-		* How will you size your tasks? (story points? hours?)
-		* Regular sprints? How many?
-		* Who’s the scrummaster?
-		* Who pretends to be the product owner?
-		* How will you do regular standup meetings with your various conflicting schedules? Can online meetings help somehow?
-
-### Division of Work
-
-* How will web client, endpoints, be divided across the team?
-* Which roles will individuals take on?
-* Repo man? (Inside joke. See http://www.imdb.com/title/tt0087995/) 
-* TDD person?
-* CI person?
-* How and where will you store your shared documents?
-
-### Github/git 
-
-How will you collaborate? When will individuals be allowed to push individual commits themselves? When is a PR necessary?
-
-### Messaging
-
-What will you use as a message board? Slack? HipChat?
-
-### Progress Tracking
-
-How will you track your progress. Burndown chart? in story points?
+We will use Kanban for project management with Trello serving as a Kanban board.
+We have divided  our team into front-end focused team: Kinga, Parham, Alex and backend team: Anas, Tri, Peter. CI person: Tri. Testing: We’ve agreed that everyone should frequently test their code. 
+Github: Work divided between branches. PR necessary if it’s a big feature commit. Individual commits allowed to fix small bugs.
+Messaging: We will use Facebook Messenger. 
+How will you track your progress:  Through the number of use cases completed.
