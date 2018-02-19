@@ -113,7 +113,7 @@ paths:
           description: Ticket not found
       security:
         - api_key: []
-  /tickets/{ticketId}:
+  '/tickets/{ticketId}':
     get:
       tags:
         - tickets
@@ -181,13 +181,13 @@ paths:
           description: Invalid ID supplied
         '404':
           description: Ticket not found
-  /tickets/{ticketId}/applicants:
+  /tickets/{ticketId}/{applicantId}:
     get:
       tags:
         - tickets
       summary: get all applicants for ticketid
       description: ''
-      operationId: getAllApplicantsByTicket
+      operationId: getAllApplicantByTicketId
       produces:
         - application/xml
         - application/json
@@ -195,6 +195,12 @@ paths:
         - name: ticketId
           in: path
           description: ID of ticket to return all applicants
+          required: true
+          type: integer
+          format: int64
+        - name: applicantId
+          in: path
+          description: ID of applicant to return info
           required: true
           type: integer
           format: int64
@@ -234,6 +240,12 @@ paths:
           required: true
           type: integer
           format: int64
+        - name: applicantId
+          in: path
+          description: ID of applicant to return info
+          required: true
+          type: integer
+          format: int64
         - in: body
           name: body
           description: specific tickets
@@ -249,7 +261,7 @@ paths:
           description: Invalid ID supplied
         '404':
           description: Ticket not found
-  /{facultyId}/tickets/:
+  /tickets/byfaculty/{facultyId}:
     get:
       tags:
         - tickets
@@ -300,6 +312,108 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/User'
+      responses:
+        default:
+          description: successful operation
+  /user/faculty/{facultyId}:
+    get:
+      tags:
+        - user
+      summary: get faculty
+      description: edit faculty
+      operationId: getFaculty
+      produces:
+        - application/xml
+        - application/json
+      parameters:
+        - name: facultyId
+          in: path
+          description: ID of faculty to return faculty info
+          required: true
+          type: integer
+          format: int64
+        - in: body
+          name: body
+          description: Created user object
+          required: true
+          schema:
+            $ref: '#/definitions/Faculty'
+      responses:
+        default:
+          description: successful operation
+    put:
+      tags:
+        - user
+      summary: edit faculty
+      description: edit faculty
+      operationId: updateFaculty
+      produces:
+        - application/xml
+        - application/json
+      parameters:
+        - name: facultyId
+          in: path
+          description: ID of faculty to return faculty info
+          required: true
+          type: integer
+          format: int64
+        - in: body
+          name: body
+          description: Created user object
+          required: true
+          schema:
+            $ref: '#/definitions/Faculty'
+      responses:
+        default:
+          description: successful operation
+  /user/applicant/{applicantId}:
+    get:
+      tags:
+        - user
+      summary: get applicant
+      description: get applicant
+      operationId: getApplicant
+      produces:
+        - application/xml
+        - application/json
+      parameters:
+        - name: applicantId
+          in: path
+          description: ID of applicant to return applicant info
+          required: true
+          type: integer
+          format: int64
+        - in: body
+          name: body
+          description: Created user object
+          required: true
+          schema:
+            $ref: '#/definitions/Faculty'
+      responses:
+        default:
+          description: successful operation
+    put:
+      tags:
+        - user
+      summary: edit applicant
+      description: edit applicant
+      operationId: updateApplicant
+      produces:
+        - application/xml
+        - application/json
+      parameters:
+        - name: applicantId
+          in: path
+          description: ID of faculty to return faculty info
+          required: true
+          type: integer
+          format: int64
+        - in: body
+          name: body
+          description: Created user object
+          required: true
+          schema:
+            $ref: '#/definitions/Faculty'
       responses:
         default:
           description: successful operation
@@ -398,7 +512,7 @@ paths:
       responses:
         default:
           description: successful operation
-  /user/{username}:
+  '/user/{username}':
     get:
       tags:
         - user
