@@ -8,69 +8,20 @@ basePath: /
 schemes:
   - http
 paths:
-  /budget:
-    post:
-      tags:
-        - budget
-      summary: Add new budget information
-      description: ''
-      operationId: addBudget
-      consumes:
-        - application/json
-        - application/xml
-      produces:
-        - application/xml
-        - application/json
-      parameters:
-        - in: body
-          name: body
-          description: New budget to be added
-          required: true
-          schema:
-            $ref: '#/definitions/Budget'
-      responses:
-        '405':
-          description: Invalid input
-    put:
-      tags:
-        - budget
-      summary: Update an existing budget
-      description: ''
-      operationId: updateBudget
-      consumes:
-        - application/json
-        - application/xml
-      produces:
-        - application/xml
-        - application/json
-      parameters:
-        - in: body
-          name: body
-          description: New Budget to be added
-          required: true
-          schema:
-            $ref: '#/definitions/Budget'
-      responses:
-        '400':
-          description: Invalid ID supplied
-        '404':
-          description: Budget not found
-        '405':
-          description: Validation exception
-  /professors:
+  /GAPF:
     get:
       tags:
-        - professors
-      summary: list of DCS research professors 
+        - GAPF
+      summary: Get GAPF info summary
       description: ''
-      operationId: getAllProfessors
+      operationId: getGAPF
       produces:
         - application/xml
         - application/json
       parameters:
-        - name: professors
+        - name: GAPF
           in: query
-          description: all professors
+          description: GAPF info
           required: true
           type: array
           items:
@@ -83,46 +34,13 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Faculty'
-  /professors/{professorId}:
-    get:
-      tags:
-        - professors
-      summary: Find professor by ID
-      description: Returns a professor
-      operationId: getProfessorById
-      produces:
-        - application/xml
-        - application/json
-      parameters:
-        - name: professorId
-          in: path
-          description: ID of professor to return
-          required: true
-          type: integer
-          format: int64
-        - in: body
-          name: body
-          description: New Budget to be added
-          required: true
-          schema:
-            $ref: '#/definitions/Budget'
-      responses:
-        '200':
-          description: successful operation
-          schema:
-            $ref: '#/definitions/Faculty'
-        '400':
-          description: Invalid ID supplied
-        '404':
-          description: Professor not found
-      security:
-        - api_key: []
+  /GAPF/attach:
     post:
       tags:
-        - professors
-      summary: Add new budget information
+        - GAPF
+      summary: Add new GAPF budget information
       description: ''
-      operationId: addBudgetByFSS
+      operationId: addGAPF
       consumes:
         - application/json
         - application/xml
@@ -130,27 +48,21 @@ paths:
         - application/xml
         - application/json
       parameters:
-        - name: professorId
-          in: path
-          description: ID of professor to return
-          required: true
-          type: integer
-          format: int64
         - in: body
           name: body
-          description: New budget to be added
-          required: false
+          description: New GAPF budget to be added
+          required: true
           schema:
-            $ref: '#/definitions/Budget'
+            $ref: '#/definitions/GAPF'
       responses:
         '405':
           description: Invalid input
     put:
       tags:
-        - professors
-      summary: Update an existing budget
+        - budget
+      summary: Update existing GAPF budget information
       description: ''
-      operationId: updateBudgetByFSS
+      operationId: updateGAPF
       consumes:
         - application/json
         - application/xml
@@ -158,42 +70,30 @@ paths:
         - application/xml
         - application/json
       parameters:
-        - name: professorId
-          in: path
-          description: ID of professor to return
-          required: true
-          type: integer
-          format: int64
         - in: body
           name: body
-          description: New Budget to be added
-          required: false
+          description: New GAPF budget to be added
+          required: true
           schema:
-            $ref: '#/definitions/Budget'
+            $ref: '#/definitions/GAPF'
       responses:
         '400':
           description: Invalid ID supplied
         '404':
-          description: Budget not found
+          description: GAPF not found
         '405':
           description: Validation exception
-  /professors/{professorId}/tickets:
+  /tickets:
     get:
       tags:
-        - professors
-      summary: get all tickets associated with professor
+        - tickets
+      summary: get all tickets
       description: returns all tickets
-      operationId: getAllTicketsByProfessorId
+      operationId: getAllTickets
       produces:
         - application/xml
         - application/json
       parameters:
-        - name: professorId
-          in: path
-          description: ID of professor to return
-          required: true
-          type: integer
-          format: int64
         - in: body
           name: body
           description: All tickets
@@ -213,58 +113,17 @@ paths:
           description: Ticket not found
       security:
         - api_key: []
-        
-    post:
-      tags:
-        - professors
-      summary: create new ticket
-      description: creates a new ticket 
-      operationId: createNewTicket
-      consumes:
-        - application/json
-        - application/xml
-      produces:
-        - application/xml
-        - application/json
-      parameters:
-        - name: professorId
-          in: path
-          description: ID of professor to return
-          required: true
-          type: integer
-          format: int64
-        - name: ticketId
-          in: path
-          description: ID of professor to return
-          required: true
-          type: integer
-          format: int64
-        - in: body
-          name: body
-          description: ticket
-          required: false
-          schema:
-            $ref: '#/definitions/Ticket'
-      responses:
-        '405':
-          description: Invalid input
-  /professors/{professorId}/tickets/{ticketId}:
+  /tickets/{ticketId}:
     get:
       tags:
-        - professors
-      summary: get ticket with ticket id associated with professor
-      description: returns all tickets
-      operationId: getTicketByProfessorIdAndTicketId
+        - tickets
+      summary: get ticket info
+      description: specific ticket
+      operationId: getTicket
       produces:
         - application/xml
         - application/json
       parameters:
-        - name: professorId
-          in: path
-          description: ID of professor to return
-          required: true
-          type: integer
-          format: int64
         - name: ticketId
           in: path
           description: ID of ticket to return
@@ -273,7 +132,7 @@ paths:
           format: int64
         - in: body
           name: body
-          description: All tickets
+          description: specific tickets
           required: true
           schema:
             $ref: '#/definitions/Ticket'
@@ -285,16 +144,14 @@ paths:
         '400':
           description: Invalid ID supplied
         '404':
-          description: Professor not found
-        '405':
           description: Ticket not found
       security:
         - api_key: []
     put:
       tags:
-        - professors
-      summary: Update an existing budget
-      description: ''
+        - tickets
+      summary: update existing ticket
+      description: updates an existing ticket
       operationId: updateTicket
       consumes:
         - application/json
@@ -303,12 +160,6 @@ paths:
         - application/xml
         - application/json
       parameters:
-        - name: professorId
-          in: path
-          description: ID of professor to return
-          required: true
-          type: integer
-          format: int64
         - name: ticketId
           in: path
           description: ID of ticket to return
@@ -317,43 +168,39 @@ paths:
           format: int64
         - in: body
           name: body
-          description: Ticket to be updated
-          required: false
+          description: specific tickets
+          required: true
           schema:
             $ref: '#/definitions/Ticket'
       responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Ticket'
         '400':
-          description: Invalid ticket ID supplied
+          description: Invalid ID supplied
         '404':
           description: Ticket not found
-        '405':
-          description: Validation exception
-  /professors/{professorId}/tickets/{ticketId}/applicants:
+  /tickets/{ticketId}/applicants:
     get:
       tags:
-        - professors
-      summary: get all applicants with ticket id associated with professor
-      description: returns all tickets
-      operationId: getAllApplicantsByProfessorIdAndTicketId
+        - tickets
+      summary: get all applicants for ticketid
+      description: ''
+      operationId: getAllApplicantsByTicket
       produces:
         - application/xml
         - application/json
       parameters:
-        - name: professorId
-          in: path
-          description: ID of professor to return
-          required: true
-          type: integer
-          format: int64
         - name: ticketId
           in: path
-          description: ID of ticket to return
+          description: ID of ticket to return all applicants
           required: true
           type: integer
           format: int64
         - in: body
           name: body
-          description: All Applicants
+          description: applicants for ticket
           required: true
           schema:
             $ref: '#/definitions/Applicant'
@@ -365,17 +212,15 @@ paths:
         '400':
           description: Invalid ID supplied
         '404':
-          description: Professor not found
-        '405':
           description: Ticket not found
       security:
         - api_key: []
     put:
       tags:
-        - professors
-      summary: Update an existing budget
-      description: ''
-      operationId: updateTicketOfferByFaculty
+        - tickets
+      summary: update existing applicant for ticket id
+      description: updates an existing applicant
+      operationId: updateApplicantByTicketId
       consumes:
         - application/json
         - application/xml
@@ -383,12 +228,6 @@ paths:
         - application/xml
         - application/json
       parameters:
-        - name: professorId
-          in: path
-          description: ID of professor to return
-          required: true
-          type: integer
-          format: int64
         - name: ticketId
           in: path
           description: ID of ticket to return
@@ -397,17 +236,53 @@ paths:
           format: int64
         - in: body
           name: body
-          description: Ticket to be updated
-          required: false
+          description: specific tickets
+          required: true
           schema:
             $ref: '#/definitions/Ticket'
       responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Ticket'
         '400':
-          description: Invalid ticket ID supplied
+          description: Invalid ID supplied
         '404':
           description: Ticket not found
-        '405':
-          description: Validation exception
+  /{facultyId}/tickets/:
+    get:
+      tags:
+        - tickets
+      summary: get all tickets associated with facultyId
+      description: ''
+      operationId: getAllTicketByFacultyId
+      produces:
+        - application/xml
+        - application/json
+      parameters:
+        - name: facultyId
+          in: path
+          description: ID of faculty to return all tickets
+          required: true
+          type: integer
+          format: int64
+        - in: body
+          name: body
+          description: specific tickets
+          required: true
+          schema:
+            $ref: '#/definitions/Ticket'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Ticket'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Ticket not found
+      security:
+        - api_key: []
   /user:
     post:
       tags:
@@ -523,7 +398,7 @@ paths:
       responses:
         default:
           description: successful operation
-  '/user/{username}':
+  /user/{username}:
     get:
       tags:
         - user
@@ -601,8 +476,8 @@ securityDefinitions:
     flow: implicit
     scopes:
       'write:tickets': change tickets
-      'write:budget': change budget
-      'read:budget': reading budget
+      'write:GAPF': change GAPF
+      'read:GAPF': reading GAPF
   api_key:
     type: apiKey
     name: api_key
@@ -676,7 +551,7 @@ definitions:
       roleid:
         type: integer
         format: int64
-      budget:
+      GAPF:
         type: object
     xml:
       name: Faculty
@@ -701,11 +576,11 @@ definitions:
         format: int64
       offered:
         type: boolean
-      budget:
+      GAPF:
         type: object
     xml:
       name: Faculty
-  Budget:
+  GAPF:
     type: object
     properties:
       id:
@@ -713,9 +588,8 @@ definitions:
         format: int64
       faculty:
         type: object
-      
     xml:
-      name: Budget
+      name: GAPF
 externalDocs:
   description: Find out more about Swagger
   url: 'http://swagger.io'
