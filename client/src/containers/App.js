@@ -17,7 +17,7 @@ const PrivateRoute = ({ component: Component, authenticated, ...props }) => {
         <Route
             {...props}
             render={props =>
-                authenticated === true ? (
+                authenticated === false ? (
                     <Component {...props} />
                 ) : (
                     <Redirect
@@ -39,7 +39,7 @@ const PublicRoute = ({ component: Component, authenticated, ...props }) => {
                 authenticated === false ? (
                     <Component {...props} />
                 ) : (
-                    <Redirect to="/login" />
+                    <Redirect to="/BDDashboard" />
                 )}
         />
     );
@@ -55,7 +55,7 @@ class App extends React.Component {
 
                     <div className="container">
                         <Route exact path="/">
-                            <Redirect to="/login" />
+                            <Redirect to="/BDDashboard" />
                         </Route>
                         <PublicRoute
                             authenticated={this.props.authenticated}

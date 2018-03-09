@@ -45,8 +45,8 @@ class Header extends React.Component {
             <Navbar inverse collapseOnSelect>
                 <Navbar.Header>
                     <Navbar.Brand>
-                        <Link className="navbar-brand" to="/home">
-                            {this.props.businessName}
+                        <Link className="navbar-brand" to="/BDDashboard">
+                            {'Grad Ticket App'}
                         </Link>
                     </Navbar.Brand>
                     <Navbar.Toggle />

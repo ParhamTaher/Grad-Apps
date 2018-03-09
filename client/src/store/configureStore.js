@@ -30,7 +30,7 @@ export function configureStore(initialState) {
     // we can just import it and dispatch it right there.
 
     // Call verifyAuth() almost as soon as app boots so we can update the state accordingly.
-    store.dispatch(Actions.verifyAuth());
+    // store.dispatch(Actions.verifyAuth());
 
     return store;
 }

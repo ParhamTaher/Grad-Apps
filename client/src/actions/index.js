@@ -1,3 +1,14 @@
+// ACTIONS
+//  This is where the ajax calls are made to the backend. An action dispatches data or requests data, where the data is inside 'payload'.
+//  When dispatched, the requeted action is then processed by the reducers.
+/**
+    {
+        type: DESIRED ACTION
+        payload: DATA THE FRONT END WANTS TO SEND
+    }
+**/
+//
+
 export const SIGN_OUT_USER = 'SIGN_OUT_USER';
 export const AUTH_ERROR = 'AUTH_ERROR';
 export const AUTH_USER = 'AUTH_USER';
