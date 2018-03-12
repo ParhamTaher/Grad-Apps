@@ -32,7 +32,7 @@ Key features:
 ### `DELETE`
 
 
-## Drink Schema
+## Ticket Schema
 
 ```js
 {
