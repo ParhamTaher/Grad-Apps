@@ -10,8 +10,14 @@ router.get('/', (req, res, next) => {
 
 // Create a ticket
 router.post('/', (req, res, next) => {
+	const ticket = {
+		status: req.body.status,
+		applicant_name: req.body.applicant_name,
+		type: req.body.type
+	};
 	res.status(201).json({
 		message: 'Ticket was created',
+		createdTicket: ticket
 	});
 });
 

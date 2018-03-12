@@ -5,8 +5,6 @@ A simple RESTful API for querying tickets.
 Tools used:
 
 - Express
-- Nodemon
-- Morgan
 - Mongoose + MongoDB
 - Docker
 
