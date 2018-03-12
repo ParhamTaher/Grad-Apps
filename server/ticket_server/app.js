@@ -1,11 +1,16 @@
 const express = require('express');
 const app = express();
+const morgan = require('morgan');
 
 const ticketRoutes = require('./api/routes/tickets');
 
+// Log all requests to the terminal
+app.use(morgan('dev'));
+
+// Route that handles ticket requests
 app.use('/tickets', ticketRoutes);
 
-//handle errors
+// Handle errors
 app.use((req, res, next) => {
 	const error = new Error('Not found');
 	error.status = 404;
