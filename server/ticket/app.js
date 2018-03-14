@@ -2,8 +2,20 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const ticketRoutes = require('./api/routes/tickets');
+
+// Connect to database
+mongoose.connect(
+	'mongodb://proj-team13:' + 
+	process.env.MONGO_PW + 
+	'@node-rest-gradapp-shard-00-00-imzxv.mongodb.net:27017,' + 
+	'node-rest-gradapp-shard-00-01-imzxv.mongodb.net:27017,' + 
+	'node-rest-gradapp-shard-00-02-imzxv.mongodb.net:27017/' + 
+	'test?ssl=true&replicaSet=node-rest-gradapp-shard-0&authSource=admin'
+	);
+mongoose.Promise = global.Promise;
 
 // Log all requests to the terminal
 app.use(morgan('dev'));
