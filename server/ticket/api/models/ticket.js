@@ -13,7 +13,12 @@ const ticketSchema = mongoose.Schema({
 		type: Date, 
 		default: Date.now
 	},
-	domestic: { type: Boolean, required: true }
+	ticket_type: { 
+		type: String, 
+		enum: ['D', 'I'],
+		uppercase: true,
+		required: true 
+	}
 });
 
 module.exports = mongoose.model('Ticket', ticketSchema);

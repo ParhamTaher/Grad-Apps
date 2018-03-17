@@ -28,23 +28,29 @@ The API will be running on localhost:3000
 ## API endpoints
 
 - `/tickets`: main entrypoint for tickets
-- `/tickets/:ticketId`: query a ticket by its unique `ticketId`
+- `/tickets/:ticketId`: perform operations on a ticket by its unique `ticketId`
+- `/tickets/:num_tickets`: create a batch of tickets
+- `/tickets/faculty/:facultyId`: update a batch of tickets owned by a specific `facultyId`
 
 ### Examples
 
 ### `GET`
 
+- `/tickets/5aad6dbdb2d0332d6299e048`: gets the ticket with id `5aad6dbdb2d0332d6299e048`
 - `/tickets`: queries all the tickets
+- `/tickets?faculty_id=mzaleski`: queries tickets owned by `mzaleski`
+- `/tickets?status=granted&ticket_type=D`: queries domestic tickets that have status `granted`
 
 ### `POST`
 
 - `/tickets`: create a new ticket
+- `/tickets/5`: creates 5 new tickets
 
 Request.Body:
 ```json
 {
     "faculty_id": "mzaleski",
-    "domestic": "true"
+    "ticket_type": "D"
 }
 ```
 
@@ -64,9 +70,22 @@ Request.Body:
 ]
 ```
 
+- `tickets/faculty/:facultyId`: updates all tickets owned by a specific faculty
+
+Request.Body:
+```json
+[
+	{"fieldName": "status", "value": "granted"},
+	...
+]
+```
+
 ### `DELETE`
 
-- `/tickets/:ticketId`: deletes the specified ticket
+- `/tickets/5aad6dbdb2d0332d6299e048`: deletes a ticket with id `5aad6dbdb2d0332d6299e048`
+- `/tickets`: deletes all tickets
+- `/tickets?faculty_id=mzaleski`: deletes all tickets owned by `mzaleski`
+- `/tickets?status=granted&ticket_type=D`: deletes all domestic tickets that have status `granted`
 
 ## Ticket Schema
 
@@ -86,8 +105,10 @@ Request.Body:
 		type: Date, 
 		default: Date.now
 	},
-	domestic: { 
-		type: Boolean, 
+	ticket_type: { 
+		type: String, 
+		enum: ['D', 'I'],
+		uppercase: true,
 		required: true 
 	}
 }
