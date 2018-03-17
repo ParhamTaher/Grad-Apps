@@ -8,9 +8,28 @@ const Ticket = require('../models/ticket');
 router.get('/', (req, res, next) => {
 	Ticket
 		.find()  // Find data in the DB
-		.then(result => {  // Promise instead of callback (why? see https://stackoverflow.com/questions/22539815/arent-promises-just-callbacks)
-			console.log(result);
-			res.status(200).json(result);
+		.then(results => {  // Promise instead of callback (why? see https://stackoverflow.com/questions/22539815/arent-promises-just-callbacks)
+			const response = { // Format the response
+				count: results.length,
+				tickets: results.map(result => {
+					return {
+						_id: result._id,
+						faculty_id: result.faculty_id,
+						applicant_id: result.applicant_id,
+						status: result.status,
+						domestic: result.domestic,
+						request: {
+							type: 'GET',
+							url: 'http://localhost:3000/tickets/' + result._id
+						}
+					}
+				})
+			};
+			results ? // Check if tickets exist
+				res.status(200).json(response) : 
+				res.status(404).json({
+					message: 'No entries found'
+				});
 		})
 		.catch(err => {  // Catch any errors that may occur before this point
 			console.log(err)
@@ -27,16 +46,27 @@ router.post('/', (req, res, next) => {
 		faculty_id: req.body.faculty_id,
 		applicant_id: req.body.applicant_id,
 		status: req.body.status,
-		date: req.body.date,
-		d_or_i: req.body.d_or_i
+		creation_date: req.body.date,
+		domestic: req.body.domestic
 	});
+	console.log("REQ BODY ", req.body);
 	ticket
 		.save() // Store data into the DB
 		.then(result => {	
 		      	console.log(result);
 		      	res.status(201).json({
 					message: 'Ticket created successfully',
-					createdTicket: result
+					createdTicket: {
+						_id: result._id,
+						faculty_id: result.faculty_id,
+						applicant_id: result.applicant_id,
+						status: result.status,
+						domestic: result.domestic,
+						request: {
+							type: 'GET',
+							url: 'http://localhost:3000/tickets/' + result._id
+						}
+					}
 				});
 		      })
 		.catch(err => {
@@ -54,13 +84,11 @@ router.get('/:ticketId', (req, res, next) => {
 		.findById(id)
 		.then(result => {
 			console.log("Returned from DB:", result);
-		  	if (result) {	// Check if ticket exists
-		  		res.status(200).json(result);
-		  	} else {
+		  	result	? // Check if ticket exists
+		  		res.status(200).json(result) :
 		  		res.status(404).json({
 		  			message: 'No valid entry found for provided ID'
 		  		});
-		  	}
 		})
 		.catch(err => {
 			console.log(err)
@@ -68,6 +96,27 @@ router.get('/:ticketId', (req, res, next) => {
 				error: err
 			});
 		});
+});
+
+// Update a ticket by ID
+router.patch('/:ticketId', (req, res, next) => {
+	const id = req.params.ticketId;
+	const update_fields = {};	// Make update iterable so can update none, some, or all fields
+	for (const field of req.body) {
+		update_fields[field.fieldName] = field.value;
+	}
+	Ticket
+	.update({_id: id}, {$set: update_fields}) // Update data in DB
+	.then(result => {
+		console.log(result);
+		res.status(200).json(result);
+	})
+	.catch(err => {
+		console.log(err);
+		res.status(500).json({
+			error: err
+		});
+	});
 });
 
 // Delete a ticket by ID
