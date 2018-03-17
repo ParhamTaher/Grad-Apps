@@ -18,7 +18,7 @@ Key features:
 
 Clone this repo, then run the commands below from the root directory
 
-<span style="color:red">some **Commands will change when docker is implemented.** text</span>
+**Commands will change when docker is implemented.**
 
 ```shell
 npm install
