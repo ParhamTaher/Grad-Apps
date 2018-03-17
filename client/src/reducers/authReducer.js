@@ -23,6 +23,7 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 authenticated: true,
+                userRole: action.payload.userRole,
                 error: null
             };
         case SIGN_OUT_USER:

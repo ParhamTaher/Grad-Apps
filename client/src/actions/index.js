@@ -13,13 +13,26 @@ export const SIGN_OUT_USER = 'SIGN_OUT_USER';
 export const AUTH_ERROR = 'AUTH_ERROR';
 export const AUTH_USER = 'AUTH_USER';
 export const REQUEST_CHANGE_PASS = 'REQUEST_CHANGE_PASS';
-export const REQUEST_TICKET_ID = 'REQUEST_TICKET_ID';
+export const REQUEST_TICKETS = 'REQUEST_TICKET_ID';
 
-export function requestTicketID() {
+export function requestTickets(facultyID) {
     return dispatch => {
         dispatch({
-            type: REQUEST_TICKET_ID,
-            payload: { ticketID: 123 }
+            type: REQUEST_TICKETS,
+            payload: {
+                tickets: [
+                    {
+                        TID: 1,
+                        applicant: 'Bob',
+                        ticketStatus: 'Granted'
+                    },
+                    {
+                        TID: 2,
+                        applicant: 'John',
+                        ticketStatus: 'Granted'
+                    }
+                ]
+            }
         });
     };
 }
@@ -33,9 +46,8 @@ export function signUpUser(credentials) {
 
 export function signInUser(credentials) {
     return function(dispatch) {
-        return function(dispatch) {
-            dispatch(authUser());
-        };
+        // Check db for the userRole of this user (BD, FSS, Chair, etc)
+        dispatch(authUser({ userRole: 'FSS' }));
     };
 }
 
@@ -79,9 +91,10 @@ export function requestPasswordChange(credentials) {
 **/
 
 // Dual-purpose action used for both signin and signup
-export function authUser() {
+export function authUser(userRole) {
     return {
-        type: AUTH_USER
+        type: AUTH_USER,
+        payload: userRole
     };
 }
 

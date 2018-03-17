@@ -13,7 +13,7 @@ import { reducer as FormReducer } from 'redux-form';
 const rootReducer = combineReducers({
     auth: authReducer,
     form: FormReducer,
-    ticket: ticketReducer,
+    tickets: ticketReducer,
     router: routerReducer
 });
 

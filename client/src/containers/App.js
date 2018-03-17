@@ -8,16 +8,22 @@ import Header from '../containers/Header';
 import Signup from '../containers/Signup';
 import Login from '../containers/Login';
 import BDDashboard from '../containers/BDDashboard';
+import FacultyDashboard from '../containers/FacultyDashboard';
 
 // Passing through a component and checking whether our user is authenticated,
 // then either returning the component we are passing in as an argument
 // or redirecting them to the /login or /profile.
-const PrivateRoute = ({ component: Component, authenticated, ...props }) => {
+const PrivateRoute = ({
+    component: Component,
+    authenticated,
+    userRole,
+    ...props
+}) => {
     return (
         <Route
             {...props}
             render={props =>
-                authenticated === false ? (
+                authenticated === true ? (
                     <Component {...props} />
                 ) : (
                     <Redirect
@@ -31,15 +37,22 @@ const PrivateRoute = ({ component: Component, authenticated, ...props }) => {
     );
 };
 
-const PublicRoute = ({ component: Component, authenticated, ...props }) => {
+const PublicRoute = ({
+    component: Component,
+    authenticated,
+    userRole,
+    ...props
+}) => {
     return (
         <Route
             {...props}
             render={props =>
-                authenticated === false ? (
-                    <Component {...props} />
-                ) : (
+                authenticated === true && userRole === 'FSS' ? (
+                    <Redirect to="/FacultyDashboard" />
+                ) : authenticated === true && userRole === 'BD' ? (
                     <Redirect to="/BDDashboard" />
+                ) : (
+                    <Component {...props} />
                 )}
         />
     );
@@ -55,7 +68,7 @@ class App extends React.Component {
 
                     <div className="container">
                         <Route exact path="/">
-                            <Redirect to="/BDDashboard" />
+                            <Redirect to="/login" />
                         </Route>
                         <PublicRoute
                             authenticated={this.props.authenticated}
@@ -64,13 +77,21 @@ class App extends React.Component {
                         />
                         <PublicRoute
                             authenticated={this.props.authenticated}
+                            userRole={this.props.userRole}
                             path="/login"
                             component={Login}
                         />
                         <PrivateRoute
                             authenticated={this.props.authenticated}
+                            userRole={this.props.userRole}
                             path="/BDDashboard"
                             component={BDDashboard}
+                        />
+                        <PrivateRoute
+                            authenticated={this.props.authenticated}
+                            userRole={this.props.userRole}
+                            path="/FacultyDashboard"
+                            component={FacultyDashboard}
                         />
                     </div>
                 </div>
@@ -80,7 +101,11 @@ class App extends React.Component {
 }
 
 const mapStateToProps = state => {
-    return { authenticated: state.auth.authenticated };
+    console.log('user role: ', state.auth.userRole);
+    return {
+        authenticated: state.auth.authenticated,
+        userRole: state.auth.userRole
+    };
 };
 
 export default connect(mapStateToProps)(App);
