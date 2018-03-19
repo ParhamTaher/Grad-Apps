@@ -91,6 +91,7 @@ Request.Body:
 
 ```js
 {
+        _id: mongoose.Schema.Types.ObjectId,
 	faculty_id: { 
 		type: String, 
 		required: true 
