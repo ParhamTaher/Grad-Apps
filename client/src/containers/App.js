@@ -9,6 +9,7 @@ import Signup from '../containers/Signup';
 import Login from '../containers/Login';
 import BDDashboard from '../containers/BDDashboard';
 import FacultyDashboard from '../containers/FacultyDashboard';
+import ACDashboard from '../containers/ACDashboard';
 
 // Passing through a component and checking whether our user is authenticated,
 // then either returning the component we are passing in as an argument
@@ -51,6 +52,8 @@ const PublicRoute = ({
                     <Redirect to="/FacultyDashboard" />
                 ) : authenticated === true && userRole === 'BD' ? (
                     <Redirect to="/BDDashboard" />
+                ) : authenticated === true && userRole === 'AC' ? (
+                    <Redirect to="/ACDashboard" />
                 ) : (
                     <Component {...props} />
                 )}
@@ -92,6 +95,12 @@ class App extends React.Component {
                             userRole={this.props.userRole}
                             path="/FacultyDashboard"
                             component={FacultyDashboard}
+                        />
+                        <PrivateRoute
+                            authenticated={this.props.authenticated}
+                            userRole={this.props.userRole}
+                            path="/ACDashboard"
+                            component={ACDashboard}
                         />
                     </div>
                 </div>

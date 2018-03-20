@@ -56,10 +56,12 @@ export function signUpUser(credentials) {
 
 export function signInUser(credentials) {
     return function(dispatch) {
-        // Get "role"
-
+        if (credentials.email === 'AC@gmail.com') {
+            dispatch(authUser({ userRole: 'AC' }));
+        } else {
+            dispatch(authUser({ userRole: 'FSS' }));
+        }
         // Check db for the userRole of this user (BD, FSS, Chair, etc)
-        dispatch(authUser({ userRole: 'FSS' }));
     };
 }
 
