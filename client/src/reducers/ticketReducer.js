@@ -1,8 +1,9 @@
-import { REQUEST_TICKET_ID } from '../actions';
+import { REQUEST_TICKETS } from '../actions';
 
-export default function(state = {}, action) {
+export default function(state = { tickets: [] }, action) {
+    console.log('Inside ticket reducer: ', action.payload);
     switch (action.type) {
-        case REQUEST_TICKET_ID:
+        case REQUEST_TICKETS:
             return action.payload;
         default:
             return state;
