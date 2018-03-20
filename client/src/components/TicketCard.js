@@ -2,7 +2,7 @@ import React from 'react';
 
 const TicketCard = ({ TID, applicant, ticketStatus }) => {
     return (
-        <li key={TID}>
+        <li className="list-group-item" key={TID}>
             <div>{applicant}</div>
             <div>{ticketStatus}</div>
         </li>

@@ -14,6 +14,16 @@ export const AUTH_ERROR = 'AUTH_ERROR';
 export const AUTH_USER = 'AUTH_USER';
 export const REQUEST_CHANGE_PASS = 'REQUEST_CHANGE_PASS';
 export const REQUEST_TICKETS = 'REQUEST_TICKET_ID';
+export const UPLOAD_GAPF = 'UPLOAD_GAPF';
+
+export function uploadDocumentRequest(file) {
+    console.log('uploading GAPF... ' + file.name);
+    return function(dispatch) {
+        dispatch({
+            type: UPLOAD_GAPF
+        });
+    };
+}
 
 export function requestTickets(facultyID) {
     return dispatch => {
@@ -46,6 +56,8 @@ export function signUpUser(credentials) {
 
 export function signInUser(credentials) {
     return function(dispatch) {
+        // Get "role"
+
         // Check db for the userRole of this user (BD, FSS, Chair, etc)
         dispatch(authUser({ userRole: 'FSS' }));
     };

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import * as Actions from '../actions';
 import { bindActionCreators } from 'redux';
 import TicketCard from '../components/TicketCard';
+import { PanelGroup, Panel } from 'react-bootstrap';
 
 class ItemList extends Component {
     componentDidMount() {
@@ -13,17 +14,22 @@ class ItemList extends Component {
     renderList() {
         return this.props.ticketList.tickets.map(ticket => {
             return (
-                <TicketCard
-                    TID={ticket.TID}
-                    applicant={ticket.applicant}
-                    ticketStatus={ticket.ticketStatus}
-                />
+                <Panel eventKey={ticket.TID}>
+                    <Panel.Heading>
+                        <Panel.Title toggle>{ticket.applicant}</Panel.Title>
+                    </Panel.Heading>
+                    <Panel.Body collapsible>{ticket.ticketStatus}</Panel.Body>
+                </Panel>
             );
         });
     }
 
     render() {
-        return <ul className="list-group col-sm-4">{this.renderList()}</ul>;
+        return (
+            <PanelGroup accordion id="accordion-example">
+                {this.renderList()}
+            </PanelGroup>
+        );
     }
 }
 
