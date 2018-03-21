@@ -21,6 +21,9 @@ router.patch('/:ticketId', TicketsController.update);
 // Update tickets by faculty
 router.patch('/faculty/:facultyId', TicketsController.update_by_faculty);
 
+// Update ticket status by id
+router.patch('/:ticketId/status', TicketsController.update_status);
+
 // Delete a ticket by ID
 router.delete('/:ticketId', TicketsController.delete);
 

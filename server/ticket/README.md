@@ -31,6 +31,7 @@ The API will be running on localhost:3000
 - `/tickets/:ticketId`: perform operations on a ticket by its unique `ticketId`
 - `/tickets/:num_tickets`: create a batch of tickets
 - `/tickets/faculty/:facultyId`: update a batch of tickets owned by a specific `facultyId`
+- `/tickets/:ticketId/status`: updates the status of a ticket
 
 ### Examples
 
@@ -56,29 +57,38 @@ Request.Body:
 
 ### `PATCH`
 
-- `/tickets/:ticketId`: updates the specified ticket
+- `/tickets/5aad6dbdb2d0332d6299e048`: updates the ticket with id `5aad6dbdb2d0332d6299e048`
 
-Updates can be made modularly on a ticket by listing out any desired changes on specified fields in an array format.
+Updates can be made modularly on a ticket by listing out any desired changes on specified fields in an array format. Status of a ticket cannot be updated in this way.
 
 Request.Body:
 ```json
 [
 	{"fieldName": "faculty_id", "value": "pbacals"},
 	{"fieldName": "applicant_id", "value": "1000369610"},
-	{"fieldName": "status", "value": "offer-request"},
 	...
 ]
 ```
 
-- `tickets/faculty/:facultyId`: updates all tickets owned by a specific faculty
+- `tickets/faculty/mzaleski`: updates all tickets owned by a `mzaleski`
 
 Request.Body:
 ```json
 [
-	{"fieldName": "status", "value": "granted"},
+	{"fieldName": "ticket_type", "value": "I"},
 	...
 ]
 ```
+
+- `/tickets/5aad6dbdb2d0332d6299e048/status` updates the status of ticket with id `5aad6dbdb2d0332d6299e048`
+
+Request.Body:
+```json
+{
+	"status": "offer-pending"
+}
+```
+
 
 ### `DELETE`
 
@@ -91,16 +101,14 @@ Request.Body:
 
 ```js
 {
-        _id: mongoose.Schema.Types.ObjectId,
-	faculty_id: { 
-		type: String, 
-		required: true 
-	},
+	_id: mongoose.Schema.Types.ObjectId,
+	faculty_id: { type: String, required: true },
 	applicant_id: Number,
 	status: { 
 		type: String,
 		enum: ['initial', 'granted', 'offer-request', 'offer-pending', 'accepted', 'refused'],
-		default: 'initial'
+		default: 'initial',
+		required: true
 	},
 	creation_date: { 
 		type: Date, 
@@ -111,6 +119,19 @@ Request.Body:
 		enum: ['D', 'I'],
 		uppercase: true,
 		required: true 
+	},
+	status_history: {
+		type: [{
+			status: { 
+				type: String,
+				enum: ['initial', 'granted', 'offer-request', 'offer-pending', 'accepted', 'refused']
+			},
+			update_date: Date
+		}],
+		default: [{
+			status: 'initial',
+			update_date: new Date()
+		}]
 	}
 }
 ```

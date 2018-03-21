@@ -40,6 +40,7 @@ exports.get_all = (req, res, next) => {
 						faculty_id: result.faculty_id,
 						applicant_id: result.applicant_id,
 						status: result.status,
+						status_history: result.status_history,
 						ticket_type: result.ticket_type,
 						request: {
 							type: 'GET',
@@ -67,6 +68,7 @@ exports.create = (req, res, next) => {
 		faculty_id: req.body.faculty_id,
 		applicant_id: req.body.applicant_id,
 		status: req.body.status,
+		status_history: req.body.status_history,
 		creation_date: req.body.date,
 		ticket_type: req.body.ticket_type
 	});
@@ -80,6 +82,7 @@ exports.create = (req, res, next) => {
 						faculty_id: result.faculty_id,
 						applicant_id: result.applicant_id,
 						status: result.status,
+						status_history: result.status_history,
 						ticket_type: result.ticket_type,
 						request: {
 							type: 'GET',
@@ -104,6 +107,7 @@ exports.create_batch = (req, res, next) => {
 			faculty_id: req.body.faculty_id,
 			applicant_id: req.body.applicant_id,
 			status: req.body.status,
+			status_history: req.body.status_history,
 			creation_date: req.body.date,
 			ticket_type: req.body.ticket_type
 		});
@@ -120,6 +124,7 @@ exports.create_batch = (req, res, next) => {
 						faculty_id: result.faculty_id,
 						applicant_id: result.applicant_id,
 						status: result.status,
+						status_history: req.body.status_history,
 						ticket_type: result.ticket_type,
 						request: {
 							type: 'GET',
@@ -141,10 +146,13 @@ exports.update = (req, res, next) => {
 	const id = req.params.ticketId;
 	const update_fields = {};	// Make update iterable so can update none, some, or all fields
 	for (const field of req.body) {
-		update_fields[field.fieldName] = field.value;
+		if (field.fieldName != 'status') {
+			update_fields[field.fieldName] = field.value;
+		}
 	}
 	Ticket
-		.update({_id: id}, {$set: update_fields}) // Update data in DB
+		.update({_id: id}, {$set: update_fields},
+			{ upsert: true, runValidators: true }) // Update data in DB
 		.then(result => {
 			res.status(200).json({
 				message: 'Ticket updated',
@@ -165,16 +173,46 @@ exports.update_by_faculty = (req, res, next) => {
 	const id = req.params.facultyId;
 	const update_fields = {};	// Make update iterable so can update none, some, or all fields
 	for (const field of req.body) {
-		update_fields[field.fieldName] = field.value;
+		if (field.fieldName != 'status' || field.fieldName != 'status_history') {
+			update_fields[field.fieldName] = field.value;
+		}
 	}
 	Ticket
-		.update({faculty_id: id}, {$set: update_fields}, { multi: true })
+		.update({faculty_id: id}, {$set: update_fields}, 
+			{ multi: true, upsert: true, runValidators: true })
 		.then(results => {
 			res.status(200).json({
 				message: results.n + ' Tickets updated',
 				request: {
 					type: 'GET',
 					url: 'http://localhost:3000/tickets/faculty/' + id
+				}
+			});
+		})
+		.catch(err => {
+			res.status(500).json({
+				error: err
+			});
+		});
+};
+
+exports.update_status = (req, res, next) => {
+	const id = req.params.ticketId;
+	var status_log = { status: req.body.status, update_date: new Date() };
+	Ticket
+		.update({_id: id}, 
+			{
+				$set: {status: req.body.status}, 
+				$push: {status_history: status_log}
+			}, 
+			{ upsert: true, runValidators: true }
+		)
+		.then(result => {
+			res.status(200).json({
+				message: 'Ticket status updated',
+				request: {
+					type: 'GET',
+					url: 'http://localhost:3000/tickets/' + id
 				}
 			});
 		})
