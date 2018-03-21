@@ -8,6 +8,7 @@
     }
 **/
 //
+import axios from 'axios';
 
 export const SIGN_OUT_USER = 'SIGN_OUT_USER';
 export const AUTH_ERROR = 'AUTH_ERROR';
@@ -25,8 +26,15 @@ export function uploadDocumentRequest(file) {
     };
 }
 
-export function requestTickets(facultyID) {
+export function requestTickets(facultyID, ticketType) {
     return dispatch => {
+        axios.get('/tickets').then(function(response) {
+            console.log(
+                'Successfully connected to tickets route!: ',
+                response.data
+            );
+        });
+
         dispatch({
             type: REQUEST_TICKETS,
             payload: {
@@ -34,12 +42,14 @@ export function requestTickets(facultyID) {
                     {
                         TID: 1,
                         applicant: 'Bob',
-                        ticketStatus: 'Granted'
+                        ticketStatus: 'Granted',
+                        ticket_type: 'D'
                     },
                     {
                         TID: 2,
                         applicant: 'John',
-                        ticketStatus: 'Granted'
+                        ticketStatus: 'Granted',
+                        ticket_type: 'I'
                     }
                 ]
             }

@@ -1,11 +1,15 @@
 import React from 'react';
+import { Panel } from 'react-bootstrap';
 
-const TicketCard = ({ TID, applicant, ticketStatus }) => {
+const TicketCard = ({ TID, applicant, ticketStatus, ticketType }) => {
     return (
-        <li className="list-group-item" key={TID}>
-            <div>{applicant}</div>
-            <div>{ticketStatus}</div>
-        </li>
+        <Panel eventKey={TID}>
+            <Panel.Heading>
+                <Panel.Title toggle>{applicant}</Panel.Title>
+            </Panel.Heading>
+            <Panel.Body collapsible>Ticket Status: {ticketStatus}</Panel.Body>
+            <Panel.Body collapsible>Ticket Type: {ticketType}</Panel.Body>
+        </Panel>
     );
 };
 
