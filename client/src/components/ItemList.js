@@ -11,6 +11,8 @@ class ItemList extends Component {
                     applicant={ticket.applicant}
                     ticketStatus={ticket.ticketStatus}
                     ticketType={ticket.ticket_type}
+                    notes={ticket.notes}
+                    onApproveSubmit={this.props.onApproveSubmit}
                 />
             );
         });

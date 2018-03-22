@@ -16,6 +16,7 @@ export const AUTH_USER = 'AUTH_USER';
 export const REQUEST_CHANGE_PASS = 'REQUEST_CHANGE_PASS';
 export const REQUEST_TICKETS = 'REQUEST_TICKET_ID';
 export const UPLOAD_GAPF = 'UPLOAD_GAPF';
+export const SAVE_NOTE_RESPONSE = 'SAVE_NOTE_RESPONSE';
 
 export function uploadDocumentRequest(file) {
     console.log('uploading GAPF... ' + file.name);
@@ -43,18 +44,25 @@ export function requestTickets(facultyID, ticketType) {
                         TID: 1,
                         applicant: 'Bob',
                         ticketStatus: 'Granted',
-                        ticket_type: 'D'
+                        ticket_type: 'D',
+                        notes: 'Alex'
                     },
                     {
                         TID: 2,
                         applicant: 'John',
                         ticketStatus: 'Granted',
-                        ticket_type: 'I'
+                        ticket_type: 'I',
+                        notes: ''
                     }
                 ]
             }
         });
     };
+}
+
+export function approveApplicant(tID) {
+    console.log("Approving applicant with ID: " + tID);
+    return;
 }
 
 // Auth Data

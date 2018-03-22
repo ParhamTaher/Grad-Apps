@@ -56,6 +56,7 @@ function mapStateToProps(state) {
     // Whatever is returned will show up as props
     return {
         ticketList: state.tickets
+
     };
 }
 
