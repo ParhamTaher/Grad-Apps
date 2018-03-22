@@ -13,18 +13,10 @@ const mongoose = require('mongoose');
 const usersRoutes = require('./api/routes/users');
 const facultyRoutes = require('./api/routes/faculty');
 const applicantsRoutes = require('./api/routes/applicants');
+let config = require('config');
 
-
-const MONGO_PW = "team13db"
 // Connect to database
-mongoose.connect(
-	'mongodb://proj-team13:' + 
-	MONGO_PW + 
-	'@node-rest-gradapp-shard-00-00-imzxv.mongodb.net:27017,' + 
-	'node-rest-gradapp-shard-00-01-imzxv.mongodb.net:27017,' + 
-	'node-rest-gradapp-shard-00-02-imzxv.mongodb.net:27017/' + 
-	'test?ssl=true&replicaSet=node-rest-gradapp-shard-0&authSource=admin'
-	);
+mongoose.connect(config.DBHost);
 mongoose.Promise = global.Promise;
 
 // test connection
@@ -34,8 +26,10 @@ db.once('open', function() {
   console.log("Connected to db");
 });
 
-// Log all requests to the terminal
-app.use(morgan('dev'));
+// Log all requests to the terminal if not in test
+if(config.util.getEnv('NODE_ENV') !== 'test') {
+	app.use(morgan('combined'));
+}
 //body parser middle ware
 app.use(bodyParser.urlencoded({ extended: false }));  // Support URL-encoded data
 app.use(bodyParser.json());						  	// Support JSON-encoded data
@@ -63,3 +57,5 @@ const server = http.createServer(app);
 server.listen(port, () => {
     console.log('Your server is listening on port %d (http://localhost:%d)', port, port);
 });
+
+module.exports = app;
