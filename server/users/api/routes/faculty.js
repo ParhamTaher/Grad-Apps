@@ -16,7 +16,7 @@ router.get('/', (req, res, next) => {
                 });
         })
         .catch( (err) => {
-            console.log("ERROR: can't get all faculty")
+            console.log("ERROR: can't get all faculty");
             res.status(500).json({
 				error: err
 			});
@@ -39,7 +39,7 @@ router.get('/:facultyId', (req, res, next) => {
                 });
         })
         .catch( (err) => {
-            console.log("ERROR: can't get faculty with id:" + facultyId)
+            console.log("ERROR: can't get faculty with id:" + facultyId);
             res.status(500).json({
 				error: err
 			});
@@ -64,11 +64,12 @@ router.put('/:facultyId', (req, res, next) => {
         .then( (result) => {
             res.status(200).json({
                 message: 'user updated successfully',
-                facultyId: facultyId
+                facultyId: facultyId,
+                nModified: result.nModified
             });
         })
         .catch((err) => {
-            console.log("can't sign up new user")
+            console.log("ERROR: can't update faculty with provided id:" + facultyId);
             res.status(500).json({
 				error: err
 			});

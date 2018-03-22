@@ -5,7 +5,14 @@ let emailValidator =
     validate({
         validator: 'isEmail',
         message: 'Please provide a correct email',
-    })
+    });
+
+let lengthValidator = 
+    validate({
+        validator: 'isLength',
+        arguments: [3, 50],
+        message: 'This field should be between {ARGS[0]} and {ARGS[1]} characters',
+    });
 
 const userSchema = mongoose.Schema({
 	_id: mongoose.Schema.Types.ObjectId,
@@ -14,15 +21,14 @@ const userSchema = mongoose.Schema({
         enum: ['Faculty', 'FSS', 'Budget Director', 'Associate Chair graduate', 'Grad office staff'],
         required: true
     },
-    fname: { type: String, required: true },
-    lname: { type: String, required: true },
+    fname: { type: String, required: true, validate: lengthValidator },
+    lname: { type: String, required: true, validate: lengthValidator },
     email: { 
         type: String, 
         required: true,
         unique: true,
         validate: emailValidator
     },
-    username: { type: String, required: true },
     password: { type: String, required: true },
 	creation_date: { 
 		type: Date, 
