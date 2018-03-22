@@ -128,7 +128,7 @@ exports.create_batch = (req, res, next) => {
 						ticket_type: result.ticket_type,
 						request: {
 							type: 'GET',
-							url: 'http://localhost:3000/tickets/' + result._id
+							url: 'http://localhost:3000/tickets/'
 						}
 					}
 				})
