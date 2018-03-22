@@ -10,6 +10,7 @@ import Login from '../containers/Login';
 import BDDashboard from '../containers/BDDashboard';
 import FacultyDashboard from '../containers/FacultyDashboard';
 import ACDashboard from '../containers/ACDashboard';
+import BDDcreate from '../containers/BDDcreate';
 
 // Passing through a component and checking whether our user is authenticated,
 // then either returning the component we are passing in as an argument
@@ -89,6 +90,12 @@ class App extends React.Component {
                             userRole={this.props.userRole}
                             path="/BDDashboard"
                             component={BDDashboard}
+                        />
+                        <PrivateRoute
+                            authenticated={this.props.authenticated}
+                            userRole={this.props.userRole}
+                            path="/createTicket"
+                            component={BDDcreate}
                         />
                         <PrivateRoute
                             authenticated={this.props.authenticated}
