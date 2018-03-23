@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const User = require('../models/user');
 
 // create a new user
-router.post('/signUp', (req, res, next) => {
+router.post('/signup', (req, res, next) => {
     let newUser = new User({
         _id: new mongoose.Types.ObjectId(),
         role: req.body.role,
@@ -21,19 +21,17 @@ router.post('/signUp', (req, res, next) => {
         .then( (result) => {
             res.status(200).json({
                 message: 'user created successfully',
-                user_id: newUser._id
+                userId: newUser._id
             });
         })
         .catch((err) => {
             console.log("ERROR: can't sign up new user");
-            res.status(500).json({
-				error: err
-			});
+            res.status(500).json(err);
         });
 });
   
 // log in user
-router.post('/logIn', (req, res, next) => {
+router.post('/login', (req, res, next) => {
     let email = req.body.email;
     let password = req.body.password;
 
@@ -59,5 +57,10 @@ router.post('/logIn', (req, res, next) => {
 			});
         });
 });
+
+// // log out user - waiting for authentication
+// router.post('/logout', (req, res, next) => {
+
+// });
 
 module.exports = router;
