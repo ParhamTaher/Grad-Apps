@@ -28,7 +28,7 @@ To run the mocha tests
 npm test
 ```
 
-The API will be running on localhost:3000
+The API will be running on localhost:5000
 
 ## API endpoints
 
