@@ -26,7 +26,7 @@ router.get('/:facultyId', (req, res, next) => {
     User
         .findById(facultyId)
         .then( (result) => {
-            result ?
+            (result && result.role === "Faculty") ?
                 res.status(200).json({
                     faculty: result,
                 }) :
@@ -46,7 +46,6 @@ router.get('/:facultyId', (req, res, next) => {
 router.put('/:facultyId', (req, res, next) => {
     let facultyId = req.params.facultyId;
     let fields = {
-        role: req.body.role,
         fname: req.body.fname,
         lname: req.body.lname,
         email: req.body.email,
@@ -56,12 +55,17 @@ router.put('/:facultyId', (req, res, next) => {
     Object.keys(fields).forEach((key) => (fields[key] == null) && delete fields[key])
 
     User
-        .update({_id: facultyId}, {$set: fields}, {runValidators: true})
+        .update({_id: facultyId, role: 'Faculty'}, {$set: fields}, {runValidators: true})
         .then( (result) => {
+            (result && result.nModified > 0) ?
             res.status(200).json({
-                message: 'user updated successfully',
+                message: 'faculty updated successfully',
                 facultyId: facultyId,
                 nModified: result.nModified
+            })
+            :
+            res.status(400).json({
+                message: 'no updates happened'
             });
         })
         .catch((err) => {

@@ -2,6 +2,7 @@ process.env.NODE_ENV = 'test';
 
 let mongoose = require("mongoose");
 let User = require('../api/models/user');
+let Applicant = require('../api/models/applicant');
 
 //Require the dev-dependencies
 let chai = require('chai');
@@ -67,24 +68,42 @@ let newUser4 = {
 };
 
 let newUser5 = {
-    role: "FSS",
+    _id: new mongoose.Types.ObjectId(),
+    role: "Faculty",
     fname: "test5fname",
     lname: "test5lname",
     email: "test5@mail.com",
     password: "test5password"
 };
 
+let newUser5update = {
+    fname: "test5fnameupdated",
+    lname: "test5lnameupdated",
+    email: "test5@mail.comupdated",
+    password: "test5passwordupdated"
+}
+
 let newUser6 = {
-    role: "Faculty",
+    _id: new mongoose.Types.ObjectId(),
+    role: "FSS",
     fname: "test6fname",
     lname: "test6lname",
     email: "test6@mail.com",
     password: "test6password"
 };
 
+let newApplicant7 = {
+    _id: new mongoose.Types.ObjectId(),
+    fname: "test7fname",
+    lname: "test7lname",
+    email: "test7@mail.com"
+};
 
+let newApplicant7update = {
+    status: "accepted"
+}
 
-describe('Users', () => {
+describe('users & faculty', () => {
     before((done) => { //Before each test we empty the database
         User.remove({}, (err) => { 
            done();         
@@ -215,7 +234,6 @@ describe('Users', () => {
                 .post('/users/login')
                 .send(logninUser3)
                 .end((err, res) => {
-                    console.log(res.body);
                     res.should.have.status(200);
                     res.body.should.have.property('user');
                     res.body.user.should.be.a('array');
@@ -225,7 +243,7 @@ describe('Users', () => {
     });
 
     /*
-    * Test the /GET route
+    * Test the /GET/faculty/ route
     */
     describe('/GET/faculty', () => {
         it('it should GET all faculty users only', (done) => {
@@ -233,7 +251,6 @@ describe('Users', () => {
             chai.request(server)
                 .get('/faculty')
                 .end((err, res) => {
-                    console.log(res.body);
                     res.should.have.status(200);
                     res.body.should.have.property('faculty');
                     res.body.faculty.should.be.a('array');
@@ -250,6 +267,246 @@ describe('Users', () => {
                     }
                     done();
             });
+        });
+    });
+
+    /*
+    * Test the /GET/faculty/:facultyId route
+    */
+   describe('/GET/faculty/:facultyId', () => {
+        it('it should GET faculty user with the given faculty id', (done) => {
+            let newUser = new User(newUser5);
+            newUser
+                .save()
+                .then( (user) => {
+                    chai.request(server)
+                        .get('/faculty/' + user._id)
+                        .end((err, res) => {
+                            res.should.have.status(200);
+                            res.body.should.have.property('faculty');
+                            res.body.faculty.should.be.a('object');
+                            res.body.faculty.should.have.property('_id');
+                            res.body.faculty.should.have.property('_id').eql(String(newUser5._id));
+                            res.body.faculty.should.have.property('fname');
+                            res.body.faculty.should.have.property('fname').eql(newUser5.fname);
+                            res.body.faculty.should.have.property('lname');
+                            res.body.faculty.should.have.property('lname').eql(newUser5.lname);
+                            res.body.faculty.should.have.property('email');
+                            res.body.faculty.should.have.property('email').eql(newUser5.email);
+                            res.body.faculty.should.have.property('password');
+                            res.body.faculty.should.have.property('password').eql(newUser5.password);
+                            done();
+                        });
+                })
+                .catch((err) => {
+                    console.log("ERROR: can't insert data in db for testing");
+                });
+        });
+
+        it('it should not GET faculty user with id not in db', (done) => {
+            chai.request(server)
+                .get('/faculty/' + newUser6._id)
+                .end((err, res) => {
+                    res.should.have.status(404);
+                    res.body.should.have.property('message');
+                    res.body.should.have.property('message').eql('No valid entry found for provided ID');
+                    done();
+                });
+        });
+
+        it('it should not GET non faculty user with the given id', (done) => {
+            let newUser = new User(newUser6);
+            newUser
+                .save()
+                .then( (user) => {
+                    chai.request(server)
+                        .get('/faculty/' + user._id)
+                        .end((err, res) => {
+                            res.should.have.status(404);
+                            res.body.should.have.property('message');
+                            res.body.should.have.property('message').eql('No valid entry found for provided ID');
+                            done();
+                        });
+                })
+                .catch((err) => {
+                    console.log("ERROR: can't insert data in db for testing");
+                });
+        });
+    });
+
+    /*
+    * Test the /PUT/faculty/:facultyId route
+    */
+   describe('/PUT/faculty/:facultyId', () => {
+        it('it should PUT faculty user with the given faculty id', (done) => {
+            chai.request(server)
+                .put('/faculty/' + newUser5._id)
+                .send(newUser5update)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.have.property('message');
+                    res.body.should.have.property('message').eql('faculty updated successfully');
+                    res.body.should.have.property('facultyId');
+                    res.body.should.have.property('facultyId').eql(String(newUser5._id));
+                    res.body.should.have.property('nModified');
+                    res.body.should.have.property('nModified').eql(1);
+                    done();
+                });
+        });
+
+        it('it should not PUT faculty user if there are no changes', (done) => {
+            chai.request(server)
+                .put('/faculty/' + newUser5._id)
+                .send(newUser5update)
+                .end((err, res) => {
+                    res.should.have.status(400);
+                    res.body.should.have.property('message');
+                    res.body.should.have.property('message').eql('no updates happened');
+                    done();
+                });
+        });
+
+        it('it should not PUT faculty user with id not in db', (done) => {
+            chai.request(server)
+                .put('/faculty/' + new mongoose.Types.ObjectId())
+                .send(newUser5update)
+                .end((err, res) => {
+                    res.should.have.status(400);
+                    res.body.should.have.property('message');
+                    res.body.should.have.property('message').eql('no updates happened');
+                    done();
+                });
+        });
+
+        it('it should not PUT non faculty users', (done) => {
+            chai.request(server)
+                .put('/faculty/' + newUser6._id)
+                .send(newUser5update)
+                .end((err, res) => {
+                    res.should.have.status(400);
+                    res.body.should.have.property('message');
+                    res.body.should.have.property('message').eql('no updates happened');
+                    done();
+                });
+        });
+    });
+
+});
+
+describe('applicants', () => {
+    after((done) => { //Before each test we empty the database
+        Applicant.remove({_id:newApplicant7._id}, (err) => { 
+           done();         
+        });     
+    });
+
+    it('should exist', () => {
+        server.should.exist;
+    });
+    /*
+    * Test the /GET/applicants/ route
+    */
+    describe('/GET/applicants', () => {
+        it('it should GET all applicants', (done) => {
+            chai.request(server)
+                .get('/applicants')
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.have.property('applicants');
+                    res.body.applicants.should.be.a('array');
+                    res.body.applicants.length.should.be.gt(0);
+                    done();
+            });
+        });
+    });
+
+    /*
+    * Test the /GET/applicants/:applicantId route
+    */
+    describe('/GET/applicants/:applicantId', () => {
+        it('it should GET applicant with the given applicant id', (done) => {
+            let newApplicant = new Applicant(newApplicant7);
+            newApplicant
+                .save()
+                .then( (applicant) => {
+                    chai.request(server)
+                        .get('/applicants/' + applicant._id)
+                        .end((err, res) => {
+                            res.should.have.status(200);
+                            res.body.should.have.property('applicant');
+                            res.body.applicant.should.be.a('object');
+                            res.body.applicant.should.have.property('status');
+                            res.body.applicant.should.have.property('status').eql('available');
+                            res.body.applicant.should.have.property('_id');
+                            res.body.applicant.should.have.property('_id').eql(String(newApplicant7._id));
+                            res.body.applicant.should.have.property('fname');
+                            res.body.applicant.should.have.property('fname').eql(newApplicant7.fname);
+                            res.body.applicant.should.have.property('lname');
+                            res.body.applicant.should.have.property('lname').eql(newApplicant7.lname);
+                            res.body.applicant.should.have.property('email');
+                            res.body.applicant.should.have.property('email').eql(newApplicant7.email);
+                            done();
+                        });
+                })
+                .catch((err) => {
+                    console.log("ERROR: can't insert data in db for testing");
+                });
+        });
+
+        it('it should not GET applicant with id not in db', (done) => {
+            chai.request(server)
+                .get('/applicants/' + newUser6._id)
+                .end((err, res) => {
+                    res.should.have.status(404);
+                    res.body.should.have.property('message');
+                    res.body.should.have.property('message').eql('No valid entry found for provided ID');
+                    done();
+                });
+        });
+    });
+
+    /*
+    * Test the /PUT/applicants/:applicantId route
+    */
+    describe('/PUT/applicants/:applicantId', () => {
+        it('it should PUT applicant with the given applicant id', (done) => {
+            chai.request(server)
+                .put('/applicants/' + newApplicant7._id)
+                .send(newApplicant7update)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.have.property('message');
+                    res.body.should.have.property('message').eql('Applicant status updated successfully');
+                    res.body.should.have.property('applicantId');
+                    res.body.should.have.property('applicantId').eql(String(newApplicant7._id));
+                    res.body.should.have.property('nModified');
+                    res.body.should.have.property('nModified').eql(1);
+                    done();
+                });
+        });
+
+        it('it should not PUT applicant if there are no changes', (done) => {
+            chai.request(server)
+                .put('/applicants/' + newApplicant7._id)
+                .send(newApplicant7update)
+                .end((err, res) => {
+                    res.should.have.status(400);
+                    res.body.should.have.property('message');
+                    res.body.should.have.property('message').eql('no updates happened');
+                    done();
+                });
+        });
+
+        it('it should not PUT applicant with id not in db', (done) => {
+            chai.request(server)
+                .put('/applicants/' + new mongoose.Types.ObjectId())
+                .send(newApplicant7update)
+                .end((err, res) => {
+                    res.should.have.status(400);
+                    res.body.should.have.property('message');
+                    res.body.should.have.property('message').eql('no updates happened');
+                    done();
+                });
         });
     });
 });

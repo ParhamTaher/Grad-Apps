@@ -32,7 +32,7 @@ router.get('/:applicantId', (req, res, next) => {
         .then( (result) => {
             result ?
                 res.status(200).json({
-                    faculty: result,
+                    applicant: result,
                 }) :
                 res.status(404).json({
                     message: 'No valid entry found for provided ID'
@@ -54,10 +54,15 @@ router.put('/:applicantId', (req, res, next) => {
     Applicant
         .update({_id: applicantId}, {$set: fields}, {runValidators: true})
         .then( (result) => {
+            (result && result.nModified > 0) ?
             res.status(200).json({
                 message: 'Applicant status updated successfully',
                 applicantId: applicantId,
                 nModified: result.nModified
+            })
+            :
+            res.status(400).json({
+                message: 'no updates happened'
             });
         })
         .catch((err) => {
