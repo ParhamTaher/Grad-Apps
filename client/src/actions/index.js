@@ -61,7 +61,7 @@ export function requestTickets(facultyID, ticketType) {
 }
 
 export function approveApplicant(tID) {
-    console.log("Approving applicant with ID: " + tID);
+    console.log('Approving applicant with ID: ' + tID);
     return;
 }
 
@@ -76,6 +76,8 @@ export function signInUser(credentials) {
     return function(dispatch) {
         if (credentials.email === 'AC@gmail.com') {
             dispatch(authUser({ userRole: 'AC' }));
+        } else if (credentials.email === 'BD@gmail.com') {
+            dispatch(authUser({ userRole: 'BD' }));
         } else {
             dispatch(authUser({ userRole: 'FSS' }));
         }
