@@ -22,6 +22,11 @@ Clone this repo, then run the commands below from the root directory
 npm install
 npm start
 ```
+To run the mocha tests
+
+```shell
+npm test
+```
 
 The API will be running on localhost:3000
 
