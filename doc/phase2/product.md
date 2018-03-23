@@ -6,8 +6,8 @@ Created three Restful API’s for GAPF forms, tickets, and users using the follo
  - MongoDB was used as the database and Mongoose as the ORM tool
 The services offer endpoints that enable creating, reading, updating, or deleting items.
 See the corresponding documents for more details:
- - Ticket README.md
- - Users README.md
+ - Ticket [README.md](https://github.com/csc302-winter-2018/proj-TEAM13/blob/backend/server/ticket/README.md)
+ - Users [README.md](https://github.com/csc302-winter-2018/proj-TEAM13/blob/backend/server/users/README.md)
 
 Created a solid front-end platform to build on with the required dependencies. Login, SignUp, and all the Dashboards created for the different user roles. Redux setup and Redux Store configured with appropriate reducers and actions. Merged the front and back end and configured app for deployment.
 
