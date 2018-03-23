@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 const applicantSchema = mongoose.Schema({
 	_id: mongoose.Schema.Types.ObjectId,
-    fname: { type: String, required: true },
-    lname: { type: String, required: true },
+    fname: { type: String, required: false },
+    lname: { type: String, required: false },
     email: { type: String, required: true, unique: true },
 	status: { 
 		type: String,
@@ -16,4 +16,4 @@ const applicantSchema = mongoose.Schema({
 	}
 });
 
-module.exports = mongoose.model('applicant', applicantSchema);
+module.exports = mongoose.model('Applicant', applicantSchema);

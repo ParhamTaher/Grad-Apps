@@ -25,7 +25,7 @@ router.post('/signUp', (req, res, next) => {
             });
         })
         .catch((err) => {
-            console.log("can't sign up new user")
+            console.log("ERROR: can't sign up new user");
             res.status(500).json({
 				error: err
 			});
@@ -53,7 +53,7 @@ router.post('/logIn', (req, res, next) => {
                 });
         })
         .catch( (err) => {
-            console.log("ERROR: can't get user with email:" + email)
+            console.log("ERROR: can't get user with email:" + email);
             res.status(500).json({
 				error: err
 			});
