@@ -31,7 +31,6 @@ The API will be running on localhost:3000
 - `/tickets/:ticketId`: perform operations on a ticket by its unique `ticketId`
 - `/tickets/:num_tickets`: create a batch of tickets
 - `/tickets/faculty/:facultyId`: update a batch of tickets owned by a specific `facultyId`
-- `/tickets/:ticketId/status`: updates the status of a ticket
 
 ### Examples
 
@@ -66,6 +65,7 @@ Request.Body:
 [
 	{"fieldName": "faculty_id", "value": "pbacals"},
 	{"fieldName": "applicant_id", "value": "1000369610"},
+	{"fieldName": "status", "value": "offer-pending"}
 	...
 ]
 ```
@@ -76,19 +76,10 @@ Request.Body:
 ```json
 [
 	{"fieldName": "ticket_type", "value": "I"},
+	{"fieldName": "status", "value": "granted"}
 	...
 ]
 ```
-
-- `/tickets/5aad6dbdb2d0332d6299e048/status` updates the status of ticket with id `5aad6dbdb2d0332d6299e048`
-
-Request.Body:
-```json
-{
-	"status": "offer-pending"
-}
-```
-
 
 ### `DELETE`
 

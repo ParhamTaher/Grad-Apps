@@ -1,24 +1,30 @@
+process.env.NODE_ENV = 'dev';
+
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+let config = require('config');
 
 const ticketRoutes = require('./api/routes/tickets');
 
 // Connect to database
-mongoose.connect(
-	'mongodb://proj-team13:' + 
-	process.env.MONGO_PW + 
-	'@node-rest-gradapp-shard-00-00-imzxv.mongodb.net:27017,' + 
-	'node-rest-gradapp-shard-00-01-imzxv.mongodb.net:27017,' + 
-	'node-rest-gradapp-shard-00-02-imzxv.mongodb.net:27017/' + 
-	'test?ssl=true&replicaSet=node-rest-gradapp-shard-0&authSource=admin'
-	);
+mongoose.connect(config.DBHost);
 mongoose.Promise = global.Promise;
 
-// Log all requests to the terminal
-app.use(morgan('dev'));
+// test connection
+var db = mongoose.connection;
+	db.on('error', console.error.bind(console, 'connection error:'));
+	db.once('open', function() {
+	  console.log("Connected to db");
+});
+
+// Log all requests to the terminal if not in test
+if(config.util.getEnv('NODE_ENV') !== 'test') {
+	app.use(morgan('combined'));
+}
+
 //body parser middle ware
 app.use(bodyParser.urlencoded({ extended: false }));  // Support URL-encoded data
 app.use(bodyParser.json());						  	// Support JSON-encoded data
