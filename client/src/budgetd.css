@@ -1,0 +1,25 @@
+.ex11 {
+    height: 500px;
+    overflow: auto;
+}
+
+#header .bottom-header h2 {
+    color: black;
+    font-size: 60px;
+}
+#header .bottom-header span.span-dot {
+    color: black;
+}
+
+.header {
+    text-align: center;
+}
+
+.btn-primary {
+    margin-bottom: 10px;
+}
+
+
+.table{
+   margin: 0 auto
+}
