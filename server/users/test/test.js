@@ -366,6 +366,21 @@ describe('users & faculty', () => {
                 });
         });
 
+        it('it should not PUT faculty user if new email is already used for another user in db', (done) => {
+            chai.request(server)
+                .put('/faculty/' + newUser5._id)
+                .send({email: newUser4.email})
+                .end((err, res) => {
+                    res.should.have.status(500);
+                    res.body.should.have.property('error');
+                    res.body.error.should.be.a('object');
+                    res.body.error.should.have.property('code');
+                    res.body.error.should.have.property('code').eql(11000);
+                    done();
+                });
+        });
+
+
         it('it should not PUT faculty user with id not in db', (done) => {
             chai.request(server)
                 .put('/faculty/' + new mongoose.Types.ObjectId())

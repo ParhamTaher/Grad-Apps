@@ -50,6 +50,7 @@ router.get('/:applicantId', (req, res, next) => {
 router.put('/:applicantId', (req, res, next) => {
     let applicantId = req.params.applicantId;
     fields = { status: req.body.status}
+    Object.keys(fields).forEach((key) => (fields[key] == null) && delete fields[key])
 
     Applicant
         .update({_id: applicantId}, {$set: fields}, {runValidators: true})
