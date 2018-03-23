@@ -61,6 +61,7 @@ The following are some TODOs to be implemented for phase 3
      - Get proper user authentication working
      - Front-end testing
      - Implement handling of tickets based on respective users
+     - Implement email notification functionality
 
 The goal for the final demo to be able to handle different use cases in the web app and to be able to explicitly show a workflow of a grad application process from start to finish by tracing the exchange of data from front-end to back-end and vice versa.
 
