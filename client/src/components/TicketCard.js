@@ -16,7 +16,7 @@ class TicketCard extends React.Component {
 	            <Panel.Body collapsible>Ticket Status: {this.props.ticketStatus}</Panel.Body>
 	            <Panel.Body collapsible>Ticket Type: {this.props.ticketType}</Panel.Body>
 	            <Panel.Body collapsible><textarea>{this.props.notes}</textarea></Panel.Body>
-	            <Panel.Body collapsible><Button bsStyle="primary" onClick = {this.handleClick}>Primary</Button></Panel.Body>
+	            <Panel.Body collapsible><Button bsStyle="primary" onClick = {this.handleClick}>Approve</Button></Panel.Body>
 
 	        </Panel>
 	    );

@@ -45,14 +45,14 @@ export function requestTickets(facultyID, ticketType) {
                         applicant: 'Bob',
                         ticketStatus: 'Granted',
                         ticket_type: 'D',
-                        notes: 'Alex'
+                        notes: 'Ticket notes'
                     },
                     {
                         TID: 2,
                         applicant: 'John',
                         ticketStatus: 'Granted',
                         ticket_type: 'I',
-                        notes: ''
+                        notes: 'Ticket notes'
                     }
                 ]
             }
