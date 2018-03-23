@@ -7,13 +7,9 @@ router.get('/', (req, res, next) => {
     User
         .find({role : 'Faculty'})
         .then( (result) => {
-            result ?
-                res.status(200).json({
-                    faculty: result,
-                }) :
-                res.status(404).json({
-                    message: 'No valid entry found for provided ID'
-                });
+            res.status(200).json({
+                faculty: result,
+            })
         })
         .catch( (err) => {
             console.log("ERROR: can't get all faculty");
