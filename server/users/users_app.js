@@ -8,6 +8,8 @@ const promise = require('promise');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
 
 // routes
 const usersRoutes = require('./api/routes/users');
@@ -25,6 +27,16 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   console.log("Connected to db");
 });
+
+// use express-sessions to track users
+app.use(session({
+	secret: 'csc 302 team 13',
+	resave: true,
+	saveUninitialized: false,
+	store: new MongoStore({
+	  mongooseConnection: db
+	})
+  }));
 
 // Log all requests to the terminal if not in test
 if(config.util.getEnv('NODE_ENV') !== 'test') {

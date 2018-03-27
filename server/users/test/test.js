@@ -31,11 +31,6 @@ let wrongPasswordlogninUser2 = {
     password: "t"
 }
 
-let logninUser3 = {
-    email: "test1@mail.com",
-    password: "test1password"
-}
-
 let newUser1 = {
     role: "FSS",
     fname: "test1fname",
@@ -75,6 +70,11 @@ let newUser5 = {
     email: "test5@mail.com",
     password: "test5password"
 };
+
+let logninUser3 = {
+    email: newUser5.email,
+    password: newUser5.password
+}
 
 let newUser5update = {
     fname: "test5fnameupdated",
@@ -203,46 +203,6 @@ describe('users & faculty', () => {
     });
 
     /*
-    * Test the /POST/users/login route
-    */
-   describe('/POST/users/login', () => {
-        it('it should not POST a user with wrong email and password', (done) => {
-            chai.request(server)
-                .post('/users/login')
-                .send(wrongLogninUser1)
-                .end((err, res) => {
-                    res.should.have.status(500);
-                    res.body.should.have.property('error');
-                    done();
-                });
-        });
-
-        it('it should not POST a user with correct email and wrong password', (done) => {
-            chai.request(server)
-                .post('/users/login')
-                .send(wrongPasswordlogninUser2)
-                .end((err, res) => {
-                    res.should.have.status(404);
-                    res.body.should.have.property('message');
-                    res.body.should.have.property('message').eql('wrong password');
-                    done();
-                });
-        });
-
-        it('it should POST a user with correct email and password', (done) => {
-            chai.request(server)
-                .post('/users/login')
-                .send(logninUser3)
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.have.property('user');
-                    res.body.user.should.be.a('array');
-                    done();
-                });
-        });
-    });
-
-    /*
     * Test the /GET/faculty/ route
     */
     describe('/GET/faculty', () => {
@@ -330,6 +290,49 @@ describe('users & faculty', () => {
                 })
                 .catch((err) => {
                     console.log("ERROR: can't insert data in db for testing");
+                });
+        });
+    });
+
+    /*
+    * Test the /POST/users/login route
+    */
+    describe('/POST/users/login', () => {
+        it('it should not POST a user with wrong email and password', (done) => {
+            chai.request(server)
+                .post('/users/login')
+                .send(wrongLogninUser1)
+                .end((err, res) => {
+                    res.should.have.status(500);
+                    res.body.should.have.property('error');
+                    res.body.should.have.property('message').eql("can't get user with email:" + wrongLogninUser1.email);
+                    done();
+                });
+        });
+
+        it('it should not POST a user with correct email and wrong password', (done) => {
+            chai.request(server)
+                .post('/users/login')
+                .send(wrongPasswordlogninUser2)
+                .end((err, res) => {
+                    res.should.have.status(401);
+                    res.body.should.have.property('message');
+                    res.body.should.have.property('message').eql('wrong password');
+                    done();
+                });
+        });
+
+        it('it should POST a user with correct email and password', (done) => {
+            chai.request(server)
+                .post('/users/login')
+                .send(logninUser3)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.have.property('userId');
+                    res.body.should.have.property('userId').eql(newUser1._id);
+                    res.body.should.have.property('message');
+                    res.body.should.have.property('message').eql('successfuly logged in user');
+                    done();
                 });
         });
     });
