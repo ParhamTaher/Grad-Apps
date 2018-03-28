@@ -223,7 +223,7 @@ describe('users & faculty', () => {
                         res.body.faculty[i].should.have.property('email');
                         res.body.faculty[i].should.have.property('email').eql(facultyUsers[i].email);
                         res.body.faculty[i].should.have.property('password');
-                        res.body.faculty[i].should.have.property('password').eql(facultyUsers[i].password);
+                        res.body.faculty[i].should.have.property('password').eql(null);
                     }
                     done();
             });
@@ -254,7 +254,7 @@ describe('users & faculty', () => {
                             res.body.faculty.should.have.property('email');
                             res.body.faculty.should.have.property('email').eql(newUser5.email);
                             res.body.faculty.should.have.property('password');
-                            res.body.faculty.should.have.property('password').eql(newUser5.password);
+                            res.body.faculty.should.have.property('password').eql(null);
                             done();
                         });
                 })
@@ -329,7 +329,7 @@ describe('users & faculty', () => {
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.have.property('userId');
-                    res.body.should.have.property('userId').eql(newUser1._id);
+                    res.body.should.have.property('userId').eql(String(newUser5._id));
                     res.body.should.have.property('message');
                     res.body.should.have.property('message').eql('successfuly logged in user');
                     done();

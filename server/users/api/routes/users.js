@@ -38,31 +38,13 @@ router.post('/login', (req, res, next) => {
     let password = req.body.password;
     console.log("here1");
     User
-        // .authenticate(email, password)
-        // .then((result) => {
-        //     console.log("here2");
-        //     result ?
-        //         console.log(result)
-        //         :
-        //         console.log("no result!?");
-        // })
-        // .catch( (err) => {
-        //     console.log("here3");
-        //     console.log("ERROR: can't get user with email:" + email);
-        //     res.status(500).json({
-        //         test: 'test!!',
-        //         error: err
-		// 	});
-        // });
-
-
-    
         .find({email: email})
         .then( (users) => {
             users ?
             bcrypt.compare(password, users[0].password)
                 .then( (result) => {
                     if (result === true) {
+                        console.log(users);
                         res.status(200).json({
                             userId: users[0]._id,
                             message: "successfuly logged in user"

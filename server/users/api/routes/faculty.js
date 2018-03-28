@@ -7,6 +7,7 @@ router.get('/', (req, res, next) => {
     User
         .find({role : 'Faculty'})
         .then( (result) => {
+            result.map((x) => {x["password"] = null})
             res.status(200).json({
                 faculty: result,
             })
@@ -26,13 +27,17 @@ router.get('/:facultyId', (req, res, next) => {
     User
         .findById(facultyId)
         .then( (result) => {
-            (result && result.role === "Faculty") ?
+            console.log(result)
+            if (result && result.role === "Faculty") {
+                result["password"] = null;
                 res.status(200).json({
                     faculty: result,
-                }) :
+                })
+            } else {
                 res.status(404).json({
                     message: 'No valid entry found for provided ID'
                 });
+            }
         })
         .catch( (err) => {
             console.log("ERROR: can't get faculty with id:" + facultyId);
