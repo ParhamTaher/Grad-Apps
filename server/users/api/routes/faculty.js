@@ -27,7 +27,6 @@ router.get('/:facultyId', (req, res, next) => {
     User
         .findById(facultyId)
         .then( (result) => {
-            console.log(result)
             if (result && result.role === "Faculty") {
                 result["password"] = null;
                 res.status(200).json({
@@ -59,26 +58,33 @@ router.put('/:facultyId', (req, res, next) => {
     };
     Object.keys(fields).forEach((key) => (fields[key] == null) && delete fields[key])
 
-    User
-        .update({_id: facultyId, role: 'Faculty'}, {$set: fields}, {runValidators: true})
-        .then( (result) => {
-            (result && result.nModified > 0) ?
-            res.status(200).json({
-                message: 'faculty updated successfully',
-                facultyId: facultyId,
-                nModified: result.nModified
+    // only given user can update their info
+    if (facultyId === req.session.userId) {
+        User
+            .update({_id: facultyId, role: 'Faculty'}, {$set: fields}, {runValidators: true})
+            .then( (result) => {
+                (result && result.nModified > 0) ?
+                res.status(200).json({
+                    message: 'faculty updated successfully',
+                    facultyId: facultyId,
+                    nModified: result.nModified
+                })
+                :
+                res.status(400).json({
+                    message: 'no updates happened'
+                });
             })
-            :
-            res.status(400).json({
-                message: 'no updates happened'
+            .catch((err) => {
+                console.log("ERROR: can't update faculty with provided id:" + facultyId);
+                res.status(500).json({
+                    error: err
+                });
             });
-        })
-        .catch((err) => {
-            console.log("ERROR: can't update faculty with provided id:" + facultyId);
-            res.status(500).json({
-				error: err
-			});
-        });
+    } else {
+        res.status(401).json({
+			message: 'Unauthorized User'
+		});
+    }
 });
   
 

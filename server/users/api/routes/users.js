@@ -15,7 +15,6 @@ router.post('/signup', (req, res, next) => {
         username: req.body.username,
         password: req.body.password
     });
-    // User.find({}).then(res1 => {console.log(res1)});
 
     newUser
         .save()
@@ -35,7 +34,7 @@ router.post('/signup', (req, res, next) => {
 router.post('/login', (req, res, next) => {
     let email = req.body.email;
     let password = req.body.password;
-    console.log("here1");
+
     User
         .find({email: email})
         .then( (users) => {
@@ -65,7 +64,6 @@ router.post('/login', (req, res, next) => {
                 });
         })
         .catch( (err) => {
-            console.log("ERROR: can't get user with email:" + email);
             res.status(500).json({
                 error: err,
                 message: "can't get user with email:" + email
@@ -75,7 +73,6 @@ router.post('/login', (req, res, next) => {
 
 // log out user - waiting for authentication
 router.get('/logout', (req, res, next) => {
-    console.log(req.session)
     if (req.session.userId) {
         // delete session object
         req.session.destroy( (err) => {

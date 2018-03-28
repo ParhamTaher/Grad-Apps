@@ -49,7 +49,18 @@ if(config.util.getEnv('NODE_ENV') !== 'test') {
 app.use(bodyParser.urlencoded({ extended: false }));  // Support URL-encoded data
 app.use(bodyParser.json());						  	// Support JSON-encoded data
 
+function hasSession(req, res, next) {
+	if (req.session.userId) {
+		next();
+	} else {
+		const error = new Error('Unauthorized User');
+		error.status = 401;
+		next(error);
+	}
+  }
 
+app.use('/faculty', hasSession)
+app.use('/applicants', hasSession)
 
 app.use('/users', usersRoutes);
 app.use('/faculty', facultyRoutes);
