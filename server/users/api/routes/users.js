@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 const User = require('../models/user');
 var bcrypt = require('bcrypt');
 
-
 // create a new user
 router.post('/signup', (req, res, next) => {
     let newUser = new User({
@@ -44,7 +43,8 @@ router.post('/login', (req, res, next) => {
             bcrypt.compare(password, users[0].password)
                 .then( (result) => {
                     if (result === true) {
-                        console.log(users);
+                        req.session.userId = users[0]._id;
+                        req.session.role = users[0].role;
                         res.status(200).json({
                             userId: users[0]._id,
                             message: "successfuly logged in user"
@@ -73,9 +73,28 @@ router.post('/login', (req, res, next) => {
         });
 });
 
-// // log out user - waiting for authentication
-// router.post('/logout', (req, res, next) => {
-
-// });
+// log out user - waiting for authentication
+router.get('/logout', (req, res, next) => {
+    console.log(req.session)
+    if (req.session.userId) {
+        // delete session object
+        req.session.destroy( (err) => {
+            if(err) {
+                res.status(500).json({
+                    error: err,
+                    message: "can not log user out"
+                });
+            } else {
+                res.status(200).json({
+                    message: "user logged out successfully"
+                });
+            }
+        });
+    } else {
+        res.status(404).json({
+            message: "No user logged In to log out"
+        });
+    }
+});
 
 module.exports = router;

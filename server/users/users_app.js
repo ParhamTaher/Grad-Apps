@@ -8,6 +8,7 @@ const promise = require('promise');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const passport = require('passport')
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 
@@ -31,12 +32,14 @@ db.once('open', function() {
 // use express-sessions to track users
 app.use(session({
 	secret: 'csc 302 team 13',
-	resave: true,
+	resave: false,
 	saveUninitialized: false,
 	store: new MongoStore({
 	  mongooseConnection: db
 	})
-  }));
+}));
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 // Log all requests to the terminal if not in test
 if(config.util.getEnv('NODE_ENV') !== 'test') {
@@ -46,9 +49,13 @@ if(config.util.getEnv('NODE_ENV') !== 'test') {
 app.use(bodyParser.urlencoded({ extended: false }));  // Support URL-encoded data
 app.use(bodyParser.json());						  	// Support JSON-encoded data
 
+
+
 app.use('/users', usersRoutes);
 app.use('/faculty', facultyRoutes);
 app.use('/applicants', applicantsRoutes);
+
+
 
 //handle errors
 app.use((req, res, next) => {
