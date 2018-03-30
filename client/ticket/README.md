@@ -22,8 +22,13 @@ Clone this repo, then run the commands below from the root directory
 npm install
 npm start
 ```
+To run the mocha tests
 
-The API will be running on localhost:3000
+```shell
+npm test
+```
+
+The API will be running on localhost:5000
 
 ## API endpoints
 
@@ -66,6 +71,7 @@ Request.Body:
 [
 	{"fieldName": "faculty_id", "value": "pbacals"},
 	{"fieldName": "applicant_id", "value": "1000369610"},
+	{"fieldName": "status", "value": "offer-pending"}
 	...
 ]
 ```
@@ -76,6 +82,7 @@ Request.Body:
 ```json
 [
 	{"fieldName": "ticket_type", "value": "I"},
+	{"fieldName": "status", "value": "granted"}
 	...
 ]
 ```
