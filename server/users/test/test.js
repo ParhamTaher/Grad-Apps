@@ -104,7 +104,7 @@ let newApplicant7update = {
 }
 
 describe('users & faculty', () => {
-    before((done) => { //Before each test we empty the database
+    before((done) => { //Before all tests we empty the database
         User.remove({}, (err) => { 
            done();         
         });     
@@ -202,6 +202,57 @@ describe('users & faculty', () => {
         });
     });
 
+    let newUser = new User(newUser5);
+    newUser
+        .save()
+        .catch((err) => {
+            console.log("ERROR: can't insert data in db for testing");
+        });
+
+    /*
+    * Test the /POST/users/login route
+    */
+   describe('/POST/users/login', () => {
+        it('it should not POST a user with wrong email and password', (done) => {
+            chai.request(server)
+                .post('/users/login')
+                .send(wrongLogninUser1)
+                .end((err, res) => {
+                    res.should.have.status(500);
+                    res.body.should.have.property('error');
+                    res.body.should.have.property('message').eql("can't get user with email:" + wrongLogninUser1.email);
+                    done();
+                });
+        });
+
+        it('it should not POST a user with correct email and wrong password', (done) => {
+            chai.request(server)
+                .post('/users/login')
+                .send(wrongPasswordlogninUser2)
+                .end((err, res) => {
+                    res.should.have.status(401);
+                    res.body.should.have.property('message');
+                    res.body.should.have.property('message').eql('wrong password');
+                    done();
+                });
+        });
+
+        it('it should POST a user with correct email and password', (done) => {
+            chai.request(server)
+                .post('/users/login')
+                .send(logninUser3)
+                .end((err, res) => {
+                    console.log(res.header['set-cookie'][0].split(".")[1].split("s%3A")[1])
+                    res.should.have.status(200);
+                    res.body.should.have.property('userId');
+                    res.body.should.have.property('userId').eql(String(newUser5._id));
+                    res.body.should.have.property('message');
+                    res.body.should.have.property('message').eql('successfuly logged in user');
+                    done();
+                });
+        });
+    });
+
     /*
     * Test the /GET/faculty/ route
     */
@@ -235,10 +286,10 @@ describe('users & faculty', () => {
     */
    describe('/GET/faculty/:facultyId', () => {
         it('it should GET faculty user with the given faculty id', (done) => {
-            let newUser = new User(newUser5);
-            newUser
-                .save()
-                .then( (user) => {
+            // let newUser = new User(newUser5);
+            // newUser
+            //     .save()
+            //     .then( (user) => {
                     chai.request(server)
                         .get('/faculty/' + user._id)
                         .end((err, res) => {
@@ -257,10 +308,10 @@ describe('users & faculty', () => {
                             res.body.faculty.should.have.property('password').eql(null);
                             done();
                         });
-                })
-                .catch((err) => {
-                    console.log("ERROR: can't insert data in db for testing");
-                });
+                // })
+                // .catch((err) => {
+                //     console.log("ERROR: can't insert data in db for testing");
+                // });
         });
 
         it('it should not GET faculty user with id not in db', (done) => {
@@ -290,49 +341,6 @@ describe('users & faculty', () => {
                 })
                 .catch((err) => {
                     console.log("ERROR: can't insert data in db for testing");
-                });
-        });
-    });
-
-    /*
-    * Test the /POST/users/login route
-    */
-    describe('/POST/users/login', () => {
-        it('it should not POST a user with wrong email and password', (done) => {
-            chai.request(server)
-                .post('/users/login')
-                .send(wrongLogninUser1)
-                .end((err, res) => {
-                    res.should.have.status(500);
-                    res.body.should.have.property('error');
-                    res.body.should.have.property('message').eql("can't get user with email:" + wrongLogninUser1.email);
-                    done();
-                });
-        });
-
-        it('it should not POST a user with correct email and wrong password', (done) => {
-            chai.request(server)
-                .post('/users/login')
-                .send(wrongPasswordlogninUser2)
-                .end((err, res) => {
-                    res.should.have.status(401);
-                    res.body.should.have.property('message');
-                    res.body.should.have.property('message').eql('wrong password');
-                    done();
-                });
-        });
-
-        it('it should POST a user with correct email and password', (done) => {
-            chai.request(server)
-                .post('/users/login')
-                .send(logninUser3)
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.have.property('userId');
-                    res.body.should.have.property('userId').eql(String(newUser5._id));
-                    res.body.should.have.property('message');
-                    res.body.should.have.property('message').eql('successfuly logged in user');
-                    done();
                 });
         });
     });
