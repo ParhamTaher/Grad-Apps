@@ -5,6 +5,7 @@
 import { combineReducers } from 'redux';
 import ticketReducer from './ticketReducer';
 import authReducer from './authReducer';
+import applicantReducer from './applicantReducer';
 
 // Keep track of our current location, in the store
 import { routerReducer } from 'react-router-redux';
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
     auth: authReducer,
     form: FormReducer,
     tickets: ticketReducer,
+    applicants: applicantReducer,
     router: routerReducer
 });
 

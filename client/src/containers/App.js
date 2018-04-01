@@ -74,7 +74,7 @@ class App extends React.Component {
 
                     <div className="container">
                         <Route exact path="/">
-                            <Redirect to="/login" />
+                            <Redirect to="/FacultyDashboard" />
                         </Route>
                         <PublicRoute
                             authenticated={this.props.authenticated}

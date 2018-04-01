@@ -24,7 +24,7 @@ class TicketCard extends React.Component {
                 </Panel.Body>
                 <Panel.Body collapsible>
                     <Button bsStyle="primary" onClick={this.handleClick}>
-                        Submit
+                        Approve
                     </Button>
                 </Panel.Body>
             </Panel>

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as Actions from '../actions';
 import { bindActionCreators } from 'redux';
-import ItemList from '../components/ItemList';
+import ItemListFSS from '../components/ItemListFSS';
 import { Button } from 'react-bootstrap';
 
 class FacultyDashboard extends Component {
@@ -27,21 +27,22 @@ class FacultyDashboard extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-sm-6 col-sm-push-6">
-                        <h4>Domestic Tickets</h4>
-                        <ItemList
+                    <div className="col-sm-4">
+                        <h4>Available Tickets</h4>
+                        <ItemListFSS
                             ticketList={this.props.ticketList.tickets}
                             ticketType={'D'}
                         />
                     </div>
-                    <div className="col-sm-6 col-sm-pull-6">
-                        <h4>International Tickets</h4>
-                        <ItemList
-                            ticketList={this.props.ticketList.tickets}
-                            ticketType={'I'}
-                        />
+
+                    <div className="col-sm-4">
+                        <h4>Offers Pending</h4>
+                    </div>
+                    <div className="col-sm-4">
+                        <h4>Final Offers</h4>
                     </div>
                 </div>
+
                 <div className="row">
                     <div className="col-sm-12">
                         <input type="file" onChange={this.handleFileUpload} />
@@ -56,7 +57,6 @@ function mapStateToProps(state) {
     // Whatever is returned will show up as props
     return {
         ticketList: state.tickets
-
     };
 }
 

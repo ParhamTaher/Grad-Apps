@@ -16,7 +16,8 @@ export const AUTH_USER = 'AUTH_USER';
 export const REQUEST_CHANGE_PASS = 'REQUEST_CHANGE_PASS';
 export const REQUEST_TICKETS = 'REQUEST_TICKET_ID';
 export const UPLOAD_GAPF = 'UPLOAD_GAPF';
-export const SAVE_NOTE_RESPONSE = 'SAVE_NOTE_RESPONSE';
+export const SAVE_NOTE = 'SAVE_NOTE';
+export const REQUEST_APPLICANTS = 'REQUEST_APPLICANTS';
 
 export function uploadDocumentRequest(file) {
     console.log('uploading GAPF... ' + file.name);
@@ -45,11 +46,19 @@ export function requestTickets(facultyID, ticketType) {
                         applicant: 'Bob',
                         ticketStatus: 'Granted',
                         ticket_type: 'D',
-                        notes: 'Alex'
+                        notes:
+                            'Bob - Please review tickets thanks. Admin - Bob, please send me GAPF Form'
                     },
                     {
                         TID: 2,
                         applicant: 'John',
+                        ticketStatus: 'Granted',
+                        ticket_type: 'I',
+                        notes: ''
+                    },
+                    {
+                        TID: 3,
+                        applicant: 'Joh2n',
                         ticketStatus: 'Granted',
                         ticket_type: 'I',
                         notes: ''
@@ -60,9 +69,42 @@ export function requestTickets(facultyID, ticketType) {
     };
 }
 
+export function requestApplicants() {
+    return dispatch => {
+        dispatch({
+            type: REQUEST_APPLICANTS,
+            payload: {
+                applicants: [
+                    {
+                        _id: 2435243,
+                        fname: 'Parham',
+                        lname: 'Taher'
+                    },
+                    {
+                        _id: 666432,
+                        fname: 'Bob',
+                        lname: 'Bob'
+                    },
+                    {
+                        _id: 4435635,
+                        fname: 'John',
+                        lname: 'Doe'
+                    }
+                ]
+            }
+        });
+    };
+}
+
 export function approveApplicant(tID) {
     console.log('Approving applicant with ID: ' + tID);
     return;
+}
+
+export function saveNote(tID, email) {
+    return dispatch => {
+        console.log('Note Saved! ' + email);
+    };
 }
 
 // Auth Data
