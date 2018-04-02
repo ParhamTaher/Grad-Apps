@@ -28,7 +28,10 @@
         "test": "react-scripts test --env=jsdom",
         "eject": "react-scripts eject",
         "client": "npm run start",
-        "server": "npm start --prefix ticket",
-        "dev": "concurrently \"npm run server\" \"npm run client\""
+        "serverTicket": "npm start --prefix ../server/ticket",
+        "serverUser": "npm start --prefix ../server/users",
+        "serverGapf": "npm start --prefix ../server/gapf",
+        "dev":
+            "concurrently \"npm run serverTicket\" \"npm run serverUser\" \"npm run serverGapf\" \"npm run client\""
     }
 }
