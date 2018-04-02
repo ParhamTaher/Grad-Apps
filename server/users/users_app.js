@@ -1,3 +1,6 @@
+if (!process.env.NODE_ENV)
+  process.env.NODE_ENV = 'dev';
+
 const http = require('http');
 const port = process.env.PORT || 3002;
 

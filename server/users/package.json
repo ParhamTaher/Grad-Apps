@@ -4,7 +4,7 @@
   "description": "",
   "main": "users_app.js",
   "scripts": {
-    "start": "SET NODE_ENV=dev && nodemon users_app.js ",
+    "start": "nodemon users_app.js ",
     "test": "mocha --timeout 10000 --exit"
   },
   "keywords": [],
