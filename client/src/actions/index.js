@@ -96,14 +96,20 @@ export function requestApplicants() {
     };
 }
 
+export function offerRequest(iD) {
+    return dispatch => {
+        console.log('Inside offer request action creator! with ID: ' + iD);
+    };
+}
+
 export function approveApplicant(tID) {
     console.log('Approving applicant with ID: ' + tID);
     return;
 }
 
-export function saveNote(tID, email) {
+export function saveNote(values) {
     return dispatch => {
-        console.log('Note Saved! ' + email);
+        console.log('Note Saved! ' + values.note);
     };
 }
 
