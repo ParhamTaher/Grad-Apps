@@ -13,7 +13,7 @@ exports.get = (req, res, next) => {
 		  			request: {
 		  				type: 'GET',
 		  				description: 'Get all tickets',
-		  				url: 'http://localhost:3000/tickets'
+		  				url: 'http://localhost:' + process.env.PORT + '/tickets'
 		  			}
 		  		}) :
 		  		res.status(404).json({
@@ -44,7 +44,7 @@ exports.get_all = (req, res, next) => {
 						ticket_type: result.ticket_type,
 						request: {
 							type: 'GET',
-							url: 'http://localhost:3000/tickets/' + result._id
+							url: 'http://localhost:' + process.env.PORT + '/tickets/' + result._id
 						}
 					}
 				})
@@ -86,7 +86,7 @@ exports.create = (req, res, next) => {
 						ticket_type: result.ticket_type,
 						request: {
 							type: 'GET',
-							url: 'http://localhost:3000/tickets/' + result._id
+							url: 'http://localhost:' + process.env.PORT + '/tickets/' + result._id
 						}
 					}
 				});
@@ -128,7 +128,7 @@ exports.create_batch = (req, res, next) => {
 						ticket_type: result.ticket_type,
 						request: {
 							type: 'GET',
-							url: 'http://localhost:3000/tickets/'
+							url: 'http://localhost:' + process.env.PORT + '/tickets/'
 						}
 					}
 				})
@@ -145,55 +145,109 @@ exports.create_batch = (req, res, next) => {
 exports.update = (req, res, next) => {
 	const id = req.params.ticketId;
 	const update_fields = {};	// Make update iterable so can update none, some, or all fields
+	var status_log = {};
 	for (const field of req.body) {
-		if (field.fieldName != 'status') {
+		if (field.fieldName != 'status_history')
 			update_fields[field.fieldName] = field.value;
-		}
+		if (field.fieldName == 'status')
+			status_log = { status: field.value, update_date: new Date() };
 	}
-	Ticket
-		.update({_id: id}, {$set: update_fields},
-			{ upsert: true, runValidators: true }) // Update data in DB
-		.then(result => {
-			res.status(200).json({
-				message: 'Ticket updated',
-				request: {
-					type: 'GET',
-					url: 'http://localhost:3000/tickets/' + id
-				}
+	if (status_log.length != '') {
+		console.log('STATUS LOG HERERREEE', status_log);
+		Ticket
+			.update({_id: id}, 
+				{ 
+						$set: update_fields, 
+						$push: {status_history: status_log}
+				},
+				{ upsert: true, runValidators: true }) // Update data in DB
+			.then(result => {
+				res.status(200).json({
+					message: 'Ticket updated',
+					request: {
+						type: 'GET',
+						url: 'http://localhost:' + process.env.PORT + '/tickets/' + id
+					}
+				});
+			})
+			.catch(err => {
+				res.status(500).json({
+					error: err
+				});
 			});
-		})
-		.catch(err => {
-			res.status(500).json({
-				error: err
+	} else {
+		Ticket
+			.update({_id: id}, { $set: update_fields },
+				{ upsert: true, runValidators: true }) // Update data in DB
+			.then(result => {
+				res.status(200).json({
+					message: 'Ticket updated',
+					request: {
+						type: 'GET',
+						url: 'http://localhost:' + process.env.PORT + '/tickets/' + id
+					}
+				});
+			})
+			.catch(err => {
+				res.status(500).json({
+					error: err
+				});
 			});
-		});
+	}
 };
 
 exports.update_by_faculty = (req, res, next) => {
 	const id = req.params.facultyId;
 	const update_fields = {};	// Make update iterable so can update none, some, or all fields
+	var status_log = {};
 	for (const field of req.body) {
-		if (field.fieldName != 'status' || field.fieldName != 'status_history') {
+		if (field.fieldName != 'status_history')
 			update_fields[field.fieldName] = field.value;
-		}
+		if (field.fieldName == 'status')
+			status_log = { status: field.value, update_date: new Date() };
 	}
-	Ticket
-		.update({faculty_id: id}, {$set: update_fields}, 
-			{ multi: true, upsert: true, runValidators: true })
-		.then(results => {
-			res.status(200).json({
-				message: results.n + ' Tickets updated',
-				request: {
-					type: 'GET',
-					url: 'http://localhost:3000/tickets/faculty/' + id
-				}
+	if (status_log.length != '') {
+		Ticket
+			.update({faculty_id: id}, 				
+				{ 
+						$set: update_fields, 
+						$push: {status_history: status_log}
+				}, 
+				{ multi: true, upsert: true, runValidators: true })
+			.then(results => {
+				res.status(200).json({
+					message: results.n + ' Ticket(s) updated',
+					request: {
+						type: 'GET',
+						url: 'http://localhost:' + process.env.PORT + '/tickets/faculty/' + id
+					}
+				});
+			})
+			.catch(err => {
+				res.status(500).json({
+					error: err
+				});
 			});
-		})
-		.catch(err => {
-			res.status(500).json({
-				error: err
+
+	} else {
+		Ticket
+			.update({faculty_id: id}, {$set: update_fields}, 
+				{ multi: true, upsert: true, runValidators: true })
+			.then(results => {
+				res.status(200).json({
+					message: results.n + ' Ticket(s) updated',
+					request: {
+						type: 'GET',
+						url: 'http://localhost:' + process.env.PORT + '/tickets/faculty/' + id
+					}
+				});
+			})
+			.catch(err => {
+				res.status(500).json({
+					error: err
+				});
 			});
-		});
+	}
 };
 
 exports.update_status = (req, res, next) => {
@@ -232,7 +286,7 @@ exports.delete = (req, res, next) => {
 				message: 'Ticket Deleted',
 				request: {
 					type: 'POST',
-					url: 'http://localhost:3000/tickets',
+					url: 'http://localhost:' + process.env.PORT + '/tickets',
 					body: { faculty_id: 'String', ticket_type: "{ type: String, enum: ['D', 'I'] }" }
 				}
 			});
@@ -249,10 +303,10 @@ exports.delete_all = (req, res, next) => {
 		.remove(req.query)
 		.then(result => { 
 			res.status(200).json({
-				message: result.n + ' Tickets Deleted',
+				message: result.n + ' Ticket(s) Deleted',
 				request: {
 					type: 'POST',
-					url: 'http://localhost:3000/tickets',
+					url: 'http://localhost:' + process.env.PORT + '/tickets',
 					body: { faculty_id: 'String', ticket_type: "{ type: String, enum: ['D', 'I'] }" }
 				}
 			});
