@@ -15,6 +15,14 @@ import {
 } from 'react-bootstrap';
 
 class TicketCardFSS extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectedApplicantID: 0,
+            selectedApplicantName: 'Select an Applicant'
+        };
+    }
+
     componentDidMount() {
         console.log('Requesting applicants...');
         this.props.actions.requestApplicants();
@@ -22,6 +30,16 @@ class TicketCardFSS extends React.Component {
 
     handleSaveNoteSubmit = values => {
         console.log('Clicked note button! ' + values.note);
+        this.props.actions.saveNote(values);
+    };
+
+    handleAssignSubmit = () => {
+        console.log('Clicked Assign button! ');
+        this.props.actions.offerRequest(this.state.selectedApplicantID);
+    };
+
+    handleUnassignSubmit = () => {
+        console.log('Clicked Unassign button! ');
     };
 
     renderField = ({ input, label, type, meta: { touched, error } }) => (
@@ -61,10 +79,26 @@ class TicketCardFSS extends React.Component {
         console.log('app list: ' + this.props.applicantList.applicants);
         return this.props.applicantList.applicants.map((applicant, i) => {
             return (
-                <MenuItem eventKey={applicant._id}>
+                <MenuItem
+                    eventKey={applicant._id}
+                    title={applicant.fname + ' ' + applicant.lname}
+                    onSelect={(eventKey, event) => {
+                        this.setState({
+                            selectedApplicantID: applicant._id,
+                            selectedApplicantName:
+                                applicant.fname + ' ' + applicant.lname
+                        });
+                    }}
+                >
                     {i + 1 + '. ' + applicant.fname + ' ' + applicant.lname}
                 </MenuItem>
             );
+        });
+    }
+
+    renderNotes() {
+        return this.props.notesList.notes.map((note, i) => {
+            return <div>{note}</div>;
         });
     }
 
@@ -106,16 +140,32 @@ class TicketCardFSS extends React.Component {
                                 Save
                             </button>
                         </form>
-                        <div>Notes</div>
+                        <div>
+                            <ul>
+                                <li>Note 1</li>
+                                <li>Note 2</li>
+                            </ul>
+                        </div>
                         <DropdownButton
                             bsStyle="default"
-                            title={'Select an applicant'}
+                            title={this.state.selectedApplicantName}
                             key={this.props.TID}
                             id={`dropdown-basic-${this.props.TID}`}
-                            onSelect={evt => console.log(evt)}
                         >
                             {this.renderApplicantList()}
                         </DropdownButton>
+                        <Button
+                            bsStyle="primary"
+                            onClick={this.handleAssignSubmit}
+                        >
+                            Assigned
+                        </Button>
+                        <Button
+                            bsStyle="primary"
+                            onClick={this.handleUnassignSubmit}
+                        >
+                            Unassigned
+                        </Button>
                     </Panel.Body>
                 </Panel.Collapse>
             </Panel>
