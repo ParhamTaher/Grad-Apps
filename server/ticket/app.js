@@ -25,14 +25,16 @@ var db = mongoose.connection;
 });
 
 // use express-sessions to track users
-app.use(session({
-	secret: 'csc 302 team 13',
-	resave: false,
-	saveUninitialized: false,
-	store: new MongoStore({
-	  mongooseConnection: db
-	})
-}));
+if (process.env.NODE_ENV == 'dev') {
+	app.use(session({
+		secret: 'csc 302 team 13',
+		resave: false,
+		saveUninitialized: false,
+		store: new MongoStore({
+		  mongooseConnection: db
+		})
+	}));
+};
 
 // Log all requests to the terminal if not in test
 if(config.util.getEnv('NODE_ENV') !== 'test') {
@@ -43,27 +45,31 @@ if(config.util.getEnv('NODE_ENV') !== 'test') {
 app.use(bodyParser.urlencoded({ extended: false }));  // Support URL-encoded data
 app.use(bodyParser.json());						  	// Support JSON-encoded data
 
-function hasSession(req, res, next) {
-	if (req.session.userId) {
-		next();
-	} else {
-		const error = new Error('Unauthorized User');
-		error.status = 401;
-		next(error);
-	}
-  }
+// Authentication
+if (process.env.NODE_ENV == 'dev') {
+	function hasSession(req, res, next) {
+		if (req.session.userId) {
+			next();
+		} else {
+			const error = new Error('Unauthorized User');
+			error.status = 401;
+			next(error);
+		}
+	  }
 
-// Login to user endpoint
-var client = request.createClient('http://localhost:3002/');
-var userLogin = {
-	email: "pb@test.com",
-	password: "123"
-};
-client.post('/users/login', userLogin, function(err, res, body) {
-  return console.log(body);
-});
+	// Login to user endpoint
+	var client = request.createClient('http://localhost:3002/');
+	var userLogin = {
+		email: "pb@test.com",
+		password: "123"
+	};
+	client.post('/users/login', userLogin, function(err, res, body) {
+	  return console.log(body);
+	});
 
-app.use('/tickets', hasSession)
+	app.use('/tickets', hasSession)
+}
+
 // Route that handles ticket requests
 app.use('/tickets', ticketRoutes);
 

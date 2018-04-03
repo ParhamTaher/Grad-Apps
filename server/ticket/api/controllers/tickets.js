@@ -146,6 +146,7 @@ exports.update = (req, res, next) => {
 	const id = req.params.ticketId;
 	const update_fields = {};	// Make update iterable so can update none, some, or all fields
 	var status_log = {};
+	var note = {};
 	for (const field of req.body) {
 		if (field.fieldName != 'status_history' && field.fieldName != 'note')
 			update_fields[field.fieldName] = field.value;
