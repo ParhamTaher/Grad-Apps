@@ -147,53 +147,47 @@ exports.update = (req, res, next) => {
 	const update_fields = {};	// Make update iterable so can update none, some, or all fields
 	var status_log = {};
 	for (const field of req.body) {
-		if (field.fieldName != 'status_history')
+		if (field.fieldName != 'status_history' && field.fieldName != 'note')
 			update_fields[field.fieldName] = field.value;
 		if (field.fieldName == 'status')
 			status_log = { status: field.value, update_date: new Date() };
+		if (field.fieldName == 'note')
+			note = { comment: field.value, post_date: new Date() };
 	}
-	if (status_log.length != '') {
-		console.log('STATUS LOG HERERREEE', status_log);
-		Ticket
-			.update({_id: id}, 
-				{ 
-						$set: update_fields, 
-						$push: {status_history: status_log}
-				},
-				{ upsert: true, runValidators: true }) // Update data in DB
-			.then(result => {
-				res.status(200).json({
-					message: 'Ticket updated',
-					request: {
-						type: 'GET',
-						url: 'http://localhost:' + process.env.PORT + '/tickets/' + id
-					}
-				});
-			})
-			.catch(err => {
-				res.status(500).json({
-					error: err
-				});
-			});
-	} else {
-		Ticket
-			.update({_id: id}, { $set: update_fields },
-				{ upsert: true, runValidators: true }) // Update data in DB
-			.then(result => {
-				res.status(200).json({
-					message: 'Ticket updated',
-					request: {
-						type: 'GET',
-						url: 'http://localhost:' + process.env.PORT + '/tickets/' + id
-					}
-				});
-			})
-			.catch(err => {
-				res.status(500).json({
-					error: err
-				});
-			});
+	var updates = {}
+	if (Object.keys(update_fields).length > 0 && update_fields.constructor === Object) {
+		updates = { $set: update_fields };
+		if (Object.keys(status_log).length > 0 && status_log.constructor === Object) {
+			updates = { 
+				$set: update_fields, 
+				$push: {status_history: status_log}
+			}
+			if (Object.keys(note).length > 0 && note.constructor === Object) {
+				updates = { 
+					$set: update_fields, 
+					$push: {status_history: status_log, note: note}
+				}
+			}
+		}
 	}
+	Ticket
+		.update({_id: id}, 
+			updates,
+			{ upsert: true, runValidators: true }) // Update data in DB
+		.then(result => {
+			res.status(200).json({
+				message: 'Ticket updated',
+				request: {
+					type: 'GET',
+					url: 'http://localhost:' + process.env.PORT + '/tickets/' + id
+				}
+			});
+		})
+		.catch(err => {
+			res.status(500).json({
+				error: err
+			});
+		});	
 };
 
 exports.update_by_faculty = (req, res, next) => {
@@ -205,49 +199,43 @@ exports.update_by_faculty = (req, res, next) => {
 			update_fields[field.fieldName] = field.value;
 		if (field.fieldName == 'status')
 			status_log = { status: field.value, update_date: new Date() };
+		if (field.fieldName == 'note')
+			note = { comment: field.value, post_date: new Date() };
 	}
-	if (status_log.length != '') {
-		Ticket
-			.update({faculty_id: id}, 				
-				{ 
-						$set: update_fields, 
-						$push: {status_history: status_log}
-				}, 
-				{ multi: true, upsert: true, runValidators: true })
-			.then(results => {
-				res.status(200).json({
-					message: results.n + ' Ticket(s) updated',
-					request: {
-						type: 'GET',
-						url: 'http://localhost:' + process.env.PORT + '/tickets/faculty/' + id
-					}
-				});
-			})
-			.catch(err => {
-				res.status(500).json({
-					error: err
-				});
-			});
-
-	} else {
-		Ticket
-			.update({faculty_id: id}, {$set: update_fields}, 
-				{ multi: true, upsert: true, runValidators: true })
-			.then(results => {
-				res.status(200).json({
-					message: results.n + ' Ticket(s) updated',
-					request: {
-						type: 'GET',
-						url: 'http://localhost:' + process.env.PORT + '/tickets/faculty/' + id
-					}
-				});
-			})
-			.catch(err => {
-				res.status(500).json({
-					error: err
-				});
-			});
+	var updates = {}
+	if (Object.keys(update_fields).length > 0 && update_fields.constructor === Object) {
+		updates = { $set: update_fields };
+		if (Object.keys(status_log).length > 0 && status_log.constructor === Object) {
+			updates = { 
+				$set: update_fields, 
+				$push: {status_history: status_log}
+			}
+			if (Object.keys(note).length > 0 && note.constructor === Object) {
+				updates = { 
+					$set: update_fields, 
+					$push: {status_history: status_log, note: note}
+				}
+			}
+		}
 	}
+	Ticket
+		.update({faculty_id: id}, 				
+			updates, 
+			{ multi: true, upsert: true, runValidators: true })
+		.then(results => {
+			res.status(200).json({
+				message: results.n + ' Ticket(s) updated',
+				request: {
+					type: 'GET',
+					url: 'http://localhost:' + process.env.PORT + '/tickets/faculty/' + id
+				}
+			});
+		})
+		.catch(err => {
+			res.status(500).json({
+				error: err
+			});
+		});
 };
 
 exports.delete = (req, res, next) => {

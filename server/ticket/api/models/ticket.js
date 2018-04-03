@@ -9,6 +9,11 @@ var status_history_schema = new Schema({
 	update_date: Date
 },{ _id : false });
 
+var note_schema = new Schema({
+	comment: String,
+	post_date: Date
+},{ _id : false });
+
 var ticket_schema = new Schema({
 	_id: mongoose.Schema.Types.ObjectId,
 	faculty_id: { type: String, required: true },
@@ -35,6 +40,9 @@ var ticket_schema = new Schema({
 			status: 'initial',
 			update_date: new Date()
 		}]
+	},
+	note: {
+		type: [note_schema]
 	}
 });
 

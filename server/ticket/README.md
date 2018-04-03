@@ -81,7 +81,8 @@ Request.Body:
 ```json
 [
 	{"fieldName": "ticket_type", "value": "I"},
-	{"fieldName": "status", "value": "granted"}
+	{"fieldName": "notes", "value": "updated status to granted"},
+	{"fieldName": "status", "value": "granted"},
 	...
 ]
 ```
@@ -127,6 +128,12 @@ Request.Body:
 		default: [{
 			status: 'initial',
 			update_date: new Date()
+		}]
+	},
+	note: {
+		type: [{
+			comment: String,
+			post_date: Date
 		}]
 	}
 }
