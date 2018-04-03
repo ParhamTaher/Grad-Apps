@@ -6,7 +6,6 @@ Tools used:
 
 - Express
 - Mongoose + MongoDB
-- Docker
 
 Key features:
 
