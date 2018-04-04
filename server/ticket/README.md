@@ -62,7 +62,7 @@ Request.Body:
 
 - `/tickets/5aad6dbdb2d0332d6299e048`: updates the ticket with id `5aad6dbdb2d0332d6299e048`
 
-Updates can be made modularly on a ticket by listing out any desired changes on specified fields in an array format. Status of a ticket cannot be updated in this way.
+Updates can be made modularly on a ticket by listing out any desired changes on specified fields in an array format.
 
 Request.Body:
 ```json
