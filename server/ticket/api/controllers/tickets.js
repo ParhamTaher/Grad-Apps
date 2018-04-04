@@ -70,6 +70,7 @@ exports.get_all = (req, res, next) => {
 };
 
 exports.create = (req, res, next) => {
+<<<<<<< HEAD
     const ticket = new Ticket({
         _id: new mongoose.Types.ObjectId(), //Mongoose function that generates a unique ID
         faculty_id: req.body.faculty_id,
@@ -154,6 +155,101 @@ exports.create_batch = (req, res, next) => {
                 error: err
             });
         });
+=======
+	const ticket = new Ticket({
+		_id: new mongoose.Types.ObjectId(), //Mongoose function that generates a unique ID
+		faculty_id: req.body.faculty_id,
+		applicant_id: req.body.applicant_id,
+		status: req.body.status,
+		status_history: req.body.status_history,
+		creation_date: req.body.date,
+		ticket_type: req.body.ticket_type
+	});
+	if (req.session.role == 'Budget Director') {
+		ticket
+			.save() // Store data into the DB
+			.then(result => {	
+			      	res.status(201).json({
+						message: 'Ticket created successfully',
+						createdTicket: {
+							_id: result._id,
+							faculty_id: result.faculty_id,
+							applicant_id: result.applicant_id,
+							status: result.status,
+							status_history: result.status_history,
+							ticket_type: result.ticket_type,
+							request: {
+								type: 'GET',
+								url: 'http://localhost:' + process.env.PORT + '/tickets/' + result._id
+							}
+						}
+					});
+			      })
+			.catch(err => {
+				res.status(500).json({
+					error: err
+				});
+			});
+	} else {
+		const err = new Error('Unauthorized User');
+		err.status = 'Unauthorized User';
+		res.status(401).json({
+			error: err
+		});
+	}
+};
+
+exports.create_batch = (req, res, next) => {
+	const num_tickets = req.params.num_tickets;
+	const ticket_batch = [];
+	for (i = 0; i < num_tickets; i++) {
+		var ticket = new Ticket({
+			_id: new mongoose.Types.ObjectId(),
+			faculty_id: req.body.faculty_id,
+			applicant_id: req.body.applicant_id,
+			status: req.body.status,
+			status_history: req.body.status_history,
+			creation_date: req.body.date,
+			ticket_type: req.body.ticket_type
+		});
+		ticket_batch.push(ticket);
+	}
+	if (req.session.role == 'Budget Director') {
+		Ticket
+			.insertMany(ticket_batch)
+			.then(results => {	
+				const response = { // Format the response
+					count: results.length,
+					tickets: results.map(result => {
+						return {
+							_id: result._id,
+							faculty_id: result.faculty_id,
+							applicant_id: result.applicant_id,
+							status: result.status,
+							status_history: req.body.status_history,
+							ticket_type: result.ticket_type,
+							request: {
+								type: 'GET',
+								url: 'http://localhost:' + process.env.PORT + '/tickets/'
+							}
+						}
+					})
+				};
+			    res.status(201).json(response);
+	      	})
+			.catch(err => {
+				res.status(500).json({
+					error: err
+				});
+			});
+	} else {
+		const err = new Error('Unauthorized User');
+		err.status = 'Unauthorized User';
+		res.status(401).json({
+			error: err
+		});
+	}
+>>>>>>> d24f55b5b038423adcef76e5e7f979dff7841aa4
 };
 
 exports.update = (req, res, next) => {
@@ -272,6 +368,7 @@ exports.update_by_faculty = (req, res, next) => {
 };
 
 exports.delete = (req, res, next) => {
+<<<<<<< HEAD
     const id = req.params.ticketId;
     Ticket.remove({ _id: id }) // Remove any object that fulfills this criteria
         .then(result => {
@@ -314,4 +411,60 @@ exports.delete_all = (req, res, next) => {
                 error: err
             });
         });
+=======
+	if (req.session.role == 'Budget Director') {
+		const id = req.params.ticketId;
+		Ticket
+			.remove({_id: id}) // Remove any object that fulfills this criteria
+			.then(result => { 
+				res.status(200).json({
+					message: 'Ticket Deleted',
+					request: {
+						type: 'POST',
+						url: 'http://localhost:' + process.env.PORT + '/tickets',
+						body: { faculty_id: 'String', ticket_type: "{ type: String, enum: ['D', 'I'] }" }
+					}
+				});
+			})
+			.catch(err => {
+				res.status(500).json({
+					error: err
+				});
+			});
+	} else {
+		const err = new Error('Unauthorized User');
+		err.status = 'Unauthorized User';
+		res.status(401).json({
+			error: err
+		});
+	}
+};
+
+exports.delete_all = (req, res, next) => {
+	if (req.session.role == 'Budget Director') {
+		Ticket
+			.remove(req.query)
+			.then(result => { 
+				res.status(200).json({
+					message: result.n + ' Ticket(s) Deleted',
+					request: {
+						type: 'POST',
+						url: 'http://localhost:' + process.env.PORT + '/tickets',
+						body: { faculty_id: 'String', ticket_type: "{ type: String, enum: ['D', 'I'] }" }
+					}
+				});
+			})
+			.catch(err => {
+				res.status(500).json({
+					error: err
+				});
+			});
+	} else {
+		const err = new Error('Unauthorized User');
+		err.message = 'Unauthorized User';
+		res.status(401).json({
+			error: err
+		});
+	}
+>>>>>>> d24f55b5b038423adcef76e5e7f979dff7841aa4
 };
