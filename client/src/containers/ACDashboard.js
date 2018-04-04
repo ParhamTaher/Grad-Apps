@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as Actions from '../actions';
 import { bindActionCreators } from 'redux';
-import ItemList from '../components/ItemList';
+import ItemListAC from '../components/ItemListAC';
+import ItemListOffered from '../components/ItemListOffered';
 import { Button } from 'react-bootstrap';
 
 class ACDashboard extends Component {
@@ -21,25 +22,18 @@ class ACDashboard extends Component {
                 </div>
                 <div className="row">
                     <div className="col-sm-6 col-sm-push-6">
-                        <h4>Domestic Tickets</h4>
-                        <ItemList
+                        <h4>Offered Tickets</h4>
+                        <ItemListOffered
                             ticketList={this.props.ticketList.tickets}
-                            ticketType={'D'}
-                            onApproveSubmit={this.props.actions.approveApplicant}
+                            TID={68968}
                         />
                     </div>
                     <div className="col-sm-6 col-sm-pull-6">
-                        <h4>International Tickets</h4>
-                        <ItemList
-                            ticketList={this.props.ticketList.tickets}
-                            ticketType={'I'}
-                           	onApproveSubmit={this.props.actions.approveApplicant}
+                        <h4>Requested Tickets</h4>
+                        <ItemListAC
+                            ticketList={this.props.ticketList.tickets}   
+                            
                         />
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-sm-12">
-                        <input type="file" onChange={this.handleFileUpload} />
                     </div>
                 </div>
             </div>
