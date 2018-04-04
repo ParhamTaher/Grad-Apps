@@ -28,7 +28,7 @@ export function uploadDocumentRequest(file) {
     };
 }
 
-export function requestTickets(facultyID, ticketType) {
+export function requestTickets(facultyID, ticketType=null) {
     return dispatch => {
         axios.get('/tickets').then(function(response) {
             console.log(
@@ -110,6 +110,30 @@ export function approveApplicant(tID) {
 export function saveNote(values) {
     return dispatch => {
         console.log('Note Saved! ' + values.note);
+    };
+}
+
+export function offerApplicant(tID) {
+    return dispatch => {
+        console.log('Offering applicant with ID: ' + tID);
+    };
+}
+
+export function rejectApplicant(tID) {
+    return dispatch => {
+        console.log('Rejecting applicant with ID: ' + tID);
+    };
+}
+
+export function acceptedOfferApplicant(tID) {
+    return dispatch => {
+        console.log('Accepted offer from applicant with ID: ' + tID);
+    };
+}
+
+export function declinedOfferApplicant(tID) {
+    return dispatch => {
+        console.log('Declined offer from applicant with ID: ' + tID);
     };
 }
 

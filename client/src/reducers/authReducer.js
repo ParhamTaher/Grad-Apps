@@ -13,7 +13,7 @@ Means: Return a previous state, but also update the authenticated and error key 
 import { AUTH_USER, SIGN_OUT_USER, AUTH_ERROR } from '../actions';
 
 const initialState = {
-    authenticated: false,
+    authenticated: true,
     error: null
 };
 
