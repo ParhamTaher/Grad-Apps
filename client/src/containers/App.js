@@ -55,8 +55,6 @@ const PublicRoute = ({
                     <Redirect to="/BDDashboard" />
                 ) : authenticated === true && userRole === 'AC' ? (
                     <Redirect to="/ACDashboard" />
-                ) : authenticated === true && userRole === 'BD' ? (
-                    <Redirect to="/BDDashboard" />
                 ) : (
                     <Component {...props} />
                 )}
