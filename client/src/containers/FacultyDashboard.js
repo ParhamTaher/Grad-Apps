@@ -8,7 +8,7 @@ import { Button } from 'react-bootstrap';
 class FacultyDashboard extends Component {
     componentDidMount() {
         console.log('Requesting tickets...');
-        this.props.actions.requestTickets(21);
+        this.props.actions.requestTickets('', '', '');
     }
 
     handleFileUpload = event => {
