@@ -18,12 +18,16 @@ class TicketCardFSS extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedApplicantID: 0,
+            selectedApplicantID: null,
             selectedApplicantName: 'Select an Applicant'
         };
     }
 
     componentDidMount() {
+        if (this.props.applicantID) {
+            this.props.actions.getApplicantNameFromId(this.props.applicantID);
+        }
+
         console.log('Requesting applicants...');
         this.props.actions.requestApplicants();
     }
@@ -35,7 +39,10 @@ class TicketCardFSS extends React.Component {
 
     handleAssignSubmit = () => {
         console.log('Clicked Assign button! ');
-        this.props.actions.offerRequest(this.state.selectedApplicantID);
+        this.props.actions.offerRequest(
+            this.props.TID,
+            this.state.selectedApplicantID
+        );
     };
 
     handleUnassignSubmit = () => {
@@ -80,6 +87,7 @@ class TicketCardFSS extends React.Component {
         return this.props.applicantList.applicants.map((applicant, i) => {
             return (
                 <MenuItem
+                    key={applicant._id}
                     eventKey={applicant._id}
                     title={applicant.fname + ' ' + applicant.lname}
                     onSelect={(eventKey, event) => {
@@ -118,7 +126,7 @@ class TicketCardFSS extends React.Component {
                         </div>
                         <div>
                             &nbsp;&nbsp;&nbsp;&nbsp;Assigned to{' '}
-                            {this.props.applicant || 'No one'}
+                            {this.props.applicantName.appName || 'No one'}
                         </div>
                     </Panel.Title>
                 </Panel.Heading>
@@ -176,7 +184,8 @@ class TicketCardFSS extends React.Component {
 function mapStateToProps(state) {
     // Whatever is returned will show up as props
     return {
-        applicantList: state.applicants
+        applicantList: state.applicants,
+        applicantName: state.appName
     };
 }
 

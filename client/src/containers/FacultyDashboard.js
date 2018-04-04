@@ -8,7 +8,8 @@ import { Button } from 'react-bootstrap';
 class FacultyDashboard extends Component {
     componentDidMount() {
         console.log('Requesting tickets...');
-        this.props.actions.requestTickets('', '', '');
+        this.props.actions.requestTicketsFSS('mzaleski', 'initial', '');
+        this.props.actions.requestTicketsFSS('mzaleski', 'offer-request', '');
     }
 
     handleFileUpload = event => {
@@ -30,13 +31,25 @@ class FacultyDashboard extends Component {
                     <div className="col-sm-4">
                         <h4>Available Tickets</h4>
                         <ItemListFSS
-                            ticketList={this.props.ticketList.tickets}
-                            ticketType={'D'}
+                            ticketList={this.props.initialTicketList.tickets}
+                            listID="1"
+                            facultyID="mzaleski"
+                            ticketStatus="initial"
+                            ticketType=""
                         />
                     </div>
 
                     <div className="col-sm-4">
                         <h4>Offers Pending</h4>
+                        <ItemListFSS
+                            ticketList={
+                                this.props.offerRequestTicketList.tickets
+                            }
+                            listID="2"
+                            facultyID="mzaleski"
+                            ticketStatus="offer-request"
+                            ticketType=""
+                        />
                     </div>
                     <div className="col-sm-4">
                         <h4>Final Offers</h4>
@@ -56,7 +69,11 @@ class FacultyDashboard extends Component {
 function mapStateToProps(state) {
     // Whatever is returned will show up as props
     return {
-        ticketList: state.tickets
+        initialTicketList: state.initialTickets,
+        offerRequestTicketList: state.offerRequestTickets
+        //offerPendingTicketList: state.offerPendingTickets,
+        //offerAcceptedTicketList: state.offerAcceptedTickets,
+        //offerRejectedTicketList: state.offerRejectedTickets
     };
 }
 
