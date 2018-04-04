@@ -44,7 +44,6 @@
         "serverTicket": "npm start --prefix ../server/ticket",
         "serverUser": "npm start --prefix ../server/users",
         "serverGapf": "npm start --prefix ../server/gapf",
-        "dev":
-            "concurrently \"npm run serverTicket\" \"npm run serverUser\" \"npm run serverGapf\" \"npm run client\""
+        "dev": "concurrently \"npm run serverTicket\" \"npm run serverUser\" \"npm run serverGapf\" \"npm run client\""
     }
 }
