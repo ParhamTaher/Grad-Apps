@@ -118,7 +118,7 @@ class TicketCardFSS extends React.Component {
                         </div>
                         <div>
                             &nbsp;&nbsp;&nbsp;&nbsp;Assigned to{' '}
-                            {this.props.applicant}
+                            {this.props.applicant || 'No one'}
                         </div>
                     </Panel.Title>
                 </Panel.Heading>

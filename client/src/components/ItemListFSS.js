@@ -25,8 +25,8 @@ class ItemListFSS extends Component {
                     key={ticket.TID}
                     numberLabel={i + 1}
                     TID={ticket.TID}
-                    applicant={ticket.applicant}
-                    ticketStatus={ticket.ticketStatus}
+                    applicant={ticket.applicant_id}
+                    ticketStatus={ticket.status}
                     ticketType={ticket.ticket_type}
                     notes={ticket.notes}
                 />

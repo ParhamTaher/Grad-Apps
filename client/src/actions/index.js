@@ -9,6 +9,7 @@
 **/
 //
 import axios from 'axios';
+// import cookie from 'react-cookie';
 
 export const SIGN_OUT_USER = 'SIGN_OUT_USER';
 export const AUTH_ERROR = 'AUTH_ERROR';
@@ -28,44 +29,58 @@ export function uploadDocumentRequest(file) {
     };
 }
 
-export function requestTickets(facultyID, ticketType) {
-    return dispatch => {
-        axios.get('/tickets').then(function(response) {
-            console.log(
-                'Successfully connected to tickets route!: ',
-                response.data
-            );
-        });
+export function requestTickets(
+    facultyID = '',
+    ticketStatus = '',
+    ticketType = ''
+) {
+    let andToken1 = '';
+    let andToken2 = '';
+    if (
+        (facultyID != '' && ticketStatus != '') ||
+        (facultyID != '' && ticketType != '') ||
+        (ticketStatus != '' && ticketType != '')
+    ) {
+        console.log('AAND TOKEN 1!!');
+        andToken1 = '&';
+        if (facultyID != '' && ticketStatus != '' && ticketType != '') {
+            andToken2 = '&';
+        }
+    }
 
-        dispatch({
-            type: REQUEST_TICKETS,
-            payload: {
-                tickets: [
-                    {
-                        TID: 1,
-                        applicant: 'Bob',
-                        ticketStatus: 'Granted',
-                        ticket_type: 'D',
-                        notes:
-                            'Bob - Please review tickets thanks. Admin - Bob, please send me GAPF Form'
-                    },
-                    {
-                        TID: 2,
-                        applicant: 'John',
-                        ticketStatus: 'Granted',
-                        ticket_type: 'I',
-                        notes: ''
-                    },
-                    {
-                        TID: 3,
-                        applicant: 'Joh2n',
-                        ticketStatus: 'Granted',
-                        ticket_type: 'I',
-                        notes: ''
-                    }
-                ]
-            }
-        });
+    let facultyIdUrl = facultyID == '' ? '' : 'faculty_id=' + facultyID;
+    let ticketStatusUrl = ticketStatus == '' ? '' : 'status=' + ticketStatus;
+    let ticketTypeUrl = ticketType == '' ? '' : 'ticket_type=' + ticketType;
+
+    console.log(
+        'URL: ' +
+            '/tickets?' +
+            facultyIdUrl +
+            andToken1 +
+            ticketStatusUrl +
+            andToken2 +
+            ticketTypeUrl
+    );
+    return dispatch => {
+        axios
+            .get(
+                '/tickets?' +
+                    facultyIdUrl +
+                    andToken1 +
+                    ticketStatusUrl +
+                    andToken2 +
+                    ticketTypeUrl
+            )
+            .then(function(response) {
+                console.log(
+                    'Successfully connected to tickets route!: ',
+                    response.data
+                );
+                dispatch({
+                    type: REQUEST_TICKETS,
+                    payload: response.data
+                });
+            });
     };
 }
 
@@ -114,39 +129,57 @@ export function saveNote(values) {
 }
 
 // Auth Data
-export function signUpUser(credentials) {
-    return function(dispatch) {
-        dispatch(authUser());
+export function signUpUser(fname, lname, email, password) {
+    return dispatch => {
+        axios
+            .post('/users/signup', { fname, lname, email, password })
+            .then(response => {
+                dispatch(authUser({ userRole: 'FSS' }));
+            })
+            .catch(error => {
+                console.log('inside action signup: ', error);
+                dispatch(authError(error));
+            });
     };
 }
 
-export function signInUser(credentials) {
-    return function(dispatch) {
-        if (credentials.email === 'AC@gmail.com') {
+export function signInUser(email, password) {
+    return dispatch => {
+        if (email === 'AC@gmail.com') {
             dispatch(authUser({ userRole: 'AC' }));
-        } else if (credentials.email === 'BD@gmail.com') {
+        } else if (email === 'BD@gmail.com') {
             dispatch(authUser({ userRole: 'BD' }));
-        } else {
-            dispatch(authUser({ userRole: 'FSS' }));
         }
-        // Check db for the userRole of this user (BD, FSS, Chair, etc)
+        axios
+            .post('/users/login', { email, password })
+            .then(response => {
+                console.log('Login Response: ' + response.userId);
+
+                // cookie.set('session', 'FSS');
+                dispatch(authUser({ userRole: 'FSS' }));
+            })
+            .catch(error => {
+                console.log('inside action signin: ', error);
+                dispatch(authError(error));
+            });
     };
 }
 
 export function signOutUser() {
     return function(dispatch) {
+        // cookie.remove('session');
         dispatch({
             type: SIGN_OUT_USER
         });
     };
 }
 
-// If user is signed in, Firebase.auth.onAuthStateChanged()
+// If user is signed in,
 // will return a valid user object, and dispatch to authUser()
 // action creator to update authenticated to true on state. Returns null otherwise
 export function verifyAuth() {
     return function(dispatch) {
-        dispatch(authUser());
+        dispatch(authUser({ userRole: null }));
     };
 }
 /**
