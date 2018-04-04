@@ -9,7 +9,8 @@ import { Button } from 'react-bootstrap';
 class ACDashboard extends Component {
     componentDidMount() {
         console.log('Requesting tickets...');
-        this.props.actions.requestTickets(21);
+        this.props.actions.requestTickets('', 'offer-request', '');
+        
     }
 
     render() {
@@ -25,7 +26,6 @@ class ACDashboard extends Component {
                         <h4>Offered Tickets</h4>
                         <ItemListOffered
                             ticketList={this.props.ticketList.tickets}
-                            TID={68968}
                         />
                     </div>
                     <div className="col-sm-6 col-sm-pull-6">

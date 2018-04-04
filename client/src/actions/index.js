@@ -132,6 +132,18 @@ export function saveNote(values) {
 export function offerApplicant(tID) {
     return dispatch => {
         console.log('Offering applicant with ID: ' + tID);
+        if (tID != null) {
+            axios 
+                .patch("/tickets/" + "5ac37d29ce45b6103f43c8f2", [
+                    { "fieldName": "status", "value": "offer-pending" }
+                ])
+                .then(response => {
+                    console.log("Successfully offered applicant, ticket is pending acceptence");
+                })
+                .catch(error => {
+                    console.log("ERROR in offerApplicant " + error);
+                });     
+        }
     };
 }
 
