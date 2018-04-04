@@ -7,7 +7,6 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 let config = require('config');
-var request = require('request-json');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 
@@ -56,16 +55,6 @@ if (process.env.NODE_ENV == 'dev') {
 			next(error);
 		}
 	  }
-
-	// Login to user endpoint
-	var client = request.createClient('http://localhost:3002/');
-	var userLogin = {
-		email: "pb@test.com",
-		password: "123"
-	};
-	client.post('/users/login', userLogin, function(err, res, body) {
-	  return console.log(body);
-	});
 
 	app.use('/tickets', hasSession)
 }
