@@ -25,7 +25,7 @@ export const REQUEST_ACCEPTED_TICKETS = 'REQUEST_ACCEPTED_TICKETS';
 export const UPLOAD_GAPF = 'UPLOAD_GAPF';
 export const SAVE_NOTE = 'SAVE_NOTE';
 export const REQUEST_APPLICANTS = 'REQUEST_APPLICANTS';
-export const REQUEST_APP_NAME = 'REQUEST_APP_NAME';
+export const REQUEST_APPLICANT_NAME_FROM_ID = 'REQUEST_APPLICANT_NAME_FROM_ID';
 
 export function uploadDocumentRequest(file) {
     console.log('uploading GAPF... ' + file.name);
@@ -142,9 +142,29 @@ export function requestTicketsNew(
                         type: REQUEST_INITIAL_TICKETS,
                         payload: response.data
                     });
+                } else if (ticketStatus == 'granted') {
+                    dispatch({
+                        type: REQUEST_GRANTED_TICKETS,
+                        payload: response.data
+                    });
                 } else if (ticketStatus == 'offer-request') {
                     dispatch({
                         type: REQUEST_OFFER_REQUEST_TICKETS,
+                        payload: response.data
+                    });
+                } else if (ticketStatus == 'offer-pending') {
+                    dispatch({
+                        type: REQUEST_OFFER_PENDING_TICKETS,
+                        payload: response.data
+                    });
+                } else if (ticketStatus == 'accepted') {
+                    dispatch({
+                        type: REQUEST_ACCEPTED_TICKETS,
+                        payload: response.data
+                    });
+                } else if (ticketStatus == 'refused') {
+                    dispatch({
+                        type: REQUEST_REFUSED_TICKETS,
                         payload: response.data
                     });
                 } else {
@@ -261,14 +281,14 @@ export function requestApplicants() {
 export function getApplicantNameFromId(iD) {
     return dispatch => {
         console.log("getting applicant name with id... " + iD);
-        axios.get('/applicants?applicantId=' + iD).then(function(response) {
-            console.log('applicant name: ' + response.data.applicants.fname);
+        axios.get('/applicants/' + iD).then(function(response) {
+            console.log('applicant name: ' + response.data.applicant);
             dispatch({
-                type: REQUEST_TICKETS,
+                type: REQUEST_APPLICANT_NAME_FROM_ID,
                 payload: {
-                    appName: response.data.applicants.fname + ' ' + response.data.applicants.lname
+                    appName: response.data.applicant.fname + ' ' + response.data.applicant.lname
                 }
-            });
+            })
         });
     };
 }
