@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import TicketCardFSS from '../components/TicketCardFSS';
+import TicketCardAC from '../components/TicketCardAC';
 import { PanelGroup, Panel } from 'react-bootstrap';
 
-class ItemListFSS extends Component {
+class ItemListAC extends Component {
     constructor(props, context) {
         super(props, context);
 
@@ -21,7 +21,7 @@ class ItemListFSS extends Component {
     renderList() {
         return this.props.ticketList.map((ticket, i) => {
             return (
-                <TicketCardFSS
+                <TicketCardAC
                     listID={this.props.listID}
                     key={ticket._id}
                     numberLabel={i + 1}
@@ -40,4 +40,4 @@ class ItemListFSS extends Component {
     }
 }
 
-export default ItemListFSS;
+export default ItemListAC;

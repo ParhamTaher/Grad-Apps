@@ -10,11 +10,10 @@ import {
     FormGroup,
     ControlLabel,
     HelpBlock,
-    DropdownButton,
     MenuItem
 } from 'react-bootstrap';
 
-class TicketCardFSS extends React.Component {
+class TicketCardAC extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -24,10 +23,6 @@ class TicketCardFSS extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.applicantID) {
-            this.props.actions.getApplicantNameFromId(this.props.applicantID);
-        }
-
         console.log('Requesting applicants...');
         this.props.actions.requestApplicants();
     }
@@ -37,16 +32,14 @@ class TicketCardFSS extends React.Component {
         this.props.actions.saveNote(values);
     };
 
-    handleAssignSubmit = () => {
-        console.log('Clicked Assign button! ');
-        this.props.actions.offerRequest(
-            this.props.TID,
-            this.state.selectedApplicantID
-        );
+    handleSendOfferSubmit = () => {
+        console.log('Clicked Send Offer button! ');
+        this.props.actions.offerApplicant(this.props.TID);
     };
 
-    handleUnassignSubmit = () => {
-        console.log('Clicked Unassign button! ');
+    handleRejectSubmit = () => {
+        console.log('Clicked Reject Offer button! ');
+        this.props.actions.rejectApplicant(this.props.TID);
     };
 
     renderField = ({ input, label, type, meta: { touched, error } }) => (
@@ -62,47 +55,6 @@ class TicketCardFSS extends React.Component {
             </div>
         </fieldset>
     );
-
-    renderDropDownField = ({
-        input,
-        label,
-        type,
-        meta: { touched, error }
-    }) => (
-        <fieldset className={`form-group`}>
-            <label className="control-label">{label}</label>
-            <div>
-                <input
-                    {...input}
-                    placeholder={label}
-                    className="form-control"
-                    type={type}
-                />
-            </div>
-        </fieldset>
-    );
-
-    renderApplicantList() {
-        console.log('app list: ' + this.props.applicantList.applicants);
-        return this.props.applicantList.applicants.map((applicant, i) => {
-            return (
-                <MenuItem
-                    key={applicant._id}
-                    eventKey={applicant._id}
-                    title={applicant.fname + ' ' + applicant.lname}
-                    onSelect={(eventKey, event) => {
-                        this.setState({
-                            selectedApplicantID: applicant._id,
-                            selectedApplicantName:
-                                applicant.fname + ' ' + applicant.lname
-                        });
-                    }}
-                >
-                    {i + 1 + '. ' + applicant.fname + ' ' + applicant.lname}
-                </MenuItem>
-            );
-        });
-    }
 
     renderNotes() {
         return this.props.notesList.notes.map((note, i) => {
@@ -154,25 +106,18 @@ class TicketCardFSS extends React.Component {
                                 <li>Note 2</li>
                             </ul>
                         </div>
-                        <DropdownButton
-                            bsStyle="default"
-                            title={this.state.selectedApplicantName}
-                            key={this.props.TID}
-                            id={`dropdown-basic-${this.props.TID}`}
-                        >
-                            {this.renderApplicantList()}
-                        </DropdownButton>
                         <Button
                             bsStyle="primary"
-                            onClick={this.handleAssignSubmit}
+                            onClick={this.handleSendOfferSubmit}
                         >
-                            Assigned
+                            Send Offer
                         </Button>
+                        <br/>
                         <Button
-                            bsStyle="primary"
-                            onClick={this.handleUnassignSubmit}
+                            bsStyle="danger"
+                            onClick={this.handleRejectSubmit}
                         >
-                            Unassigned
+                            Reject
                         </Button>
                     </Panel.Body>
                 </Panel.Collapse>
@@ -198,5 +143,5 @@ function mapDispatchToProps(dispatch) {
 export default connect(mapStateToProps, mapDispatchToProps)(
     reduxForm({
         form: 'ticket-form'
-    })(TicketCardFSS)
+    })(TicketCardAC)
 );

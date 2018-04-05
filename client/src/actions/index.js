@@ -16,9 +16,16 @@ export const AUTH_ERROR = 'AUTH_ERROR';
 export const AUTH_USER = 'AUTH_USER';
 export const REQUEST_CHANGE_PASS = 'REQUEST_CHANGE_PASS';
 export const REQUEST_TICKETS = 'REQUEST_TICKET_ID';
+export const REQUEST_INITIAL_TICKETS = 'REQUEST_INITIAL_TICKETS';
+export const REQUEST_OFFER_REQUEST_TICKETS = 'REQUEST_OFFER_REQUEST_TICKETS';
+export const REQUEST_OFFER_PENDING_TICKETS = 'REQUEST_OFFER_PENDING_TICKETS';
+export const REQUEST_GRANTED_TICKETS = 'REQUEST_GRANTED_TICKETS';
+export const REQUEST_REFUSED_TICKETS = 'REQUEST_REFUSED_TICKETS';
+export const REQUEST_ACCEPTED_TICKETS = 'REQUEST_ACCEPTED_TICKETS';
 export const UPLOAD_GAPF = 'UPLOAD_GAPF';
 export const SAVE_NOTE = 'SAVE_NOTE';
 export const REQUEST_APPLICANTS = 'REQUEST_APPLICANTS';
+export const REQUEST_APP_NAME = 'REQUEST_APP_NAME';
 
 export function uploadDocumentRequest(file) {
     console.log('uploading GAPF... ' + file.name);
@@ -28,6 +35,7 @@ export function uploadDocumentRequest(file) {
         });
     };
 }
+
 
 export function requestTickets(
     facultyID = '',
@@ -41,7 +49,6 @@ export function requestTickets(
         (facultyID != '' && ticketType != '') ||
         (ticketStatus != '' && ticketType != '')
     ) {
-        console.log('AAND TOKEN 1!!');
         andToken1 = '&';
         if (facultyID != '' && ticketStatus != '' && ticketType != '') {
             andToken2 = '&';
@@ -84,8 +91,148 @@ export function requestTickets(
     };
 }
 
+export function requestTicketsNew(
+    facultyID = '',
+    ticketStatus = '',
+    ticketType = ''
+) {
+    let andToken1 = '';
+    let andToken2 = '';
+    if (
+        (facultyID != '' && ticketStatus != '') ||
+        (facultyID != '' && ticketType != '') ||
+        (ticketStatus != '' && ticketType != '')
+    ) {
+        andToken1 = '&';
+        if (facultyID != '' && ticketStatus != '' && ticketType != '') {
+            andToken2 = '&';
+        }
+    }
+
+    let facultyIdUrl = facultyID == '' ? '' : 'faculty_id=' + facultyID;
+    let ticketStatusUrl = ticketStatus == '' ? '' : 'status=' + ticketStatus;
+    let ticketTypeUrl = ticketType == '' ? '' : 'ticket_type=' + ticketType;
+
+    console.log(
+        'URL: ' +
+            '/tickets?' +
+            facultyIdUrl +
+            andToken1 +
+            ticketStatusUrl +
+            andToken2 +
+            ticketTypeUrl
+    );
+    return dispatch => {
+        axios
+            .get(
+                '/tickets?' +
+                    facultyIdUrl +
+                    andToken1 +
+                    ticketStatusUrl +
+                    andToken2 +
+                    ticketTypeUrl
+            )
+            .then(function(response) {
+                console.log(
+                    'Successfully connected to FSS tickets route!: ',
+                    response.data
+                );
+                if (ticketStatus == 'initial') {
+                    dispatch({
+                        type: REQUEST_INITIAL_TICKETS,
+                        payload: response.data
+                    });
+                } else if (ticketStatus == 'offer-request') {
+                    dispatch({
+                        type: REQUEST_OFFER_REQUEST_TICKETS,
+                        payload: response.data
+                    });
+                } else {
+                    dispatch({
+                        type: REQUEST_TICKETS,
+                        payload: response.data
+                    });
+                }
+            });
+    };
+}
+
+export function requestTicketsAC(
+    facultyID = '',
+    ticketStatus = '',
+    ticketType = ''
+) {
+    let andToken1 = '';
+    let andToken2 = '';
+    if (
+        (facultyID != '' && ticketStatus != '') ||
+        (facultyID != '' && ticketType != '') ||
+        (ticketStatus != '' && ticketType != '')
+    ) {
+        andToken1 = '&';
+        if (facultyID != '' && ticketStatus != '' && ticketType != '') {
+            andToken2 = '&';
+        }
+    }
+
+    let facultyIdUrl = facultyID == '' ? '' : 'faculty_id=' + facultyID;
+    let ticketStatusUrl = ticketStatus == '' ? '' : 'status=' + ticketStatus;
+    let ticketTypeUrl = ticketType == '' ? '' : 'ticket_type=' + ticketType;
+
+    console.log(
+        'URL: ' +
+            '/tickets?' +
+            facultyIdUrl +
+            andToken1 +
+            ticketStatusUrl +
+            andToken2 +
+            ticketTypeUrl
+    );
+    return dispatch => {
+        axios
+            .get(
+                '/tickets?' +
+                    facultyIdUrl +
+                    andToken1 +
+                    ticketStatusUrl +
+                    andToken2 +
+                    ticketTypeUrl
+            )
+            .then(function(response) {
+                console.log(
+                    'Successfully connected to AC tickets route!: ',
+                    response.data
+                );
+                if (ticketStatus == 'offer-request') {
+                    dispatch({
+                        type: REQUEST_OFFER_REQUEST_TICKETS,
+                        payload: response.data
+                    });
+                } else if (ticketStatus == 'offer-pending') {
+                    dispatch({
+                        type: REQUEST_OFFER_PENDING_TICKETS,
+                        payload: response.data
+                    });
+                } else {
+                    dispatch({
+                        type: REQUEST_TICKETS,
+                        payload: response.data
+                    });
+                }
+            });
+    };
+}
+
+
 export function requestApplicants() {
     return dispatch => {
+        axios.get('/applicants').then(function(response) {
+            dispatch({
+                type: REQUEST_APPLICANTS,
+                payload: response.data
+            });
+        });
+
         dispatch({
             type: REQUEST_APPLICANTS,
             payload: {
@@ -111,9 +258,44 @@ export function requestApplicants() {
     };
 }
 
-export function offerRequest(iD) {
+export function getApplicantNameFromId(iD) {
     return dispatch => {
-        console.log('Inside offer request action creator! with ID: ' + iD);
+        axios.get('/applicants/applicantId=' + iD).then(function(response) {
+            console.log('applicant name: ' + response.data);
+            dispatch({
+                type: REQUEST_TICKETS,
+                payload: {
+                    appName: {
+                        fname: response.data.fname,
+                        lname: response.data.lname
+                    }
+                }
+            });
+        });
+    };
+}
+
+// Peter and Alex please review!
+export function offerRequest(tID, aID) {
+    return dispatch => {
+        console.log(
+            'Inside offer request action creator! with TID: ' + tID + ' and AID: ' + aID
+        );
+        if (aID != null) {
+            axios
+                .patch('/tickets/' + tID, [
+                    { "fieldName": "applicant_id", "value": aID.toString() },
+                    { "fieldName": "status", "value": "offer-request" }
+                ])
+                .then(response => {
+                    console.log(
+                        'Successfully offered applicant, ticket is pending acceptence'
+                    );
+                })
+                .catch(error => {
+                    console.log('ERROR in offerApplicant ' + error);
+                });
+        }
     };
 }
 
@@ -126,6 +308,85 @@ export function saveNote(values) {
     return dispatch => {
         console.log('Note Saved! ' + values.note);
     };
+}
+
+export function offerApplicant(tID) {
+    return dispatch => {
+        console.log('Offering applicant with ID: ' + tID);
+        if (tID != null) {
+<<<<<<< HEAD
+            axios
+                .patch('/tickets/' + tID, [
+=======
+            axios
+                .patch("/tickets/" + tID, [
+>>>>>>> 6b2a012b92c445eeb4efc7256508c9a0a8002275
+                    { "fieldName": "status", "value": "offer-pending" }
+                ])
+                .then(response => {
+                    console.log("Successfully offered applicant, ticket is pending acceptence");
+                })
+                .catch(error => {
+                    console.log("ERROR in offerApplicant " + error);
+                });
+        }
+    };
+}
+
+export function rejectApplicant(tID) {
+    return dispatch => {
+        console.log('Offering applicant with ID: ' + tID);
+        if (tID != null) {
+            axios
+                .patch("/tickets/" + tID, [
+                    { "fieldName": "status", "value": "refused" }
+                ])
+                .then(response => {
+                    console.log("Applicant rejected");
+                })
+                .catch(error => {
+                    console.log("ERROR in offerApplicant " + error);
+                });
+        }
+    };
+}
+
+export function acceptedOfferApplicant(tID) {
+    return dispatch => {
+        console.log('Offering applicant with ID: ' + tID);
+        if (tID != null) {
+            axios
+                .patch("/tickets/" + tID, [
+                    { "fieldName": "status", "value": "accepted" }
+                ])
+                .then(response => {
+                    console.log("Applicant accepted offer");
+                })
+                .catch(error => {
+                    console.log("ERROR in offerApplicant " + error);
+                });
+        }
+    };
+
+}
+
+export function declinedOfferApplicant(tID) {
+    return dispatch => {
+        console.log('Offering applicant with ID: ' + tID);
+        if (tID != null) {
+            axios
+                .patch("/tickets/" + tID, [
+                    { "fieldName": "status", "value": "refused" }
+                ])
+                .then(response => {
+                    console.log("Applicant declined offer");
+                })
+                .catch(error => {
+                    console.log("ERROR in offerApplicant " + error);
+                });
+        }
+    };
+
 }
 
 // Auth Data
