@@ -46,7 +46,7 @@ conn.once('open', () => {
     }
   });
 
-  router.get('/gapf/:gapf_id/download', (req, res, next) => {
+  router.get('/gapf/:gapf_id', (req, res, next) => {
     //const gapf_id = req.params.gapf_id;
     gfs.files.findOne({
       _id : new ObjectId(req.params.gapf_id)},
@@ -78,7 +78,7 @@ conn.once('open', () => {
   });
 
   //new GAPF
-  router.post('/gapf/attach', (req, res, next) => {
+  router.post('/gapf', (req, res, next) => {
     let userId = req.body.userId;
     //check the request userid passed in equals to logged in use and if they're faculty or fss
     if (userId === req.session.userId && (req.session.role === 'Faculty' || req.session.role === 'FSS')){
@@ -115,7 +115,7 @@ conn.once('open', () => {
   });
 
   //delete GAPF
-  router.delete('/gapf/:gapf_id/delete', (req, res, next) => {
+  router.delete('/gapf/:gapf_id', (req, res, next) => {
     //console.log(req.params.gapf_id);
     //only faculty can delete their own file
     if (req.session.role === 'Faculty'){
