@@ -23,7 +23,7 @@ const validate = values => {
 
 class Login extends React.Component {
     handleFormSubmit = values => {
-        console.log('Login Info:', values);
+        // console.log('Login Info:', values);
         this.props.signInUser(values.email, values.password);
     };
 

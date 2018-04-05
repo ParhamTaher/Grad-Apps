@@ -31,7 +31,7 @@ const validate = values => {
 
 class Signup extends React.Component {
     handleFormSubmit = values => {
-        console.log(values);
+        // console.log(values);
         this.props.signUpUser(
             values.fname,
             values.lname,
