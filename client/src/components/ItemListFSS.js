@@ -20,6 +20,7 @@ class ItemListFSS extends Component {
 
     renderList() {
         return this.props.ticketList.map((ticket, i) => {
+            console.log("Ticket Note... " + ticket.note)
             return (
                 <TicketCardFSS
                     listID={this.props.listID}

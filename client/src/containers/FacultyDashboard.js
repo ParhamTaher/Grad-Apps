@@ -10,6 +10,7 @@ class FacultyDashboard extends Component {
     componentDidMount() {
         console.log('Requesting tickets...');
         this.props.actions.requestTicketsNew('', 'initial', '');
+        this.props.actions.requestTicketsNew('', 'granted', '');
         this.props.actions.requestTicketsNew('', 'offer-request', '');
         this.props.actions.requestTicketsNew('', 'offer-pending', '');
         this.props.actions.requestTicketsNew('', 'accepted', '');
@@ -41,10 +42,10 @@ class FacultyDashboard extends Component {
                     <div className="col-sm-4">
                         <h4>Available Tickets</h4>
                         <ItemListFSS
-                            ticketList={this.props.initialTicketList.tickets}
+                            ticketList={this.props.grantedTicketList.tickets}
                             listID="1"
                             facultyID="mzaleski"
-                            ticketStatus="initial"
+                            ticketStatus="granted"
                             ticketType=""
                         />
                     </div>
@@ -101,6 +102,7 @@ function mapStateToProps(state) {
     // Whatever is returned will show up as props
     return {
         initialTicketList: state.initialTickets,
+        grantedTicketList: state.grantedTickets,
         offerRequestTicketList: state.offerRequestTickets,
         offerPendingTicketList: state.offerPendingTickets,
         offerAcceptedTicketList: state.acceptedTickets,

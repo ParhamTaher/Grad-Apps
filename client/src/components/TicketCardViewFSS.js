@@ -78,7 +78,7 @@ class TicketCardFSS extends React.Component {
     renderNotes() {
         if(this.props.notesList) {
             return this.props.notesList.map((note, i) => {
-                return <div>{note}</div>;
+                return <div>{note.comment}</div>;
             });
         } else {
             return <div> No Notes </div>
@@ -123,7 +123,7 @@ class TicketCardFSS extends React.Component {
                             }}
                           />
                           <FormControl.Feedback />
-                          <HelpBlock>Validation is based on string length.</HelpBlock>
+                          <HelpBlock>Enter a note to display below</HelpBlock>
                         </FormGroup>
                         <Button
                             bsStyle="primary"
@@ -133,6 +133,7 @@ class TicketCardFSS extends React.Component {
                         </Button>
                     </form>
                         <div>
+                            Notes:
                             {this.renderNotes()}
                         </div>
                     </Panel.Body>
