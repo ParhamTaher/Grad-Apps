@@ -442,8 +442,8 @@ export function rejectApplicant(tID, fID, type) {
                     console.log("ERROR in rejectApplicant " + error);
                 });
             axios
-                .post("/tickets", 
-                {   
+                .post("/tickets",
+                {
                     "faculty_id": fID,
                     "ticket_type": type,
                     "status": "granted"
@@ -492,8 +492,8 @@ export function declinedOfferApplicant(tID, fID, type) {
                     console.log("ERROR in declinedOfferApplicant " + error);
                 });
             axios
-                .post("/tickets", 
-                {   
+                .post("/tickets",
+                {
                     "faculty_id": fID,
                     "ticket_type": type,
                     "status": "granted"
@@ -516,8 +516,8 @@ export function createTicket(faculty_id, ticket_type, status, quantity) {
     }
     return dispatch => {
         axios
-            .post("/tickets"+ticketNum, 
-                {   
+            .post("/tickets"+ticketNum,
+                {
                     "faculty_id": faculty_id,
                     "ticket_type": ticket_type,
                     "status": status
@@ -566,18 +566,18 @@ export function signUpUser(fname, lname, email, password) {
 
 export function signInUser(email, password) {
     return dispatch => {
-        if (email === 'AC@gmail.com') {
-            dispatch(authUser({ userRole: 'AC' }));
-        } else if (email === 'BD@gmail.com') {
-            dispatch(authUser({ userRole: 'BD' }));
-        }
         axios
             .post('/users/login', { email, password })
             .then(response => {
                 console.log('Login Response: ' + response.userId);
-
-                // cookie.set('session', 'FSS');
-                dispatch(authUser({ userRole: 'FSS' }));
+                if (email === 'ac0@mail.ca') {
+                    dispatch(authUser({ userRole: 'AC' }));
+                } else if (email === 'bd0@mail.ca') {
+                    dispatch(authUser({ userRole: 'BD' }));
+                } else {
+                    // cookie.set('session', 'FSS');
+                    dispatch(authUser({ userRole: 'FSS' }));
+                }
             })
             .catch(error => {
                 console.log('inside action signin: ', error);
