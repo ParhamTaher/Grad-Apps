@@ -8,11 +8,10 @@ var bcrypt = require('bcrypt');
 router.post('/signup', (req, res, next) => {
     let newUser = new User({
         _id: new mongoose.Types.ObjectId(),
-        role: 'Faculty',
+        role: req.body.role,
         fname: req.body.fname,
         lname: req.body.lname,
         email: req.body.email,
-        username: req.body.email,
         password: req.body.password
     });
 

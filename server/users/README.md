@@ -6,13 +6,16 @@ Tools used:
 
 - Express
 - Mongoose + MongoDB
-- Mocha + Chai & chai-http
+- Mocha + Chai & Chai-Http
+- Express-Session & Connect-Mongo
 
 Key features:
 
 - Sign Up and Log In users.
 - Access and update Faculty users.
 - Access Applicants with the possibility to update their status.
+- Authoriziation managed by sessions.
+- Automated tests covering 100% of the server functionallity.
 
 ## Quickstart
 
@@ -36,6 +39,7 @@ The API will be running on localhost:3002
 
 - `/users/signup`: enroll new users, requires unique email.
 - `/users/login`: log in as given user, requires email and password of enrolled user.
+- `/users/logout`: log out from the system and destroy session object. requires a session (a cookie for logged in users).
 - `/faculty/`: retrive all users that are faculty.
 - `/faculty/:facultyId`: retrive or update faculty user by its unique `facultyId`
 - `/applicants/`: retrive all applicants.
@@ -46,9 +50,9 @@ The API will be running on localhost:3002
 ### `GET`
 
 - `/faculty`: retrive all users that have the role `Faculty`.
-- `/faculty?facultyId=5ab4c6551781a15a082d8ce5`: retrive user that have the id `5ab4c6551781a15a082d8ce5` iff it's role is `Faculty`.
+- `/faculty/5ab4c6551781a15a082d8ce5`: retrive user that have the id `5ab4c6551781a15a082d8ce5` iff it's role is `Faculty`.
 - `/applicants`: retrive all applicants.
-- `/applicants/applicantId=5ab31c8e0a1abb207cb19350`: retrive applicant that have the id `5ab31c8e0a1abb207cb19350`.
+- `/applicants/5ab31c8e0a1abb207cb19350`: retrive applicant that have the id `5ab31c8e0a1abb207cb19350`.
 
 ### `POST`
 
@@ -75,8 +79,8 @@ Request.Body for users/login:
 
 ### `PUT`
 
-- `/faculty?facultyId=5ab4c6551781a15a082d8ce5`: update user that have the id `5ab4c6551781a15a082d8ce5` iff it's role is `Faculty`.
-- `/applicants?applicantId=5ab31c8e0a1abb207cb19350`: update the status of the applicant that have the id `5ab31c8e0a1abb207cb19350`, options for status: `available, accepted, refused`.
+- `/faculty/5ab4c6551781a15a082d8ce5`: update user that have the id `5ab4c6551781a15a082d8ce5` iff it's role is `Faculty`.
+- `/applicants/5ab31c8e0a1abb207cb19350`: update the status of the applicant that have the id `5ab31c8e0a1abb207cb19350`, options for status: `available, accepted, refused`.
 
 Request.Body for faculty:
 ```json
@@ -141,9 +145,3 @@ Updates can be made modularly on a faculty by listing out any desired changes on
 	}
 }
 ```
-
-
-
-
-
-
