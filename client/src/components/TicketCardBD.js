@@ -28,7 +28,7 @@ class TicketCardBD extends React.Component {
 
     handleGrantTicket = () => {
         console.log(this.props.faculty);
-        this.props.actions.grantTicket(this.props.faculty);
+        this.props.actions.grantTicket(this.props.TID);
     };
 
     render() {
@@ -36,8 +36,8 @@ class TicketCardBD extends React.Component {
         if(this.props.ticketStatus=='initial'){
             isInitial = true;
         }
-        
-    
+
+
         const button = isInitial ? (
           <button type="button" class="btn btn-primary" onClick={this.handleGrantTicket}>GRANT</button>
         ) : (
