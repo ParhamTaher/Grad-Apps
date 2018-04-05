@@ -30,6 +30,7 @@ export const REQUEST_FACULTY_NAME_FROM_ID = 'REQUEST_FACULTY_NAME_FROM_ID';
 export const REQUEST_APPLICANT_NAME_FROM_ID = 'REQUEST_APPLICANT_NAME_FROM_ID';
 export const REQUEST_ALL_FACULTY = 'REQUEST_ALL_FACULTY';
 export const CREATE_TICKET = 'CREATE_TICKET';
+export const REQUEST_ALL_FILES_GAPF = 'REQUEST_ALL_FILES_GAPF';
 
 export function uploadDocumentRequest(file) {
     console.log('uploading GAPF... ' + file.name);
@@ -582,6 +583,19 @@ export function verifyAuth() {
         dispatch(authUser({ userRole: null }));
     };
 }
+
+export function getAllFilesGAPF() {
+    return dispatch => {
+        axios.get('/gapf').then(function(response) {
+            console.log('gapf data: ' + response.data);
+            dispatch({
+                type: REQUEST_ALL_FILES_GAPF,
+                payload: response.data
+            });
+        });
+    };
+}
+/**
 /**
 export function requestPasswordChange(credentials) {
     return function(dispatch) {
