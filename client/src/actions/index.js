@@ -207,15 +207,23 @@ export function getApplicantNameFromId(iD) {
 export function offerRequest(tID, aID) {
     return dispatch => {
         console.log(
-            'Inside offer request action creator! with TID: ' + tID + ' and AID: ' + aID
+            'Inside offer request action creator! with TID: ' +
+                tID +
+                ' and AID: ' +
+                '"' +
+                aID +
+                '"'
         );
         if (aID != null) {
             let fieldName = 'fieldName';
             let value = 'value';
             axios
                 .patch('/tickets/' + tID, [
-                    { "fieldName": "applicant_id", "value": '"' + aID + '"' },
-                    { "fieldName": "status", "value": "offer-request" }
+                    {
+                        '"fieldName"': '"applicant_id"',
+                        '"value"': '"' + aID + '"'
+                    },
+                    { '"fieldName"': '"status"', '"value"': '"offer-request"' }
                 ])
                 .then(response => {
                     console.log('Successfully assigned ticket to applicant');
