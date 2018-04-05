@@ -17,7 +17,7 @@ class TicketCardAC extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedApplicantID: 0,
+            selectedApplicantID: null,
             selectedApplicantName: 'Select an Applicant'
         };
     }
@@ -34,12 +34,12 @@ class TicketCardAC extends React.Component {
 
     handleSendOfferSubmit = () => {
         console.log('Clicked Send Offer button! ');
-        this.props.actions.offerApplicant(0);
+        this.props.actions.offerApplicant(this.props.TID);
     };
 
     handleRejectSubmit = () => {
         console.log('Clicked Reject Offer button! ');
-        this.props.actions.rejectApplicant(0);
+        this.props.actions.rejectApplicant(this.props.TID);
     };
 
     renderField = ({ input, label, type, meta: { touched, error } }) => (
@@ -78,7 +78,7 @@ class TicketCardAC extends React.Component {
                         </div>
                         <div>
                             &nbsp;&nbsp;&nbsp;&nbsp;Assigned to{' '}
-                            {this.props.applicant}
+                            {this.props.applicantName.appName}
                         </div>
                     </Panel.Title>
                 </Panel.Heading>
@@ -129,7 +129,8 @@ class TicketCardAC extends React.Component {
 function mapStateToProps(state) {
     // Whatever is returned will show up as props
     return {
-        applicantList: state.applicants
+        applicantList: state.applicants,
+        applicantName: state.appName
     };
 }
 

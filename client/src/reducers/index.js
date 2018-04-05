@@ -6,6 +6,7 @@ import { combineReducers } from 'redux';
 import ticketReducer from './ticketReducer';
 import ticketReducerInitial from './ticketReducerInitial';
 import ticketReducerOfferRequest from './ticketReducerOfferRequest';
+import ticketReducerOfferPending from './ticketReducerOfferPending';
 import authReducer from './authReducer';
 import applicantReducer from './applicantReducer';
 import appNameReducer from './appNameReducer';
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
     tickets: ticketReducer,
     initialTickets: ticketReducerInitial,
     offerRequestTickets: ticketReducerOfferRequest,
+    offerPendingTickets: ticketReducerOfferPending,
     applicants: applicantReducer,
     appName: appNameReducer,
     router: routerReducer

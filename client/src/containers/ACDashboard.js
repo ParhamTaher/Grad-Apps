@@ -9,8 +9,9 @@ import { Button } from 'react-bootstrap';
 class ACDashboard extends Component {
     componentDidMount() {
         console.log('Requesting tickets...');
-        this.props.actions.requestTickets('', 'offer-request', '');
-        
+        this.props.actions.requestTicketsAC('', 'offer-request', '');
+        this.props.actions.requestTicketsAC('', 'offer-pending', '');
+
     }
 
     render() {
@@ -25,14 +26,17 @@ class ACDashboard extends Component {
                     <div className="col-sm-6 col-sm-push-6">
                         <h4>Offered Tickets</h4>
                         <ItemListOffered
-                            ticketList={this.props.ticketList.tickets}
+                            ticketList={
+                                this.props.offerPendingTicketList.tickets
+                            }
                         />
                     </div>
                     <div className="col-sm-6 col-sm-pull-6">
                         <h4>Requested Tickets</h4>
                         <ItemListAC
-                            ticketList={this.props.ticketList.tickets}   
-                            
+                            ticketList={
+                                this.props.offerRequestTicketList.tickets
+                            }
                         />
                     </div>
                 </div>
@@ -44,7 +48,11 @@ class ACDashboard extends Component {
 function mapStateToProps(state) {
     // Whatever is returned will show up as props
     return {
-        ticketList: state.tickets,
+
+        offerRequestTicketList: state.offerRequestTickets,
+        offerPendingTicketList: state.offerPendingTickets,
+        offerAcceptedTicketList: state.offerAcceptedTickets,
+        offerRejectedTicketList: state.offerRejectedTickets
     };
 }
 
