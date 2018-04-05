@@ -27,6 +27,7 @@ export const SAVE_NOTE = 'SAVE_NOTE';
 export const REQUEST_APPLICANTS = 'REQUEST_APPLICANTS';
 export const REQUEST_APP_NAME = 'REQUEST_APP_NAME';
 export const REQUEST_FACULTY_NAME_FROM_ID = 'REQUEST_FACULTY_NAME_FROM_ID';
+export const REQUEST_APPLICANT_NAME_FROM_ID = 'REQUEST_APPLICANT_NAME_FROM_ID';
 
 export function uploadDocumentRequest(file) {
     console.log('uploading GAPF... ' + file.name);
@@ -143,9 +144,29 @@ export function requestTicketsNew(
                         type: REQUEST_INITIAL_TICKETS,
                         payload: response.data
                     });
+                } else if (ticketStatus == 'granted') {
+                    dispatch({
+                        type: REQUEST_GRANTED_TICKETS,
+                        payload: response.data
+                    });
                 } else if (ticketStatus == 'offer-request') {
                     dispatch({
                         type: REQUEST_OFFER_REQUEST_TICKETS,
+                        payload: response.data
+                    });
+                } else if (ticketStatus == 'offer-pending') {
+                    dispatch({
+                        type: REQUEST_OFFER_PENDING_TICKETS,
+                        payload: response.data
+                    });
+                } else if (ticketStatus == 'accepted') {
+                    dispatch({
+                        type: REQUEST_ACCEPTED_TICKETS,
+                        payload: response.data
+                    });
+                } else if (ticketStatus == 'refused') {
+                    dispatch({
+                        type: REQUEST_REFUSED_TICKETS,
                         payload: response.data
                     });
                 } else {
@@ -287,14 +308,14 @@ export function requestApplicants() {
 export function getApplicantNameFromId(iD) {
     return dispatch => {
         console.log("getting applicant name with id... " + iD);
-        axios.get('/applicants?applicantId=' + iD).then(function(response) {
-            console.log('applicant name: ' + response.data.applicants.fname);
+        axios.get('/applicants/' + iD).then(function(response) {
+            console.log('applicant name: ' + response.data.applicant);
             dispatch({
-                type: REQUEST_TICKETS,
+                type: REQUEST_APPLICANT_NAME_FROM_ID,
                 payload: {
-                    appName: response.data.applicants.fname + ' ' + response.data.applicants.lname
+                    appName: response.data.applicant.fname + ' ' + response.data.applicant.lname
                 }
-            });
+            })
         });
     };
 }
@@ -343,9 +364,23 @@ export function approveApplicant(tID) {
     return;
 }
 
-export function saveNote(values) {
+export function saveNote(tID, values) {
     return dispatch => {
-        console.log('Note Saved! ' + values.note);
+        console.log(
+            'Saving note...: ' + values.note
+        );
+        if (tID != null) {
+            axios
+                .patch('/tickets/' + tID, [
+                    {"fieldName": "note", "value": "updated status to pending"}
+                ])
+                .then(response => {
+                    console.log('Successfully saved a note!: ' + values.note);
+                })
+                .catch(error => {
+                    console.log('ERROR in saveNote ' + error);
+                });
+        }
     };
 }
 
@@ -369,7 +404,7 @@ export function offerApplicant(tID) {
 
 export function rejectApplicant(tID) {
     return dispatch => {
-        console.log('Offering applicant with ID: ' + tID);
+        console.log('Rejecting applicant with ID: ' + tID);
         if (tID != null) {
             axios
                 .patch("/tickets/" + tID, [
@@ -387,7 +422,7 @@ export function rejectApplicant(tID) {
 
 export function acceptedOfferApplicant(tID) {
     return dispatch => {
-        console.log('Offering applicant with ID: ' + tID);
+        console.log('Accepting applicant offer with ID: ' + tID);
         if (tID != null) {
             axios
                 .patch("/tickets/" + tID, [
@@ -406,7 +441,7 @@ export function acceptedOfferApplicant(tID) {
 
 export function declinedOfferApplicant(tID) {
     return dispatch => {
-        console.log('Offering applicant with ID: ' + tID);
+        console.log('Declining applicant offer with ID: ' + tID);
         if (tID != null) {
             axios
                 .patch("/tickets/" + tID, [
