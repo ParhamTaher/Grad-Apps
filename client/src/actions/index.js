@@ -296,30 +296,20 @@ export function getApplicantNameFromId(iD) {
 // Peter and Alex please review!
 export function offerRequest(tID, aID) {
     return dispatch => {
-        console.log(
-            'Inside offer request action creator! with TID: ' +
-                tID +
-                ' and AID: ' +
-                '"' +
-                aID +
-                '"'
-        );
+        console.log('Offering applicant with ID: ' + tID);
         if (aID != null) {
-            let fieldName = 'fieldName';
-            let value = 'value';
             axios
                 .patch('/tickets/' + tID, [
-                    {
-                        '"fieldName"': '"applicant_id"',
-                        '"value"': '"' + aID + '"'
-                    },
-                    { '"fieldName"': '"status"', '"value"': '"offer-request"' }
+                    { "fieldName": "applicant_id", "value": aID.toString() },
+                    { "fieldName": "status", "value": "offer-request" }
                 ])
                 .then(response => {
-                    console.log('Successfully assigned ticket to applicant');
+                    console.log(
+                        'Successfully offered applicant, ticket is pending acceptence'
+                    );
                 })
                 .catch(error => {
-                    console.log('ERROR in offerRequest ' + error);
+                    console.log('ERROR in offerApplicant ' + error);
                 });
         }
     };
@@ -342,7 +332,7 @@ export function offerApplicant(tID) {
         if (tID != null) {
             axios
                 .patch('/tickets/' + tID, [
-                    { fieldName: 'status', value: 'offer-pending' }
+                    { "fieldName": "status", "value": "offer-pending" }
                 ])
                 .then(response => {
                     console.log(
