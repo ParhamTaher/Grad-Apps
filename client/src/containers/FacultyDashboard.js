@@ -9,7 +9,9 @@ class FacultyDashboard extends Component {
     componentDidMount() {
         console.log('Requesting tickets...');
         this.props.actions.requestTicketsNew('mzaleski', 'initial', '');
-        this.props.actions.requestTicketsNew('mzaleski', 'offer-request', '');
+        this.props.actions.requestTicketsNew('mzaleski', 'offer-pending', '');
+        this.props.actions.requestTicketsNew('mzaleski', 'accepted', '');
+        this.props.actions.requestTicketsNew('mzaleski', 'refused', '');
     }
 
     handleFileUpload = event => {
@@ -43,7 +45,7 @@ class FacultyDashboard extends Component {
                         <h4>Offers Pending</h4>
                         <ItemListFSS
                             ticketList={
-                                this.props.offerRequestTicketList.tickets
+                                this.props.offerPendingTicketList.tickets
                             }
                             listID="2"
                             facultyID="mzaleski"
@@ -53,6 +55,24 @@ class FacultyDashboard extends Component {
                     </div>
                     <div className="col-sm-4">
                         <h4>Final Offers</h4>
+                        <ItemListFSS
+                            ticketList={
+                                this.props.offerAcceptedTicketList.tickets
+                            }
+                            listID="2"
+                            facultyID="mzaleski"
+                            ticketStatus="offer-pending"
+                            ticketType=""
+                        />
+                        <ItemListFSS
+                            ticketList={
+                                this.props.offerRejectedTicketList.tickets
+                            }
+                            listID="2"
+                            facultyID="mzaleski"
+                            ticketStatus="offer-pending"
+                            ticketType=""
+                        />
                     </div>
                 </div>
 
@@ -70,7 +90,6 @@ function mapStateToProps(state) {
     // Whatever is returned will show up as props
     return {
         initialTicketList: state.initialTickets,
-        offerRequestTicketList: state.offerRequestTickets,
         offerPendingTicketList: state.offerPendingTickets,
         offerAcceptedTicketList: state.acceptedTickets,
         offerRejectedTicketList: state.refusedTickets
