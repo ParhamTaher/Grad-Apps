@@ -25,7 +25,7 @@ export const REQUEST_ACCEPTED_TICKETS = 'REQUEST_ACCEPTED_TICKETS';
 export const UPLOAD_GAPF = 'UPLOAD_GAPF';
 export const SAVE_NOTE = 'SAVE_NOTE';
 export const REQUEST_APPLICANTS = 'REQUEST_APPLICANTS';
-export const REQUEST_APP_NAME = 'REQUEST_APP_NAME';
+export const REQUEST_APPLICANT_NAME_FROM_ID = 'REQUEST_APPLICANT_NAME_FROM_ID';
 
 export function uploadDocumentRequest(file) {
     console.log('uploading GAPF... ' + file.name);
@@ -142,9 +142,29 @@ export function requestTicketsNew(
                         type: REQUEST_INITIAL_TICKETS,
                         payload: response.data
                     });
+                } else if (ticketStatus == 'granted') {
+                    dispatch({
+                        type: REQUEST_GRANTED_TICKETS,
+                        payload: response.data
+                    });
                 } else if (ticketStatus == 'offer-request') {
                     dispatch({
                         type: REQUEST_OFFER_REQUEST_TICKETS,
+                        payload: response.data
+                    });
+                } else if (ticketStatus == 'offer-pending') {
+                    dispatch({
+                        type: REQUEST_OFFER_PENDING_TICKETS,
+                        payload: response.data
+                    });
+                } else if (ticketStatus == 'accepted') {
+                    dispatch({
+                        type: REQUEST_ACCEPTED_TICKETS,
+                        payload: response.data
+                    });
+                } else if (ticketStatus == 'refused') {
+                    dispatch({
+                        type: REQUEST_REFUSED_TICKETS,
                         payload: response.data
                     });
                 } else {
@@ -260,40 +280,37 @@ export function requestApplicants() {
 
 export function getApplicantNameFromId(iD) {
     return dispatch => {
-        axios.get('/applicants/applicantId=' + iD).then(function(response) {
-            console.log('applicant name: ' + response.data);
+        console.log("getting applicant name with id... " + iD);
+        axios.get('/applicants/' + iD).then(function(response) {
+            console.log('applicant name: ' + response.data.applicant);
             dispatch({
-                type: REQUEST_TICKETS,
+                type: REQUEST_APPLICANT_NAME_FROM_ID,
                 payload: {
-                    appName: {
-                        fname: response.data.fname,
-                        lname: response.data.lname
-                    }
+                    appName: response.data.applicant.fname + ' ' + response.data.applicant.lname
                 }
-            });
+            })
         });
     };
 }
 
-// Peter and Alex please review!
 export function offerRequest(tID, aID) {
     return dispatch => {
         console.log(
             'Inside offer request action creator! with TID: ' + tID + ' and AID: ' + aID
         );
         if (aID != null) {
-            let fieldName = 'fieldName';
-            let value = 'value';
             axios
                 .patch('/tickets/' + tID, [
-                    { "fieldName": "applicant_id", "value": '"' + aID + '"' },
+                    { "fieldName": "applicant_id", "value": aID.toString() },
                     { "fieldName": "status", "value": "offer-request" }
                 ])
                 .then(response => {
-                    console.log('Successfully assigned ticket to applicant');
+                    console.log(
+                        'Successfully offered applicant, ticket is pending acceptence'
+                    );
                 })
                 .catch(error => {
-                    console.log('ERROR in offerRequest ' + error);
+                    console.log('ERROR in offerApplicant ' + error);
                 });
         }
     };
@@ -328,7 +345,7 @@ export function offerApplicant(tID) {
     return dispatch => {
         console.log('Offering applicant with ID: ' + tID);
         if (tID != null) {
-            axios 
+            axios
                 .patch("/tickets/" + tID, [
                     { "fieldName": "status", "value": "offer-pending" }
                 ])
@@ -337,7 +354,7 @@ export function offerApplicant(tID) {
                 })
                 .catch(error => {
                     console.log("ERROR in offerApplicant " + error);
-                });     
+                });
         }
     };
 }
@@ -346,7 +363,7 @@ export function rejectApplicant(tID) {
     return dispatch => {
         console.log('Rejecting applicant with ID: ' + tID);
         if (tID != null) {
-            axios 
+            axios
                 .patch("/tickets/" + tID, [
                     { "fieldName": "status", "value": "refused" }
                 ])
@@ -355,7 +372,7 @@ export function rejectApplicant(tID) {
                 })
                 .catch(error => {
                     console.log("ERROR in offerApplicant " + error);
-                });     
+                });
         }
     };
 }
@@ -364,7 +381,7 @@ export function acceptedOfferApplicant(tID) {
     return dispatch => {
         console.log('Accepting applicant offer with ID: ' + tID);
         if (tID != null) {
-            axios 
+            axios
                 .patch("/tickets/" + tID, [
                     { "fieldName": "status", "value": "accepted" }
                 ])
@@ -373,7 +390,7 @@ export function acceptedOfferApplicant(tID) {
                 })
                 .catch(error => {
                     console.log("ERROR in offerApplicant " + error);
-                });     
+                });
         }
     };
 
@@ -383,7 +400,7 @@ export function declinedOfferApplicant(tID) {
     return dispatch => {
         console.log('Declining applicant offer with ID: ' + tID);
         if (tID != null) {
-            axios 
+            axios
                 .patch("/tickets/" + tID, [
                     { "fieldName": "status", "value": "refused" }
                 ])
@@ -392,7 +409,7 @@ export function declinedOfferApplicant(tID) {
                 })
                 .catch(error => {
                     console.log("ERROR in offerApplicant " + error);
-                });     
+                });
         }
     };
 

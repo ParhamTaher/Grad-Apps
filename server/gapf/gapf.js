@@ -1,38 +1,59 @@
 const express = require('express');
+
+const http = require('http');
+//set up express app
+const app = express();
 //const bodyParser = require('body-parser');
 const busboy = require('busboy-body-parser');
 const gapfRoutes = require('./api/routes');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
-const Grid = require('gridfs-stream');
-const fs = require('fs');
+const config = require('config');
+const request = require('request-json');
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 const port = process.env.port || 3001;
 
-mongoose.connect(
-    'mongodb://proj-team13:' +
-        'team13db' +
-        '@node-rest-gradapp-shard-00-00-imzxv.mongodb.net:27017,' +
-        'node-rest-gradapp-shard-00-01-imzxv.mongodb.net:27017,' +
-        'node-rest-gradapp-shard-00-02-imzxv.mongodb.net:27017/' +
-        'test?ssl=true&replicaSet=node-rest-gradapp-shard-0&authSource=admin'
-);
-
+mongoose.connect(config.DBHost);
 mongoose.Promise = global.Promise;
 
-//set up express app
-const app = express();
-
 //middleware
-//app.use(bodyParser.json());
+
+//sessions
+app.use(session({
+	secret: 'csc 302 team 13',
+	resave: false,
+	saveUninitialized: false,
+	store: new MongoStore({
+	  mongooseConnection: mongoose.connection
+	})
+}));
+
+function hasSession(req, res, next) {
+  console.log(req.session);
+	if (req.session.userId && (req.session.role === 'FSS' || req.session.role === 'Budget Director' || req.session.role === 'Faculty')) {
+		next();
+	} else {
+		const error = new Error('Unauthorized User**');
+		error.status = 401;
+		next(error);
+	}
+}
+
 app.use(morgan('dev'));
 app.use(busboy());
+app.use(hasSession);
 app.use(gapfRoutes);
 
 app.use(function(err, req, res, next) {
     //console.log(err);
-    res.send({ error: err.message });
+    res.status(404).send({ error: err.message });
 });
 
-app.listen(port, function() {
+//console.log(process.env.NODE_ENV)
+const server = http.createServer(app);
+server.listen(port, function() {
     console.log("now listening for requests on port '%d'", port);
 });
+
+module.exports = app;
