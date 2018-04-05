@@ -25,6 +25,8 @@ export const REQUEST_ACCEPTED_TICKETS = 'REQUEST_ACCEPTED_TICKETS';
 export const UPLOAD_GAPF = 'UPLOAD_GAPF';
 export const SAVE_NOTE = 'SAVE_NOTE';
 export const REQUEST_APPLICANTS = 'REQUEST_APPLICANTS';
+export const REQUEST_APP_NAME = 'REQUEST_APP_NAME';
+export const REQUEST_FACULTY_NAME_FROM_ID = 'REQUEST_FACULTY_NAME_FROM_ID';
 export const REQUEST_APPLICANT_NAME_FROM_ID = 'REQUEST_APPLICANT_NAME_FROM_ID';
 
 export function uploadDocumentRequest(file) {
@@ -253,6 +255,31 @@ export function requestTicketsAC(
     };
 }
 
+export function requestTicketsBD(
+    ticketType = ''
+) {
+
+    let ticketTypeUrl = ticketType == '' ? '' : 'ticket_type=' + ticketType;
+    console.log("HERE");
+    return dispatch => {
+        axios
+            .get(
+                '/tickets?'+
+                ticketTypeUrl
+            )
+            .then(function(response) {
+                console.log(
+                    'Successfully connected to tickets route!: ',
+                    response.data
+                );
+                dispatch({
+                    type: REQUEST_TICKETS,
+                    payload: response.data
+                });
+            });
+    };
+}
+
 
 export function requestApplicants() {
     return dispatch => {
@@ -299,6 +326,22 @@ export function getApplicantNameFromId(iD) {
                     appName: response.data.applicant.fname + ' ' + response.data.applicant.lname
                 }
             })
+        });
+    };
+}
+
+export function getFacultyNameFromId(iD) {
+    return dispatch => {
+        console.log("getting faculty name with id... " + iD);
+        axios.get('/faculty?facultyId=' + iD).then(function(response) {
+            console.log('faculty name: ' + response.data.faculty.fname);
+            dispatch({
+                type: REQUEST_FACULTY_NAME_FROM_ID,
+                payload: {
+                    fName: response.data.faculty.fname + ' ' + response.data.faculty.lname
+                }
+            });
+
         });
     };
 }
