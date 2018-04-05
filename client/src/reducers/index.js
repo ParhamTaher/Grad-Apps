@@ -5,8 +5,11 @@
 import { combineReducers } from 'redux';
 import ticketReducer from './ticketReducer';
 import ticketReducerInitial from './ticketReducerInitial';
+import ticketReducerGranted from './ticketReducerGranted';
 import ticketReducerOfferRequest from './ticketReducerOfferRequest';
 import ticketReducerOfferPending from './ticketReducerOfferPending';
+import ticketReducerAccepted from './ticketReducerAccepted';
+import ticketReducerRefused from './ticketReducerRefused';
 import authReducer from './authReducer';
 import applicantReducer from './applicantReducer';
 import appNameReducer from './appNameReducer';
@@ -20,8 +23,11 @@ const rootReducer = combineReducers({
     form: FormReducer,
     tickets: ticketReducer,
     initialTickets: ticketReducerInitial,
+    grantedTickets: ticketReducerGranted,
     offerRequestTickets: ticketReducerOfferRequest,
     offerPendingTickets: ticketReducerOfferPending,
+    acceptedTickets: ticketReducerAccepted,
+    refusedTickets: ticketReducerRefused,
     applicants: applicantReducer,
     appName: appNameReducer,
     router: routerReducer

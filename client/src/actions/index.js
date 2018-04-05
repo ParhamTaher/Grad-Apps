@@ -17,8 +17,11 @@ export const AUTH_USER = 'AUTH_USER';
 export const REQUEST_CHANGE_PASS = 'REQUEST_CHANGE_PASS';
 export const REQUEST_TICKETS = 'REQUEST_TICKET_ID';
 export const REQUEST_INITIAL_TICKETS = 'REQUEST_INITIAL_TICKETS';
+export const REQUEST_GRANTED_TICKETS = 'REQUEST_GRANTED_TICKETS';
 export const REQUEST_OFFER_REQUEST_TICKETS = 'REQUEST_OFFER_REQUEST_TICKETS';
 export const REQUEST_OFFER_PENDING_TICKETS = 'REQUEST_OFFER_PENDING_TICKETS';
+export const REQUEST_ACCEPTED_TICKETS = 'REQUEST_ACCEPTED_TICKETS';
+export const REQUEST_REFUSED_TICKETS = 'REQUEST_REFUSED_TICKETS';
 export const UPLOAD_GAPF = 'UPLOAD_GAPF';
 export const SAVE_NOTE = 'SAVE_NOTE';
 export const REQUEST_APPLICANTS = 'REQUEST_APPLICANTS';
@@ -32,7 +35,6 @@ export function uploadDocumentRequest(file) {
         });
     };
 }
-
 
 export function requestTickets(
     facultyID = '',
@@ -88,7 +90,7 @@ export function requestTickets(
     };
 }
 
-export function requestTicketsFSS(
+export function requestTicketsNew(
     facultyID = '',
     ticketStatus = '',
     ticketType = ''
@@ -139,9 +141,29 @@ export function requestTicketsFSS(
                         type: REQUEST_INITIAL_TICKETS,
                         payload: response.data
                     });
+                } else if (ticketStatus == 'granted') {
+                    dispatch({
+                        type: REQUEST_GRANTED_TICKETS,
+                        payload: response.data
+                    });
                 } else if (ticketStatus == 'offer-request') {
                     dispatch({
                         type: REQUEST_OFFER_REQUEST_TICKETS,
+                        payload: response.data
+                    });
+                } else if (ticketStatus == 'offer-pending') {
+                    dispatch({
+                        type: REQUEST_OFFER_PENDING_TICKETS,
+                        payload: response.data
+                    });
+                } else if (ticketStatus == 'accepted') {
+                    dispatch({
+                        type: REQUEST_ACCEPTED_TICKETS,
+                        payload: response.data
+                    });
+                } else if (ticketStatus == 'refused') {
+                    dispatch({
+                        type: REQUEST_REFUSED_TICKETS,
                         payload: response.data
                     });
                 } else {
@@ -219,7 +241,6 @@ export function requestTicketsAC(
             });
     };
 }
-
 
 export function requestApplicants() {
     return dispatch => {
@@ -319,16 +340,18 @@ export function offerApplicant(tID) {
     return dispatch => {
         console.log('Offering applicant with ID: ' + tID);
         if (tID == null) {
-            axios 
-                .patch("/tickets/" + "5ac37d29ce45b6103f43c8f2", [
-                    { "fieldName": "status", "value": "offer-pending" }
+            axios
+                .patch('/tickets/' + '5ac37d29ce45b6103f43c8f2', [
+                    { fieldName: 'status', value: 'offer-pending' }
                 ])
                 .then(response => {
-                    console.log("Successfully offered applicant, ticket is pending acceptence");
+                    console.log(
+                        'Successfully offered applicant, ticket is pending acceptence'
+                    );
                 })
                 .catch(error => {
-                    console.log("ERROR in offerApplicant " + error);
-                });     
+                    console.log('ERROR in offerApplicant ' + error);
+                });
         }
     };
 }

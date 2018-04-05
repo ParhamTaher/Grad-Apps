@@ -8,8 +8,8 @@ import { Button } from 'react-bootstrap';
 class FacultyDashboard extends Component {
     componentDidMount() {
         console.log('Requesting tickets...');
-        this.props.actions.requestTicketsFSS('mzaleski', 'initial', '');
-        this.props.actions.requestTicketsFSS('mzaleski', 'offer-request', '');
+        this.props.actions.requestTicketsNew('mzaleski', 'initial', '');
+        this.props.actions.requestTicketsNew('mzaleski', 'offer-request', '');
     }
 
     handleFileUpload = event => {
@@ -47,7 +47,7 @@ class FacultyDashboard extends Component {
                             }
                             listID="2"
                             facultyID="mzaleski"
-                            ticketStatus="offer-request"
+                            ticketStatus="offer-pending"
                             ticketType=""
                         />
                     </div>
@@ -70,10 +70,10 @@ function mapStateToProps(state) {
     // Whatever is returned will show up as props
     return {
         initialTicketList: state.initialTickets,
-        offerRequestTicketList: state.offerRequestTickets
-        //offerPendingTicketList: state.offerPendingTickets,
-        //offerAcceptedTicketList: state.offerAcceptedTickets,
-        //offerRejectedTicketList: state.offerRejectedTickets
+        offerRequestTicketList: state.offerRequestTickets,
+        offerPendingTicketList: state.offerPendingTickets,
+        offerAcceptedTicketList: state.acceptedTickets,
+        offerRejectedTicketList: state.refusedTickets
     };
 }
 
