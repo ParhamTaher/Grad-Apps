@@ -26,7 +26,7 @@ export const UPLOAD_GAPF = 'UPLOAD_GAPF';
 export const SAVE_NOTE = 'SAVE_NOTE';
 export const REQUEST_APPLICANTS = 'REQUEST_APPLICANTS';
 export const REQUEST_APP_NAME = 'REQUEST_APP_NAME';
-export const REQUEST_F_NAME = 'REQUEST_F_NAME';
+export const REQUEST_FACULTY_NAME_FROM_ID = 'REQUEST_FACULTY_NAME_FROM_ID';
 
 export function uploadDocumentRequest(file) {
     console.log('uploading GAPF... ' + file.name);
@@ -305,7 +305,7 @@ export function getFacultyNameFromId(iD) {
         axios.get('/faculty?facultyId=' + iD).then(function(response) {
             console.log('faculty name: ' + response.data.faculty.fname);
             dispatch({
-                type: REQUEST_TICKETS,
+                type: REQUEST_FACULTY_NAME_FROM_ID,
                 payload: {
                     fName: response.data.faculty.fname + ' ' + response.data.faculty.lname
                 }
