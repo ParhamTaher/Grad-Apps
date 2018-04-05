@@ -10,8 +10,6 @@ import {
     FormGroup,
     ControlLabel,
     HelpBlock,
-    DropdownButton,
-    MenuItem
 } from 'react-bootstrap';
 import axios from 'axios';
 
@@ -37,6 +35,8 @@ class TicketCardBD extends React.Component {
     handleGrantTicket = () => {
         console.log(this.props.faculty);
         this.props.actions.grantTicket(this.props.TID);
+        window.location.reload();
+
     };
 
     render() {
