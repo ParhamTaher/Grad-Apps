@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './containers/App';
 import { Provider } from 'react-redux';
-import createAppStore from './store/configureStore2';
+import createAppStore from './store/configureAppStore';
 import { PersistGate } from 'redux-persist/integration/react'
 
 
