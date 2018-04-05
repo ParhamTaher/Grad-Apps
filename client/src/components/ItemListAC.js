@@ -22,11 +22,12 @@ class ItemListAC extends Component {
         return this.props.ticketList.map((ticket, i) => {
             return (
                 <TicketCardAC
-                    key={ticket.TID}
+                    listID={this.props.listID}
+                    key={ticket._id}
                     numberLabel={i + 1}
-                    TID={ticket.TID}
-                    applicant={ticket.applicant}
-                    ticketStatus={ticket.ticketStatus}
+                    TID={ticket._id}
+                    applicantID={ticket.applicant_id}
+                    ticketStatus={ticket.status}
                     ticketType={ticket.ticket_type}
                     notes={ticket.notes}
                 />
