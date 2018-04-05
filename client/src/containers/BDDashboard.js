@@ -1,9 +1,16 @@
 import React, { Component } from 'react';
 import '../budgetd.css';
-import ItemList from './TicketTable';
+import ItemListBD from '../components/ItemListBD';
 import { BrowserRouter as Router } from 'react-router-dom'
+import { connect } from 'react-redux';
+import * as Actions from '../actions';
+import { bindActionCreators } from 'redux';
 
 class BDDashboard extends Component {
+	componentDidMount() {
+        console.log('Requesting tickets...');
+        this.props.actions.requestTicketsNew('', '', '');
+    }
 
     render() {
         return (
@@ -21,10 +28,7 @@ class BDDashboard extends Component {
 		                	<h4>Ticket List</h4>
 		            	</div>
 		            	<div class="ex11">
-		            		<h5>Domestic</h5>
-			            	<ItemList ticketType={'D'} />
-			            	<h5>International</h5>
-			            	<ItemList ticketType={'I'} />
+			            	<ItemListBD ticketList={this.props.allTickets.tickets} />
 						</div>
 				  	</div>
 				    <div class="col-sm-2 text-center">
@@ -38,4 +42,22 @@ class BDDashboard extends Component {
     }
 }
 
-export default BDDashboard;
+function mapStateToProps(state) {
+    // Whatever is returned will show up as props
+    return {
+        initialTicketList: state.initialTickets,
+        offerRequestTicketList: state.offerRequestTickets,
+        offerPendingTicketList: state.offerPendingTickets,
+        offerAcceptedTicketList: state.acceptedTickets,
+        offerRejectedTicketList: state.refusedTickets,
+        allTickets: state.tickets
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        actions: bindActionCreators(Actions, dispatch)
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BDDashboard);
