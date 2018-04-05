@@ -17,7 +17,7 @@ var note_schema = new Schema({
 var ticket_schema = new Schema({
 	_id: mongoose.Schema.Types.ObjectId,
 	faculty_id: { type: String, required: true },
-	applicant_id: Number,
+	applicant_id: mongoose.Schema.Types.ObjectId,
 	status: { 
 		type: String,
 		enum: ['initial', 'granted', 'offer-request', 'offer-pending', 'accepted', 'refused'],
