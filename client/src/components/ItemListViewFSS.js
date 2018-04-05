@@ -3,20 +3,6 @@ import TicketCardViewFSS from '../components/TicketCardViewFSS';
 import { PanelGroup, Panel } from 'react-bootstrap';
 
 class ItemListFSS extends Component {
-    constructor(props, context) {
-        super(props, context);
-
-        this.handleSelect = this.handleSelect.bind(this);
-
-        this.state = {
-            activeKey: '1'
-        };
-    }
-
-    handleSelect(activeKey) {
-        console.log('Acitive Key: ' + activeKey);
-        this.setState({ activeKey });
-    }
 
     renderList() {
         return this.props.ticketList.map((ticket, i) => {

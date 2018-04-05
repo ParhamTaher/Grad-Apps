@@ -1,5 +1,4 @@
 import React from 'react';
-import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import * as Actions from '../actions';
 import { bindActionCreators } from 'redux';
@@ -13,7 +12,7 @@ import {
     HelpBlock
 } from 'react-bootstrap';
 
-class TicketCardFSS extends React.Component {
+class TicketCardViewFSS extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -87,7 +86,7 @@ class TicketCardFSS extends React.Component {
 
     render() {
         return (
-            <Panel id={this.props.TID}>
+            <Panel key={this.props.TID} id={this.props.TID}>
                 <Panel.Heading>
                     <Panel.Title toggle>
                         <div>
@@ -156,8 +155,4 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-    reduxForm({
-        form: 'ticket-form'
-    })(TicketCardFSS)
-);
+export default connect(mapStateToProps, mapDispatchToProps)(TicketCardViewFSS);

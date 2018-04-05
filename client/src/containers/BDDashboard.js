@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import '../budgetd.css';
 import ItemListBD from '../components/ItemListBD';
-import { BrowserRouter as Router } from 'react-router-dom'
+import { BrowserRouter as Router } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as Actions from '../actions';
 import { bindActionCreators } from 'redux';
 
 class BDDashboard extends Component {
-	componentDidMount() {
+    componentDidMount() {
         console.log('Requesting tickets...');
         this.props.actions.requestTicketsNew('', '', '');
     }
@@ -15,28 +15,41 @@ class BDDashboard extends Component {
     render() {
         return (
             <div>
-	            <div class="text-center">
-	                <h2>Budget Director Dashboard</h2>
-	            </div>
-	            <hr></hr>
-	            <div class="container">
-				  <div class="row">
-				  <div class="col-sm-2 text-center">
-				   </div>
-				  	<div class="col-sm-6 text-center">
-					  	<div class="text-center">
-		                	<h4>Ticket List</h4>
-		            	</div>
-		            	<div class="ex11">
-			            	<ItemListBD ticketList={this.props.allTickets.tickets} />
-						</div>
-				  	</div>
-				    <div class="col-sm-2 text-center">
-				    	<button type="button" class="btn btn-primary btn-lg">Show me GAPF</button>
-				    	<button type="button" onClick={() => this.props.history.push("/createTicket")} class="btn btn-success btn-lg">Create Ticket</button>
-				    </div>
-				   </div>
-  				</div>
+                <div className="text-center">
+                    <h2>Budget Director Dashboard</h2>
+                </div>
+                <hr />
+                <div className="container">
+                    <div className="row">
+                        <div className="col-sm-2 text-center" />
+                        <div className="col-sm-6 text-center">
+                            <div className="text-center">
+                                <h4>Ticket List</h4>
+                            </div>
+                            <div className="ex11">
+                                <ItemListBD
+                                    ticketList={this.props.allTickets.tickets}
+                                />
+                            </div>
+                        </div>
+                        <div className="col-sm-2 text-center">
+                            <button
+                                type="button"
+                                className="btn btn-primary btn-lg"
+                            >
+                                Show me GAPF
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    this.props.history.push('/createTicket')}
+                                className="btn btn-success btn-lg"
+                            >
+                                Create Ticket
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }

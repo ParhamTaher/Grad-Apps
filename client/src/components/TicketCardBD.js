@@ -66,9 +66,9 @@ class TicketCardBD extends React.Component {
 
 
         const button = isInitial ? (
-          <button type="button" class="btn btn-primary" onClick={this.handleGrantTicket}>GRANT</button>
+          <button type="button" className="btn btn-primary" onClick={this.handleGrantTicket}>GRANT</button>
         ) : (
-          <button type="button" class="btn btn-primary" disabled>ALREADY GRANTED</button>
+          <button type="button" className="btn btn-primary" disabled>ALREADY GRANTED</button>
         );
 
         return (
