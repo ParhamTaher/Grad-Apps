@@ -511,7 +511,7 @@ export function declinedOfferApplicant(tID, fID, type) {
 // Create Ticket
 export function createTicket(faculty_id, ticket_type, status, quantity) {
     let ticketNum = '';
-    if(quantity > 0){
+    if(quantity > 1){
         ticketNum = '/'+quantity;
     }
     return dispatch => {
