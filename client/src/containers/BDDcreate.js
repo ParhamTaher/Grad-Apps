@@ -58,6 +58,7 @@ class BDDcreate extends React.Component {
     console.log(this.state.number);
     this.props.actions.createTicket(this.state.faculty,
       this.state.type,this.state.status,this.state.number);
+    this.props.history.push("/BDDashboard");
   }
 
     renderFaculty(){
@@ -107,7 +108,7 @@ class BDDcreate extends React.Component {
               <input class="form-control" name='number' type="text" onChange={this.handleInputChange} id="example-text-input"/>
               </div>
             </div>
-            <input className="btn btn-primary" type="submit" value="Submit" />
+            <input  className="btn btn-primary" type="submit" value="Submit" />
           </form>
         </div>
       </div>
