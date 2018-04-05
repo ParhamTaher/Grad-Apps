@@ -321,23 +321,23 @@ export function approveApplicant(tID) {
     return;
 }
 
-export function saveNote(tID, values) {
+export function saveNote(tID, values, notesList) {
     return dispatch => {
-        console.log(
-            'Saving note...: ' + values.note
-        );
-        if (tID != null) {
-            axios
-                .patch('/tickets/' + tID, [
-                    {"fieldName": "note", "value": "updated status to pending"}
-                ])
-                .then(response => {
-                    console.log('Successfully saved a note!: ' + values.note);
-                })
-                .catch(error => {
-                    console.log('ERROR in saveNote ' + error);
-                });
-        }
+        console.log(typeof notesList);
+        let notesArray = [];
+        let today = new Date;
+        notesArray.push({comment: values, post_date: today})
+
+        axios
+            .patch('/tickets/' + tID, [
+                {"fieldName": "note", "value": notesArray.toString()}
+            ])
+            .then(response => {
+                console.log('Successfully saved a note!: ' + values.note);
+            })
+            .catch(error => {
+                console.log('ERROR in saveNote ' + error);
+            });
     };
 }
 

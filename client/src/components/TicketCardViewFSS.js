@@ -13,6 +13,12 @@ import {
 } from 'react-bootstrap';
 
 class TicketCardFSS extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            noteValue: ''
+        };
+    }
 
     componentDidMount() {
         if (this.props.applicantID) {
@@ -23,9 +29,9 @@ class TicketCardFSS extends React.Component {
         this.props.actions.requestApplicants();
     }
 
-    handleSaveNoteSubmit = values => {
-        console.log('Clicked note button! ' + values.note);
-        this.props.actions.saveNote(values);
+    handleSaveNoteSubmit = () => {
+        console.log('Clicked note button! ' + this.state.noteValue);
+        this.props.actions.saveNote(this.props.TID, this.state.noteValue, this.props.notesList);
     };
 
     renderField = ({ input, label, type, meta: { touched, error } }) => (
@@ -63,9 +69,13 @@ class TicketCardFSS extends React.Component {
 
 
     renderNotes() {
-        return this.props.notesList.notes.map((note, i) => {
-            return <div>{note}</div>;
-        });
+        if(this.props.notesList) {
+            return this.props.notesList.map((note, i) => {
+                return <div>{note}</div>;
+            });
+        } else {
+            return <div> No Notes </div>
+        }
     }
 
     render() {
@@ -90,27 +100,33 @@ class TicketCardFSS extends React.Component {
                 </Panel.Heading>
                 <Panel.Collapse>
                     <Panel.Body>
-                        <form
-                            onSubmit={this.props.handleSubmit(
-                                this.handleSaveNoteSubmit
-                            )}
+                    <form>
+                        <FormGroup
+                          controlId="formBasicText"
                         >
-                            <Field
-                                name="note"
-                                component={this.renderField}
-                                className="form-control"
-                                type="text"
-                                label="Enter a note"
-                            />
-                            <button action="submit" className="btn btn-primary">
-                                Save
-                            </button>
-                        </form>
+                          <ControlLabel>Notes: </ControlLabel>
+                          <FormControl
+                            type="text"
+                            value={this.state.noteValue}
+                            placeholder="Enter text"
+                            onChange={(e) => {
+                                this.setState({
+                                    noteValue: e.target.value
+                                });
+                            }}
+                          />
+                          <FormControl.Feedback />
+                          <HelpBlock>Validation is based on string length.</HelpBlock>
+                        </FormGroup>
+                        <Button
+                            bsStyle="primary"
+                            onClick={this.handleSaveNoteSubmit}
+                        >
+                            Save
+                        </Button>
+                    </form>
                         <div>
-                            <ul>
-                                <li>Note 1</li>
-                                <li>Note 2</li>
-                            </ul>
+                            {this.renderNotes()}
                         </div>
                     </Panel.Body>
                 </Panel.Collapse>

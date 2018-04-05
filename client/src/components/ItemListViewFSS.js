@@ -29,7 +29,7 @@ class ItemListFSS extends Component {
                     applicantID={ticket.applicant_id}
                     ticketStatus={ticket.status}
                     ticketType={ticket.ticket_type}
-                    notes={ticket.notes}
+                    notesList={ticket.note}
                 />
             );
         });

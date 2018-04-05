@@ -19,7 +19,8 @@ class TicketCardFSS extends React.Component {
         super(props);
         this.state = {
             selectedApplicantID: null,
-            selectedApplicantName: 'Select an Applicant'
+            selectedApplicantName: 'Select an Applicant',
+            noteValue: ''
         };
     }
 
@@ -32,10 +33,18 @@ class TicketCardFSS extends React.Component {
         this.props.actions.requestApplicants();
     }
 
-    handleSaveNoteSubmit = values => {
-        console.log('Clicked note button! ' + values.note);
-        this.props.actions.saveNote(values);
+    handleSaveNoteSubmit = () => {
+        console.log('Clicked note button! ' + this.state.noteValue);
+        this.props.actions.saveNote(this.props.TID, this.state.noteValue, this.props.notesList);
     };
+
+    handleNoteChange(e) {
+      this.setState({
+          selectedApplicantID: this.state.selectedApplicantID,
+          selectedApplicantName: this.state.selectedApplicantName,
+          noteValue: e.target.value
+      })
+    }
 
     handleAssignSubmit = () => {
         console.log('Clicked Assign button! ');
@@ -105,9 +114,13 @@ class TicketCardFSS extends React.Component {
     }
 
     renderNotes() {
-        return this.props.notesList.notes.map((note, i) => {
-            return <div>{note}</div>;
-        });
+        if(this.props.notesList) {
+            return this.props.notesList.map((note, i) => {
+                return <div>{note}</div>;
+            });
+        } else {
+            return <div> No Notes </div>
+        }
     }
 
     render() {
@@ -132,27 +145,33 @@ class TicketCardFSS extends React.Component {
                 </Panel.Heading>
                 <Panel.Collapse>
                     <Panel.Body>
-                        <form
-                            onSubmit={this.props.handleSubmit(
-                                this.handleSaveNoteSubmit
-                            )}
-                        >
-                            <Field
-                                name="note"
-                                component={this.renderField}
-                                className="form-control"
+                        <form>
+                            <FormGroup
+                              controlId="formBasicText"
+                            >
+                              <ControlLabel>Notes: </ControlLabel>
+                              <FormControl
                                 type="text"
-                                label="Enter a note"
-                            />
-                            <button action="submit" className="btn btn-primary">
+                                value={this.state.noteValue}
+                                placeholder="Enter text"
+                                onChange={(e) => {
+                                    this.setState({
+                                        noteValue: e.target.value
+                                    });
+                                }}
+                              />
+                              <FormControl.Feedback />
+                              <HelpBlock>Validation is based on string length.</HelpBlock>
+                            </FormGroup>
+                            <Button
+                                bsStyle="primary"
+                                onClick={this.handleSaveNoteSubmit}
+                            >
                                 Save
-                            </button>
+                            </Button>
                         </form>
                         <div>
-                            <ul>
-                                <li>Note 1</li>
-                                <li>Note 2</li>
-                            </ul>
+                            {this.renderNotes()}
                         </div>
                         <DropdownButton
                             bsStyle="default"

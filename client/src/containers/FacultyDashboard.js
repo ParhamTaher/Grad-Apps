@@ -9,10 +9,10 @@ import { Button } from 'react-bootstrap';
 class FacultyDashboard extends Component {
     componentDidMount() {
         console.log('Requesting tickets...');
-        this.props.actions.requestTicketsNew('mzaleski', 'initial', '');
-        this.props.actions.requestTicketsNew('mzaleski', 'offer-pending', '');
-        this.props.actions.requestTicketsNew('mzaleski', 'accepted', '');
-        this.props.actions.requestTicketsNew('mzaleski', 'refused', '');
+        this.props.actions.requestTicketsNew('', 'initial', '');
+        this.props.actions.requestTicketsNew('', 'offer-pending', '');
+        this.props.actions.requestTicketsNew('', 'accepted', '');
+        this.props.actions.requestTicketsNew('', 'refused', '');
     }
 
     handleFileUpload = event => {
