@@ -314,13 +314,8 @@ export function offerApplicant(tID) {
     return dispatch => {
         console.log('Offering applicant with ID: ' + tID);
         if (tID != null) {
-<<<<<<< HEAD
-            axios
-                .patch('/tickets/' + tID, [
-=======
             axios
                 .patch("/tickets/" + tID, [
->>>>>>> 6b2a012b92c445eeb4efc7256508c9a0a8002275
                     { "fieldName": "status", "value": "offer-pending" }
                 ])
                 .then(response => {
