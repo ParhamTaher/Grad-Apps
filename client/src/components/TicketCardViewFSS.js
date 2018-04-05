@@ -10,17 +10,13 @@ import {
     FormControl,
     FormGroup,
     ControlLabel,
-    HelpBlock,
-    DropdownButton,
-    MenuItem
+    HelpBlock
 } from 'react-bootstrap';
 
 class TicketCardFSS extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedApplicantID: null,
-            selectedApplicantName: 'Select an Applicant',
             applicantName: 'No One',
             noteValue: ''
         };
@@ -28,10 +24,11 @@ class TicketCardFSS extends React.Component {
 
     componentDidMount() {
         if (this.props.applicantID) {
+            var self = this;
             //this.props.actions.getApplicantNameFromId(this.props.applicantID);
             axios.get('/applicants/' + this.props.applicantID).then(function(response) {
                 console.log('applicant name: ' + response.data.applicant);
-                this.setState({applicantName: response.data.applicant.fname + ' ' + response.data.applicant.lname})
+                self.setState({ applicantName: response.data.applicant.fname + ' ' + response.data.applicant.lname })
             });
         }
 
@@ -43,27 +40,6 @@ class TicketCardFSS extends React.Component {
         console.log('Clicked note button! ' + this.state.noteValue);
         this.props.actions.saveNote(this.props.TID, this.state.noteValue, this.props.notesList);
     };
-
-    handleNoteChange(e) {
-      this.setState({
-          selectedApplicantID: this.state.selectedApplicantID,
-          selectedApplicantName: this.state.selectedApplicantName,
-          noteValue: e.target.value
-      })
-    }
-
-    handleAssignSubmit = () => {
-        console.log('Clicked Assign button! ');
-        this.props.actions.offerRequest(
-            this.props.TID,
-            this.state.selectedApplicantID
-        );
-    };
-
-    handleUnassignSubmit = () => {
-        console.log('Clicked Unassign button! ');
-    };
-
 
     renderField = ({ input, label, type, meta: { touched, error } }) => (
         <fieldset className={`form-group`}>
@@ -98,27 +74,6 @@ class TicketCardFSS extends React.Component {
         </fieldset>
     );
 
-    renderApplicantList() {
-        console.log('app list: ' + this.props.applicantList.applicants);
-        return this.props.applicantList.applicants.map((applicant, i) => {
-            return (
-                <MenuItem
-                    key={applicant._id}
-                    eventKey={applicant._id}
-                    title={applicant.fname + ' ' + applicant.lname}
-                    onSelect={(eventKey, event) => {
-                        this.setState({
-                            selectedApplicantID: applicant._id,
-                            selectedApplicantName:
-                                applicant.fname + ' ' + applicant.lname
-                        });
-                    }}
-                >
-                    {i + 1 + '. ' + applicant.fname + ' ' + applicant.lname}
-                </MenuItem>
-            );
-        });
-    }
 
     renderNotes() {
         if(this.props.notesList) {
@@ -152,54 +107,34 @@ class TicketCardFSS extends React.Component {
                 </Panel.Heading>
                 <Panel.Collapse>
                     <Panel.Body>
-                        <form>
-                            <FormGroup
-                              controlId="formBasicText"
-                            >
-                              <ControlLabel>Notes: </ControlLabel>
-                              <FormControl
-                                type="text"
-                                value={this.state.noteValue}
-                                placeholder="Enter text"
-                                onChange={(e) => {
-                                    this.setState({
-                                        noteValue: e.target.value
-                                    });
-                                }}
-                              />
-                              <FormControl.Feedback />
-                              <HelpBlock>Validation is based on string length.</HelpBlock>
-                            </FormGroup>
-                            <Button
-                                bsStyle="primary"
-                                onClick={this.handleSaveNoteSubmit}
-                            >
-                                Save
-                            </Button>
-                        </form>
+                    <form>
+                        <FormGroup
+                          controlId="formBasicText"
+                        >
+                          <ControlLabel>Notes: </ControlLabel>
+                          <FormControl
+                            type="text"
+                            value={this.state.noteValue}
+                            placeholder="Enter text"
+                            onChange={(e) => {
+                                this.setState({
+                                    noteValue: e.target.value
+                                });
+                            }}
+                          />
+                          <FormControl.Feedback />
+                          <HelpBlock>Validation is based on string length.</HelpBlock>
+                        </FormGroup>
+                        <Button
+                            bsStyle="primary"
+                            onClick={this.handleSaveNoteSubmit}
+                        >
+                            Save
+                        </Button>
+                    </form>
                         <div>
                             {this.renderNotes()}
                         </div>
-                        <DropdownButton
-                            bsStyle="default"
-                            title={this.state.selectedApplicantName}
-                            key={this.props.TID}
-                            id={`dropdown-basic-${this.props.TID}`}
-                        >
-                            {this.renderApplicantList()}
-                        </DropdownButton>
-                        <Button
-                            bsStyle="primary"
-                            onClick={this.handleAssignSubmit}
-                        >
-                            Assigned
-                        </Button>
-                        <Button
-                            bsStyle="primary"
-                            onClick={this.handleUnassignSubmit}
-                        >
-                            Unassigned
-                        </Button>
                     </Panel.Body>
                 </Panel.Collapse>
             </Panel>
@@ -210,7 +145,6 @@ class TicketCardFSS extends React.Component {
 function mapStateToProps(state) {
     // Whatever is returned will show up as props
     return {
-        applicantList: state.applicants,
         applicantName: state.appName
     };
 }

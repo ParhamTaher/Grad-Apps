@@ -13,22 +13,30 @@ import {
     DropdownButton,
     MenuItem
 } from 'react-bootstrap';
+import axios from 'axios';
 
 class TicketCardBD extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            facultyName: 'No One'
+        };
     }
 
     componentDidMount() {
         if (this.props.faculty) {
-            this.props.actions.getFacultyNameFromId(this.props.faculty);
+            var self = this;
+            axios.get('/faculty/' + this.props.faculty).then(function(response) {
+                console.log('faculty name: ' + response.data.faculty);
+                self.setState({facultyName: response.data.faculty.fname + ' ' + response.data.faculty.lname})
+            });
         }
     }
 
 
     handleGrantTicket = () => {
         console.log(this.props.faculty);
-        this.props.actions.grantTicket(this.props.faculty);
+        this.props.actions.grantTicket(this.props.TID);
     };
 
     render() {
@@ -36,8 +44,8 @@ class TicketCardBD extends React.Component {
         if(this.props.ticketStatus=='initial'){
             isInitial = true;
         }
-        
-    
+
+
         const button = isInitial ? (
           <button type="button" class="btn btn-primary" onClick={this.handleGrantTicket}>GRANT</button>
         ) : (
@@ -59,7 +67,7 @@ class TicketCardBD extends React.Component {
                         </div>
                         <div>
                             &nbsp;&nbsp;&nbsp;&nbsp;Assigned to{' '}
-                            {this.props.faculty}
+                            {this.state.facultyName}
                         </div>
                     </Panel.Title>
                 </Panel.Heading>

@@ -33,11 +33,11 @@ export const CREATE_TICKET = 'CREATE_TICKET';
 
 export function uploadDocumentRequest(file) {
     console.log('uploading GAPF... ' + file.name);
-    return function(dispatch) {
-        dispatch({
-            type: UPLOAD_GAPF
+    return dispatch => {
+        axios.post('/gapf', { file }).then(function(response) {
+            console.log("Successfully uploaded GAPF Form");
         });
-    };
+    }
 }
 
 
@@ -317,10 +317,10 @@ export function requestApplicants() {
     };
 }
 
-export function getApplicantNameFromId(iD) {
+export function getApplicantNameFromId(aID) {
     return dispatch => {
-        console.log("getting applicant name with id... " + iD);
-        axios.get('/applicants/' + iD).then(function(response) {
+        console.log("getting applicant name with id... " + aID);
+        axios.get('/applicants/' + aID).then(function(response) {
             console.log('applicant name: ' + response.data.applicant);
             dispatch({
                 type: REQUEST_APPLICANT_NAME_FROM_ID,
@@ -341,22 +341,6 @@ export function getAllFaculty() {
                 type: REQUEST_ALL_FACULTY,
                 payload: response.data
             });
-        });
-    };
-}
-
-export function getFacultyNameFromId(iD) {
-    return dispatch => {
-        console.log("getting faculty name with id... " + iD);
-        axios.get('/faculty?facultyId=' + iD).then(function(response) {
-            console.log('faculty name: ' + response.data.faculty.fname);
-            dispatch({
-                type: REQUEST_FACULTY_NAME_FROM_ID,
-                payload: {
-                    fName: response.data.faculty.fname + ' ' + response.data.faculty.lname
-                }
-            });
-
         });
     };
 }
@@ -389,23 +373,18 @@ export function approveApplicant(tID) {
     return;
 }
 
-export function saveNote(tID, values) {
+export function saveNote(tID, values, notesList) {
     return dispatch => {
-        console.log(
-            'Saving note...: ' + values.note
-        );
-        if (tID != null) {
-            axios
-                .patch('/tickets/' + tID, [
-                    {"fieldName": "note", "value": "updated status to pending"}
-                ])
-                .then(response => {
-                    console.log('Successfully saved a note!: ' + values.note);
-                })
-                .catch(error => {
-                    console.log('ERROR in saveNote ' + error);
-                });
-        }
+        axios
+            .patch('/tickets/' + tID, [
+                {"fieldName": "note", "value": values}
+            ])
+            .then(response => {
+                console.log('Successfully saved a note!: ' + values.note);
+            })
+            .catch(error => {
+                console.log('ERROR in saveNote ' + error);
+            });
     };
 }
 
@@ -442,8 +421,8 @@ export function rejectApplicant(tID, fID, type) {
                     console.log("ERROR in rejectApplicant " + error);
                 });
             axios
-                .post("/tickets", 
-                {   
+                .post("/tickets",
+                {
                     "faculty_id": fID,
                     "ticket_type": type,
                     "status": "granted"
@@ -492,8 +471,8 @@ export function declinedOfferApplicant(tID, fID, type) {
                     console.log("ERROR in declinedOfferApplicant " + error);
                 });
             axios
-                .post("/tickets", 
-                {   
+                .post("/tickets",
+                {
                     "faculty_id": fID,
                     "ticket_type": type,
                     "status": "granted"
@@ -511,13 +490,13 @@ export function declinedOfferApplicant(tID, fID, type) {
 // Create Ticket
 export function createTicket(faculty_id, ticket_type, status, quantity) {
     let ticketNum = '';
-    if(quantity > 0){
+    if(quantity > 1){
         ticketNum = '/'+quantity;
     }
     return dispatch => {
         axios
-            .post("/tickets"+ticketNum, 
-                {   
+            .post("/tickets"+ticketNum,
+                {
                     "faculty_id": faculty_id,
                     "ticket_type": ticket_type,
                     "status": status
@@ -566,18 +545,18 @@ export function signUpUser(fname, lname, email, password) {
 
 export function signInUser(email, password) {
     return dispatch => {
-        if (email === 'AC@gmail.com') {
-            dispatch(authUser({ userRole: 'AC' }));
-        } else if (email === 'BD@gmail.com') {
-            dispatch(authUser({ userRole: 'BD' }));
-        }
         axios
             .post('/users/login', { email, password })
             .then(response => {
                 console.log('Login Response: ' + response.userId);
-
-                // cookie.set('session', 'FSS');
-                dispatch(authUser({ userRole: 'FSS' }));
+                if (email === 'ac0@mail.ca') {
+                    dispatch(authUser({ userRole: 'AC' }));
+                } else if (email === 'bd0@mail.ca') {
+                    dispatch(authUser({ userRole: 'BD' }));
+                } else {
+                    // cookie.set('session', 'FSS');
+                    dispatch(authUser({ userRole: 'FSS' }));
+                }
             })
             .catch(error => {
                 console.log('inside action signin: ', error);
