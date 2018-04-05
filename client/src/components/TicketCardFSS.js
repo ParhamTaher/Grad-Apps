@@ -121,9 +121,10 @@ class TicketCardFSS extends React.Component {
     }
 
     renderNotes() {
+        // console.log("Notes list: " + this.props.notesList);
         if(this.props.notesList) {
             return this.props.notesList.map((note, i) => {
-                return <div>{note}</div>;
+                return <div>{note.comment}</div>;
             });
         } else {
             return <div> No Notes </div>
