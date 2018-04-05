@@ -27,6 +27,7 @@ class TicketCardBD extends React.Component {
 
 
     handleGrantTicket = () => {
+        console.log(this.props.faculty);
         this.props.actions.grantTicket(this.props.faculty);
     };
 

@@ -349,7 +349,7 @@ export function getFacultyNameFromId(iD) {
     return dispatch => {
         console.log("getting faculty name with id... " + iD);
         axios.get('/faculty?facultyId=' + iD).then(function(response) {
-            console.log('faculty name: ' + response.data.faculty.email);
+            console.log('faculty name: ' + response.data.faculty.fname);
             dispatch({
                 type: REQUEST_FACULTY_NAME_FROM_ID,
                 payload: {
@@ -516,7 +516,7 @@ export function createTicket(faculty_id, ticket_type, status, quantity) {
     }
     return dispatch => {
         axios
-            .post("/tickets", 
+            .post("/tickets"+ticketNum, 
                 {   
                     "faculty_id": faculty_id,
                     "ticket_type": ticket_type,
