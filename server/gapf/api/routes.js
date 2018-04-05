@@ -79,9 +79,10 @@ conn.once('open', () => {
 
   //new GAPF
   router.post('/gapf', (req, res, next) => {
-    let userId = req.body.userId;
+    console.log(req.session)
+    let userId = req.session.userId;
     //check the request userid passed in equals to logged in use and if they're faculty or fss
-    if (userId === req.session.userId && (req.session.role === 'Faculty' || req.session.role === 'FSS')){
+    if (userId && (req.session.role === 'Faculty' || req.session.role === 'FSS')){
       let part = req.files.file;
       let writeStream = gfs.createWriteStream({
         filename: part.name,

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import * as Actions from '../actions';
 import { bindActionCreators } from 'redux';
@@ -64,21 +63,6 @@ class TicketCardFSS extends React.Component {
         console.log('Clicked Unassign button! ');
     };
 
-
-    renderField = ({ input, label, type, meta: { touched, error } }) => (
-        <fieldset className={`form-group`}>
-            <label className="control-label">{label}</label>
-            <div>
-                <input
-                    {...input}
-                    placeholder={label}
-                    className="form-control"
-                    type={type}
-                />
-            </div>
-        </fieldset>
-    );
-
     renderDropDownField = ({
         input,
         label,
@@ -133,7 +117,7 @@ class TicketCardFSS extends React.Component {
 
     render() {
         return (
-            <Panel id={this.props.TID}>
+            <Panel key={this.props.TID} id={this.props.TID}>
                 <Panel.Heading>
                     <Panel.Title toggle>
                         <div>
@@ -223,8 +207,4 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-    reduxForm({
-        form: 'ticket-form'
-    })(TicketCardFSS)
-);
+export default connect(mapStateToProps, mapDispatchToProps)(TicketCardFSS);

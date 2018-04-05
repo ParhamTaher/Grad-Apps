@@ -34,7 +34,15 @@ export const CREATE_TICKET = 'CREATE_TICKET';
 export function uploadDocumentRequest(file) {
     console.log('uploading GAPF... ' + file.name);
     return dispatch => {
-        axios.post('/gapf', { file }).then(function(response) {
+        const url = '/gapf';
+        const formData = new FormData();
+        formData.append('file', file)
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        }
+        axios.post(url, formData, config).then(function(response) {
             console.log("Successfully uploaded GAPF Form");
         });
     }
