@@ -345,22 +345,6 @@ export function getAllFaculty() {
     };
 }
 
-export function getFacultyNameFromId(iD) {
-    return dispatch => {
-        console.log("getting faculty name with id... " + iD);
-        axios.get('/faculty?facultyId=' + iD).then(function(response) {
-            console.log('faculty name: ' + response.data.faculty.fname);
-            dispatch({
-                type: REQUEST_FACULTY_NAME_FROM_ID,
-                payload: {
-                    fName: response.data.faculty.fname + ' ' + response.data.faculty.lname
-                }
-            });
-
-        });
-    };
-}
-
 export function offerRequest(tID, aID) {
     return dispatch => {
         console.log(
