@@ -78,7 +78,7 @@ class TicketCardAC extends React.Component {
                         </div>
                         <div>
                             &nbsp;&nbsp;&nbsp;&nbsp;Assigned to{' '}
-                            {this.props.applicantName.appName}
+                            {this.props.applicantName.appName || 'No one'}
                         </div>
                     </Panel.Title>
                 </Panel.Heading>

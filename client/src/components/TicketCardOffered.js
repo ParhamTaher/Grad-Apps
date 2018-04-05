@@ -78,7 +78,7 @@ class TicketCardOffered extends React.Component {
                         </div>
                         <div>
                             &nbsp;&nbsp;&nbsp;&nbsp;Assigned to{' '}
-                            {this.props.applicant}
+                            {this.props.applicantName.appName || 'No one'}
                         </div>
                     </Panel.Title>
                 </Panel.Heading>
@@ -129,7 +129,8 @@ class TicketCardOffered extends React.Component {
 function mapStateToProps(state) {
     // Whatever is returned will show up as props
     return {
-        applicantList: state.applicants
+        applicantList: state.applicants,
+        applicantName: state.appName
     };
 }
 
