@@ -17,7 +17,8 @@ class TicketCardBD extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            facultyName: 'No One'
+            facultyName: 'No One',
+            noteValue: ''
         };
     }
 
@@ -31,6 +32,24 @@ class TicketCardBD extends React.Component {
         }
     }
 
+    handleSaveNoteSubmit = () => {
+        console.log('Clicked note button! ' + this.state.noteValue);
+        this.props.actions.saveNote(
+            this.props.TID,
+            this.state.noteValue,
+            this.props.notesList
+        );
+    };
+
+    renderNotes() {
+        if (this.props.notesList) {
+            return this.props.notesList.map((note, i) => {
+                return <div>{note.comment}</div>;
+            });
+        } else {
+            return <div> No Notes </div>;
+        }
+    }
 
     handleGrantTicket = () => {
         console.log(this.props.faculty);
@@ -73,6 +92,35 @@ class TicketCardBD extends React.Component {
                 </Panel.Heading>
                 <Panel.Collapse>
                     <Panel.Body>
+                     <form>
+                            <FormGroup controlId="formBasicText">
+                                <ControlLabel>Notes: </ControlLabel>
+                                <FormControl
+                                    type="text"
+                                    value={this.state.noteValue}
+                                    placeholder="Enter text"
+                                    onChange={e => {
+                                        this.setState({
+                                            noteValue: e.target.value
+                                        });
+                                    }}
+                                />
+                                <FormControl.Feedback />
+                                <HelpBlock>
+                                    Enter a note to display below
+                                </HelpBlock>
+                            </FormGroup>
+                            <Button
+                                bsStyle="primary"
+                                onClick={this.handleSaveNoteSubmit}
+                            >
+                                Save
+                            </Button>
+                        </form>
+                        <div>
+                            Notes:
+                            {this.renderNotes()}
+                        </div>
                         {button}
                     </Panel.Body>
                 </Panel.Collapse>

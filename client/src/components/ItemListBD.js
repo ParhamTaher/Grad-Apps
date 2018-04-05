@@ -17,7 +17,7 @@ class ItemListBD extends Component {
                     faculty={ticket.faculty_id}
                     ticketStatus={ticket.status}
                     ticketType={ticket.ticket_type}
-                    notes={ticket.notes}
+                    notesList={ticket.note}
                 />
             );
         });
