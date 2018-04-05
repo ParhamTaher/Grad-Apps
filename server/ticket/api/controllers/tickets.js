@@ -44,6 +44,7 @@ exports.get_all = (req, res, next) => {
                         status: result.status,
                         status_history: result.status_history,
                         ticket_type: result.ticket_type,
+                        note: result.note,
                         request: {
                             type: 'GET',
                             url:
@@ -78,7 +79,8 @@ exports.create = (req, res, next) => {
 		status: req.body.status,
 		status_history: req.body.status_history,
 		creation_date: req.body.date,
-		ticket_type: req.body.ticket_type
+		ticket_type: req.body.ticket_type,
+        note: req.body.note,
 	});
 	if (req.session.role == 'Budget Director' || req.session.role == 'Associate Chair graduate') {
 		ticket
@@ -93,6 +95,7 @@ exports.create = (req, res, next) => {
 							status: result.status,
 							status_history: result.status_history,
 							ticket_type: result.ticket_type,
+                            note: result.note,
 							request: {
 								type: 'GET',
 								url: 'http://localhost:' + process.env.PORT + '/tickets/' + result._id
@@ -125,7 +128,8 @@ exports.create_batch = (req, res, next) => {
 			status: req.body.status,
 			status_history: req.body.status_history,
 			creation_date: req.body.date,
-			ticket_type: req.body.ticket_type
+			ticket_type: req.body.ticket_type,
+            note: req.body.note,
 		});
 		ticket_batch.push(ticket);
 	}
@@ -143,6 +147,7 @@ exports.create_batch = (req, res, next) => {
 							status: result.status,
 							status_history: req.body.status_history,
 							ticket_type: result.ticket_type,
+                            note: result.note,
 							request: {
 								type: 'GET',
 								url: 'http://localhost:' + process.env.PORT + '/tickets/'
