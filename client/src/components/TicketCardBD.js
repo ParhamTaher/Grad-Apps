@@ -14,13 +14,9 @@ import {
     MenuItem
 } from 'react-bootstrap';
 
-class TicketCardFSS extends React.Component {
+class TicketCardBD extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            selectedApplicantID: null,
-            selectedApplicantName: 'Select an Applicant'
-        };
     }
 
     componentDidMount() {
@@ -35,7 +31,7 @@ class TicketCardFSS extends React.Component {
 
     render() {
         let isInitial = false;
-        if(this.state.ticketStatus=='initial'){
+        if(this.props.ticketStatus=='initial'){
             isInitial = true;
         }
         
@@ -91,5 +87,5 @@ function mapDispatchToProps(dispatch) {
 export default connect(mapStateToProps, mapDispatchToProps)(
     reduxForm({
         form: 'ticket-form'
-    })(TicketCardFSS)
+    })(TicketCardBD)
 );
