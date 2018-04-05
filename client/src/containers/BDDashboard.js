@@ -36,6 +36,8 @@ class BDDashboard extends Component {
                             <button
                                 type="button"
                                 className="btn btn-primary btn-lg"
+                                onClick={() =>
+                                    this.props.history.push('/BDDashboardGAPF')}
                             >
                                 Show me GAPF
                             </button>
