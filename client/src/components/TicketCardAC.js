@@ -14,13 +14,6 @@ import {
 } from 'react-bootstrap';
 
 class TicketCardAC extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            selectedApplicantID: null,
-            selectedApplicantName: 'Select an Applicant'
-        };
-    }
 
     componentDidMount() {
         console.log('Requesting applicants...');
@@ -28,8 +21,8 @@ class TicketCardAC extends React.Component {
     }
 
     handleSaveNoteSubmit = values => {
-        console.log('Clicked note button! ' + values.note);
-        this.props.actions.saveNote(values);
+        console.log('Clicked note button! ' + this.props.note);
+        this.props.actions.saveNote(this.props.TID, this.props.facultyID, values);
     };
 
     handleSendOfferSubmit = () => {
@@ -102,7 +95,7 @@ class TicketCardAC extends React.Component {
                         </form>
                         <div>
                             <ul>
-                                <li>Note 1</li>
+                                <li>{this.props.note}</li>
                                 <li>Note 2</li>
                             </ul>
                         </div>
