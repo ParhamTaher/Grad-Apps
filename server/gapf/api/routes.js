@@ -36,8 +36,7 @@ conn.once('open', () => {
             err: 'No files exist'
           });
         }
-
-        res.json(files);
+        res.status(200).json(files);
       });
     } else {
       res.status(401).json({
@@ -79,9 +78,11 @@ conn.once('open', () => {
 
   //new GAPF
   router.post('/gapf', (req, res, next) => {
-    let userId = req.body.userId;
+    //console.log(req.files)
+    //console.log(req.body)
+    let userId = req.session.userId;
     //check the request userid passed in equals to logged in use and if they're faculty or fss
-    if (userId === req.session.userId && (req.session.role === 'Faculty' || req.session.role === 'FSS')){
+    if (userId && (req.session.role === 'Faculty' || req.session.role === 'FSS')){
       let part = req.files.file;
       let writeStream = gfs.createWriteStream({
         filename: part.name,
@@ -108,10 +109,10 @@ conn.once('open', () => {
         writeStream.end();
       });
       } else {
-      res.status(401).json({
-        message: 'Unauthorized User*'
-      });
-    }
+        res.status(401).json({
+          message: 'Unauthorized User*'
+        });
+      }
   });
 
   //delete GAPF

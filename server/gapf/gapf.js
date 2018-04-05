@@ -30,11 +30,11 @@ app.use(session({
 }));
 
 function hasSession(req, res, next) {
-  console.log(req.session);
+  //console.log(req.session);
 	if (req.session.userId && (req.session.role === 'FSS' || req.session.role === 'Budget Director' || req.session.role === 'Faculty')) {
 		next();
 	} else {
-		const error = new Error('Unauthorized User**');
+		const error = new Error('Unauthorized User');
 		error.status = 401;
 		next(error);
 	}
@@ -45,9 +45,19 @@ app.use(busboy());
 app.use(hasSession);
 app.use(gapfRoutes);
 
-app.use(function(err, req, res, next) {
-    //console.log(err);
-    res.status(404).send({ error: err.message });
+// Handle errors
+app.use((req, res, next) => {
+	const error = new Error('Not found');
+	error.status = 404;
+	next(error);
+});
+app.use((error, req, res, next) => {
+	res.status(error.status || 500);
+	res.json({
+		error: {
+			message: error.message
+		}
+	});
 });
 
 //console.log(process.env.NODE_ENV)
