@@ -16,7 +16,7 @@ var note_schema = new Schema({
 
 var ticket_schema = new Schema({
 	_id: mongoose.Schema.Types.ObjectId,
-	faculty_id: { type: String, required: true },
+	faculty_id: { type: mongoose.Schema.Types.ObjectId, required: true },
 	applicant_id: mongoose.Schema.Types.ObjectId,
 	status: { 
 		type: String,

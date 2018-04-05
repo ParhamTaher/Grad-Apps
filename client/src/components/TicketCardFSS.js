@@ -1,8 +1,8 @@
 import React from 'react';
-import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import * as Actions from '../actions';
 import { bindActionCreators } from 'redux';
+import axios from 'axios';
 import {
     Button,
     Panel,
@@ -19,23 +19,37 @@ class TicketCardFSS extends React.Component {
         super(props);
         this.state = {
             selectedApplicantID: null,
-            selectedApplicantName: 'Select an Applicant'
+            selectedApplicantName: 'Select an Applicant',
+            applicantName: 'No One',
+            noteValue: ''
         };
     }
 
     componentDidMount() {
         if (this.props.applicantID) {
-            this.props.actions.getApplicantNameFromId(this.props.applicantID);
+            //this.props.actions.getApplicantNameFromId(this.props.applicantID);
+            axios.get('/applicants/' + this.props.applicantID).then(function(response) {
+                console.log('applicant name: ' + response.data.applicant);
+                this.setState({applicantName: response.data.applicant.fname + ' ' + response.data.applicant.lname})
+            });
         }
 
         console.log('Requesting applicants...');
         this.props.actions.requestApplicants();
     }
 
-    handleSaveNoteSubmit = values => {
-        console.log('Clicked note button! ' + values.note);
-        this.props.actions.saveNote(values);
+    handleSaveNoteSubmit = () => {
+        console.log('Clicked note button! ' + this.state.noteValue);
+        this.props.actions.saveNote(this.props.TID, this.state.noteValue, this.props.notesList);
     };
+
+    handleNoteChange(e) {
+      this.setState({
+          selectedApplicantID: this.state.selectedApplicantID,
+          selectedApplicantName: this.state.selectedApplicantName,
+          noteValue: e.target.value
+      })
+    }
 
     handleAssignSubmit = () => {
         console.log('Clicked Assign button! ');
@@ -48,20 +62,6 @@ class TicketCardFSS extends React.Component {
     handleUnassignSubmit = () => {
         console.log('Clicked Unassign button! ');
     };
-
-    renderField = ({ input, label, type, meta: { touched, error } }) => (
-        <fieldset className={`form-group`}>
-            <label className="control-label">{label}</label>
-            <div>
-                <input
-                    {...input}
-                    placeholder={label}
-                    className="form-control"
-                    type={type}
-                />
-            </div>
-        </fieldset>
-    );
 
     renderDropDownField = ({
         input,
@@ -105,14 +105,19 @@ class TicketCardFSS extends React.Component {
     }
 
     renderNotes() {
-        return this.props.notesList.notes.map((note, i) => {
-            return <div>{note}</div>;
-        });
+        // console.log("Notes list: " + this.props.notesList);
+        if(this.props.notesList) {
+            return this.props.notesList.map((note, i) => {
+                return <div>{note.comment}</div>;
+            });
+        } else {
+            return <div> No Notes </div>
+        }
     }
 
     render() {
         return (
-            <Panel id={this.props.TID}>
+            <Panel key={this.props.TID} id={this.props.TID}>
                 <Panel.Heading>
                     <Panel.Title toggle>
                         <div>
@@ -126,33 +131,40 @@ class TicketCardFSS extends React.Component {
                         </div>
                         <div>
                             &nbsp;&nbsp;&nbsp;&nbsp;Assigned to{' '}
-                            {this.props.applicantName.appName || 'No one'}
+                            {this.state.applicantName}
                         </div>
                     </Panel.Title>
                 </Panel.Heading>
                 <Panel.Collapse>
                     <Panel.Body>
-                        <form
-                            onSubmit={this.props.handleSubmit(
-                                this.handleSaveNoteSubmit
-                            )}
-                        >
-                            <Field
-                                name="note"
-                                component={this.renderField}
-                                className="form-control"
+                        <form>
+                            <FormGroup
+                              controlId="formBasicText"
+                            >
+                              <ControlLabel>Notes: </ControlLabel>
+                              <FormControl
                                 type="text"
-                                label="Enter a note"
-                            />
-                            <button action="submit" className="btn btn-primary">
+                                value={this.state.noteValue}
+                                placeholder="Enter text"
+                                onChange={(e) => {
+                                    this.setState({
+                                        noteValue: e.target.value
+                                    });
+                                }}
+                              />
+                              <FormControl.Feedback />
+                              <HelpBlock>Enter a note to display below</HelpBlock>
+                            </FormGroup>
+                            <Button
+                                bsStyle="primary"
+                                onClick={this.handleSaveNoteSubmit}
+                            >
                                 Save
-                            </button>
+                            </Button>
                         </form>
                         <div>
-                            <ul>
-                                <li>Note 1</li>
-                                <li>Note 2</li>
-                            </ul>
+                            Notes:
+                            {this.renderNotes()}
                         </div>
                         <DropdownButton
                             bsStyle="default"
@@ -195,8 +207,4 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-    reduxForm({
-        form: 'ticket-form'
-    })(TicketCardFSS)
-);
+export default connect(mapStateToProps, mapDispatchToProps)(TicketCardFSS);

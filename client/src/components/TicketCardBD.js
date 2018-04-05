@@ -10,23 +10,52 @@ import {
     FormGroup,
     ControlLabel,
     HelpBlock,
-    DropdownButton,
-    MenuItem
 } from 'react-bootstrap';
+import axios from 'axios';
 
 class TicketCardBD extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            facultyName: 'No One',
+            noteValue: ''
+        };
     }
 
     componentDidMount() {
         if (this.props.faculty) {
-            this.props.actions.getFacultyNameFromId(this.props.faculty);
+            var self = this;
+            axios.get('/faculty/' + this.props.faculty).then(function(response) {
+                console.log('faculty name: ' + response.data.faculty);
+                self.setState({facultyName: response.data.faculty.fname + ' ' + response.data.faculty.lname})
+            });
         }
     }
 
+    handleSaveNoteSubmit = () => {
+        console.log('Clicked note button! ' + this.state.noteValue);
+        this.props.actions.saveNote(
+            this.props.TID,
+            this.state.noteValue,
+            this.props.notesList
+        );
+    };
+
+    renderNotes() {
+        if (this.props.notesList) {
+            return this.props.notesList.map((note, i) => {
+                return <div>{note.comment}</div>;
+            });
+        } else {
+            return <div> No Notes </div>;
+        }
+    }
 
     handleGrantTicket = () => {
+        console.log(this.props.faculty);
+        this.props.actions.grantTicket(this.props.TID);
+        window.location.reload();
+
     };
 
     render() {
@@ -34,12 +63,12 @@ class TicketCardBD extends React.Component {
         if(this.props.ticketStatus=='initial'){
             isInitial = true;
         }
-        
-    
+
+
         const button = isInitial ? (
-          <button type="button" class="btn btn-primary" onClick={this.handleGrantTicket}>GRANT</button>
+          <button type="button" className="btn btn-primary" onClick={this.handleGrantTicket}>GRANT</button>
         ) : (
-          <button type="button" class="btn btn-primary" disabled>ALREADY GRANTED</button>
+          <button type="button" className="btn btn-primary" disabled>ALREADY GRANTED</button>
         );
 
         return (
@@ -57,12 +86,41 @@ class TicketCardBD extends React.Component {
                         </div>
                         <div>
                             &nbsp;&nbsp;&nbsp;&nbsp;Assigned to{' '}
-                            {this.props.faculty || 'No one'}
+                            {this.state.facultyName}
                         </div>
                     </Panel.Title>
                 </Panel.Heading>
                 <Panel.Collapse>
                     <Panel.Body>
+                     <form>
+                            <FormGroup controlId="formBasicText">
+                                <ControlLabel>Notes: </ControlLabel>
+                                <FormControl
+                                    type="text"
+                                    value={this.state.noteValue}
+                                    placeholder="Enter text"
+                                    onChange={e => {
+                                        this.setState({
+                                            noteValue: e.target.value
+                                        });
+                                    }}
+                                />
+                                <FormControl.Feedback />
+                                <HelpBlock>
+                                    Enter a note to display below
+                                </HelpBlock>
+                            </FormGroup>
+                            <Button
+                                bsStyle="primary"
+                                onClick={this.handleSaveNoteSubmit}
+                            >
+                                Save
+                            </Button>
+                        </form>
+                        <div>
+                            Notes:
+                            {this.renderNotes()}
+                        </div>
                         {button}
                     </Panel.Body>
                 </Panel.Collapse>

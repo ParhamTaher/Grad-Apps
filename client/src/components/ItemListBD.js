@@ -10,14 +10,14 @@ class ItemListBD extends Component {
         return this.props.ticketList.map((ticket, i) => {
             return (
                 <TicketCardBD
-                    key={ticket.TID}
+                    key={ticket._id}
                     numberLabel={i + 1}
-                    TID={ticket.TID}
+                    TID={ticket._id}
                     applicant={ticket.applicant_id}
                     faculty={ticket.faculty_id}
                     ticketStatus={ticket.status}
                     ticketType={ticket.ticket_type}
-                    notes={ticket.notes}
+                    notesList={ticket.note}
                 />
             );
         });

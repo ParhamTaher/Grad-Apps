@@ -44,6 +44,7 @@ exports.get_all = (req, res, next) => {
                         status: result.status,
                         status_history: result.status_history,
                         ticket_type: result.ticket_type,
+                        note: result.note,
                         request: {
                             type: 'GET',
                             url:
@@ -78,9 +79,10 @@ exports.create = (req, res, next) => {
 		status: req.body.status,
 		status_history: req.body.status_history,
 		creation_date: req.body.date,
-		ticket_type: req.body.ticket_type
+		ticket_type: req.body.ticket_type,
+        note: req.body.note,
 	});
-	if (req.session.role == 'Budget Director') {
+	if (req.session.role == 'Budget Director' || req.session.role == 'Associate Chair graduate') {
 		ticket
 			.save() // Store data into the DB
 			.then(result => {
@@ -93,6 +95,7 @@ exports.create = (req, res, next) => {
 							status: result.status,
 							status_history: result.status_history,
 							ticket_type: result.ticket_type,
+                            note: result.note,
 							request: {
 								type: 'GET',
 								url: 'http://localhost:' + process.env.PORT + '/tickets/' + result._id
@@ -106,10 +109,10 @@ exports.create = (req, res, next) => {
 				});
 			});
 	} else {
-		const err = new Error('Unauthorized User');
-		err.status = 'Unauthorized User';
 		res.status(401).json({
-			error: err
+			error: {
+				message: 'Unauthorized User'
+			}
 		});
 	}
 };
@@ -125,11 +128,12 @@ exports.create_batch = (req, res, next) => {
 			status: req.body.status,
 			status_history: req.body.status_history,
 			creation_date: req.body.date,
-			ticket_type: req.body.ticket_type
+			ticket_type: req.body.ticket_type,
+            note: req.body.note,
 		});
 		ticket_batch.push(ticket);
 	}
-	if (req.session.role == 'Budget Director') {
+	if (req.session.role == 'Budget Director' || req.session.role == 'Associate Chair graduate') {
 		Ticket
 			.insertMany(ticket_batch)
 			.then(results => {
@@ -143,6 +147,7 @@ exports.create_batch = (req, res, next) => {
 							status: result.status,
 							status_history: req.body.status_history,
 							ticket_type: result.ticket_type,
+                            note: result.note,
 							request: {
 								type: 'GET',
 								url: 'http://localhost:' + process.env.PORT + '/tickets/'
@@ -158,10 +163,10 @@ exports.create_batch = (req, res, next) => {
 				});
 			});
 	} else {
-		const err = new Error('Unauthorized User');
-		err.status = 'Unauthorized User';
 		res.status(401).json({
-			error: err
+			error: {
+				message: 'Unauthorized User'
+			}
 		});
 	}
 };
@@ -176,8 +181,11 @@ exports.update = (req, res, next) => {
             update_fields[field.fieldName] = field.value;
         if (field.fieldName == 'status')
             status_log = { status: field.value, update_date: new Date() };
-        if (field.fieldName == 'note')
+        if (field.fieldName == 'note') {
             note = { comment: field.value, post_date: new Date() };
+            console.log(note);
+            console.log(Object.keys(note).length > 0 && note.constructor === Object);
+        }
     }
     var updates = {};
     if (
@@ -194,9 +202,40 @@ exports.update = (req, res, next) => {
                 $push: { status_history: status_log }
             };
             if (Object.keys(note).length > 0 && note.constructor === Object) {
+                console.log('test', note);
                 updates = {
                     $set: update_fields,
                     $push: { status_history: status_log, note: note }
+                };
+            }
+        } else {
+            if (Object.keys(note).length > 0 && note.constructor === Object) {
+                console.log('test', note);
+                updates = {
+                    $set: update_fields,
+                    $push: { note: note }
+                };
+            }
+        }
+    } else {
+        if (
+            Object.keys(status_log).length > 0 &&
+            status_log.constructor === Object
+        ) {
+            updates = {
+                $push: { status_history: status_log }
+            };
+            if (Object.keys(note).length > 0 && note.constructor === Object) {
+                console.log('test', note);
+                updates = {
+                    $push: { status_history: status_log, note: note }
+                };
+            }
+        } else {
+            if (Object.keys(note).length > 0 && note.constructor === Object) {
+                console.log('test', note);
+                updates = {
+                    $push: { note: note }
                 };
             }
         }
@@ -235,6 +274,7 @@ exports.update_by_faculty = (req, res, next) => {
             note = { comment: field.value, post_date: new Date() };
     }
     var updates = {};
+    var updates = {};
     if (
         Object.keys(update_fields).length > 0 &&
         update_fields.constructor === Object
@@ -249,9 +289,40 @@ exports.update_by_faculty = (req, res, next) => {
                 $push: { status_history: status_log }
             };
             if (Object.keys(note).length > 0 && note.constructor === Object) {
+                console.log('test', note);
                 updates = {
                     $set: update_fields,
                     $push: { status_history: status_log, note: note }
+                };
+            }
+        } else {
+            if (Object.keys(note).length > 0 && note.constructor === Object) {
+                console.log('test', note);
+                updates = {
+                    $set: update_fields,
+                    $push: { note: note }
+                };
+            }
+        }
+    } else {
+        if (
+            Object.keys(status_log).length > 0 &&
+            status_log.constructor === Object
+        ) {
+            updates = {
+                $push: { status_history: status_log }
+            };
+            if (Object.keys(note).length > 0 && note.constructor === Object) {
+                console.log('test', note);
+                updates = {
+                    $push: { status_history: status_log, note: note }
+                };
+            }
+        } else {
+            if (Object.keys(note).length > 0 && note.constructor === Object) {
+                console.log('test', note);
+                updates = {
+                    $push: { note: note }
                 };
             }
         }
@@ -302,10 +373,10 @@ exports.delete = (req, res, next) => {
 				});
 			});
 	} else {
-		const err = new Error('Unauthorized User');
-		err.status = 'Unauthorized User';
 		res.status(401).json({
-			error: err
+			error: {
+				message: 'Unauthorized User'
+			}
 		});
 	}
 };
@@ -330,10 +401,10 @@ exports.delete_all = (req, res, next) => {
 				});
 			});
 	} else {
-		const err = new Error('Unauthorized User');
-		err.message = 'Unauthorized User';
 		res.status(401).json({
-			error: err
+			error: {
+				message: 'Unauthorized User'
+			}
 		});
 	}
 };

@@ -80,7 +80,7 @@ Request.Body:
 ```json
 [
 	{"fieldName": "ticket_type", "value": "I"},
-	{"fieldName": "notes", "value": "updated status to granted"},
+	{"fieldName": "note", "value": "updated status to granted"},
 	{"fieldName": "status", "value": "granted"},
 	...
 ]

@@ -14,6 +14,9 @@ router.post('/signup', (req, res, next) => {
         email: req.body.email,
         password: req.body.password
     });
+    if (newUser.role == undefined) {
+        newUser.role = "Faculty";
+    }
 
     newUser
         .save()

@@ -11,6 +11,7 @@ import BDDashboard from '../containers/BDDashboard';
 import FacultyDashboard from '../containers/FacultyDashboard';
 import ACDashboard from '../containers/ACDashboard';
 import BDDcreate from '../containers/BDDcreate';
+import BDDashboardGAPF from '../containers/GAPFDashboard';
 
 // Passing through a component and checking whether our user is authenticated,
 // then either returning the component we are passing in as an argument
@@ -108,6 +109,12 @@ class App extends React.Component {
                             userRole={this.props.userRole}
                             path="/ACDashboard"
                             component={ACDashboard}
+                        />
+                        <PrivateRoute
+                            authenticated={this.props.authenticated}
+                            userRole={this.props.userRole}
+                            path="/BDDashboardGAPF"
+                            component={BDDashboardGAPF}
                         />
                     </div>
                 </div>
