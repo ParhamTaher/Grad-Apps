@@ -30,7 +30,7 @@ class ItemListOffered extends Component {
                     facultyID={ticket.faculty_id}
                     ticketStatus={ticket.status}
                     ticketType={ticket.ticket_type}
-                    note={ticket.note}
+                    notesList={ticket.note}
                 />
             );
         });
