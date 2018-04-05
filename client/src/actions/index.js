@@ -321,9 +321,23 @@ export function approveApplicant(tID) {
     return;
 }
 
-export function saveNote(values) {
+export function saveNote(tID, values) {
     return dispatch => {
-        console.log('Note Saved! ' + values.note);
+        console.log(
+            'Saving note...: ' + values.note
+        );
+        if (tID != null) {
+            axios
+                .patch('/tickets/' + tID, [
+                    {"fieldName": "note", "value": "updated status to pending"}
+                ])
+                .then(response => {
+                    console.log('Successfully saved a note!: ' + values.note);
+                })
+                .catch(error => {
+                    console.log('ERROR in saveNote ' + error);
+                });
+        }
     };
 }
 
@@ -347,7 +361,7 @@ export function offerApplicant(tID) {
 
 export function rejectApplicant(tID) {
     return dispatch => {
-        console.log('Offering applicant with ID: ' + tID);
+        console.log('Rejecting applicant with ID: ' + tID);
         if (tID != null) {
             axios
                 .patch("/tickets/" + tID, [
@@ -365,7 +379,7 @@ export function rejectApplicant(tID) {
 
 export function acceptedOfferApplicant(tID) {
     return dispatch => {
-        console.log('Offering applicant with ID: ' + tID);
+        console.log('Accepting applicant offer with ID: ' + tID);
         if (tID != null) {
             axios
                 .patch("/tickets/" + tID, [
@@ -384,7 +398,7 @@ export function acceptedOfferApplicant(tID) {
 
 export function declinedOfferApplicant(tID) {
     return dispatch => {
-        console.log('Offering applicant with ID: ' + tID);
+        console.log('Declining applicant offer with ID: ' + tID);
         if (tID != null) {
             axios
                 .patch("/tickets/" + tID, [
