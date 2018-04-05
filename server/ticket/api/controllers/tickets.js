@@ -176,8 +176,11 @@ exports.update = (req, res, next) => {
             update_fields[field.fieldName] = field.value;
         if (field.fieldName == 'status')
             status_log = { status: field.value, update_date: new Date() };
-        if (field.fieldName == 'note')
+        if (field.fieldName == 'note') {
             note = { comment: field.value, post_date: new Date() };
+            console.log(note);
+            console.log(Object.keys(note).length > 0 && note.constructor === Object);
+        }
     }
     var updates = {};
     if (
@@ -194,9 +197,40 @@ exports.update = (req, res, next) => {
                 $push: { status_history: status_log }
             };
             if (Object.keys(note).length > 0 && note.constructor === Object) {
+                console.log('test', note);
                 updates = {
                     $set: update_fields,
                     $push: { status_history: status_log, note: note }
+                };
+            }
+        } else {
+            if (Object.keys(note).length > 0 && note.constructor === Object) {
+                console.log('test', note);
+                updates = {
+                    $set: update_fields,
+                    $push: { note: note }
+                };
+            }
+        }
+    } else {
+        if (
+            Object.keys(status_log).length > 0 &&
+            status_log.constructor === Object
+        ) {
+            updates = {
+                $push: { status_history: status_log }
+            };
+            if (Object.keys(note).length > 0 && note.constructor === Object) {
+                console.log('test', note);
+                updates = {
+                    $push: { status_history: status_log, note: note }
+                };
+            }
+        } else {
+            if (Object.keys(note).length > 0 && note.constructor === Object) {
+                console.log('test', note);
+                updates = {
+                    $push: { note: note }
                 };
             }
         }
@@ -235,6 +269,7 @@ exports.update_by_faculty = (req, res, next) => {
             note = { comment: field.value, post_date: new Date() };
     }
     var updates = {};
+    var updates = {};
     if (
         Object.keys(update_fields).length > 0 &&
         update_fields.constructor === Object
@@ -249,9 +284,40 @@ exports.update_by_faculty = (req, res, next) => {
                 $push: { status_history: status_log }
             };
             if (Object.keys(note).length > 0 && note.constructor === Object) {
+                console.log('test', note);
                 updates = {
                     $set: update_fields,
                     $push: { status_history: status_log, note: note }
+                };
+            }
+        } else {
+            if (Object.keys(note).length > 0 && note.constructor === Object) {
+                console.log('test', note);
+                updates = {
+                    $set: update_fields,
+                    $push: { note: note }
+                };
+            }
+        }
+    } else {
+        if (
+            Object.keys(status_log).length > 0 &&
+            status_log.constructor === Object
+        ) {
+            updates = {
+                $push: { status_history: status_log }
+            };
+            if (Object.keys(note).length > 0 && note.constructor === Object) {
+                console.log('test', note);
+                updates = {
+                    $push: { status_history: status_log, note: note }
+                };
+            }
+        } else {
+            if (Object.keys(note).length > 0 && note.constructor === Object) {
+                console.log('test', note);
+                updates = {
+                    $push: { note: note }
                 };
             }
         }
