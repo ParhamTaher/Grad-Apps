@@ -48,11 +48,8 @@ class ACDashboard extends Component {
 function mapStateToProps(state) {
     // Whatever is returned will show up as props
     return {
-
         offerRequestTicketList: state.offerRequestTickets,
         offerPendingTicketList: state.offerPendingTickets,
-        offerAcceptedTicketList: state.offerAcceptedTickets,
-        offerRejectedTicketList: state.offerRejectedTickets
     };
 }
 

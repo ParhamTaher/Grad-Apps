@@ -17,11 +17,11 @@ export const AUTH_USER = 'AUTH_USER';
 export const REQUEST_CHANGE_PASS = 'REQUEST_CHANGE_PASS';
 export const REQUEST_TICKETS = 'REQUEST_TICKET_ID';
 export const REQUEST_INITIAL_TICKETS = 'REQUEST_INITIAL_TICKETS';
-export const REQUEST_GRANTED_TICKETS = 'REQUEST_GRANTED_TICKETS';
 export const REQUEST_OFFER_REQUEST_TICKETS = 'REQUEST_OFFER_REQUEST_TICKETS';
 export const REQUEST_OFFER_PENDING_TICKETS = 'REQUEST_OFFER_PENDING_TICKETS';
-export const REQUEST_ACCEPTED_TICKETS = 'REQUEST_ACCEPTED_TICKETS';
+export const REQUEST_GRANTED_TICKETS = 'REQUEST_GRANTED_TICKETS';
 export const REQUEST_REFUSED_TICKETS = 'REQUEST_REFUSED_TICKETS';
+export const REQUEST_ACCEPTED_TICKETS = 'REQUEST_ACCEPTED_TICKETS';
 export const UPLOAD_GAPF = 'UPLOAD_GAPF';
 export const SAVE_NOTE = 'SAVE_NOTE';
 export const REQUEST_APPLICANTS = 'REQUEST_APPLICANTS';
@@ -35,6 +35,7 @@ export function uploadDocumentRequest(file) {
         });
     };
 }
+
 
 export function requestTickets(
     facultyID = '',
@@ -141,29 +142,9 @@ export function requestTicketsNew(
                         type: REQUEST_INITIAL_TICKETS,
                         payload: response.data
                     });
-                } else if (ticketStatus == 'granted') {
-                    dispatch({
-                        type: REQUEST_GRANTED_TICKETS,
-                        payload: response.data
-                    });
                 } else if (ticketStatus == 'offer-request') {
                     dispatch({
                         type: REQUEST_OFFER_REQUEST_TICKETS,
-                        payload: response.data
-                    });
-                } else if (ticketStatus == 'offer-pending') {
-                    dispatch({
-                        type: REQUEST_OFFER_PENDING_TICKETS,
-                        payload: response.data
-                    });
-                } else if (ticketStatus == 'accepted') {
-                    dispatch({
-                        type: REQUEST_ACCEPTED_TICKETS,
-                        payload: response.data
-                    });
-                } else if (ticketStatus == 'refused') {
-                    dispatch({
-                        type: REQUEST_REFUSED_TICKETS,
                         payload: response.data
                     });
                 } else {
@@ -242,6 +223,7 @@ export function requestTicketsAC(
     };
 }
 
+
 export function requestApplicants() {
     return dispatch => {
         axios.get('/applicants').then(function(response) {
@@ -296,7 +278,9 @@ export function getApplicantNameFromId(iD) {
 // Peter and Alex please review!
 export function offerRequest(tID, aID) {
     return dispatch => {
-        console.log('Offering applicant with ID: ' + tID);
+        console.log(
+            'Inside offer request action creator! with TID: ' + tID + ' and AID: ' + aID
+        );
         if (aID != null) {
             axios
                 .patch('/tickets/' + tID, [
@@ -330,17 +314,20 @@ export function offerApplicant(tID) {
     return dispatch => {
         console.log('Offering applicant with ID: ' + tID);
         if (tID != null) {
+<<<<<<< HEAD
             axios
                 .patch('/tickets/' + tID, [
+=======
+            axios
+                .patch("/tickets/" + tID, [
+>>>>>>> 6b2a012b92c445eeb4efc7256508c9a0a8002275
                     { "fieldName": "status", "value": "offer-pending" }
                 ])
                 .then(response => {
-                    console.log(
-                        'Successfully offered applicant, ticket is pending acceptence'
-                    );
+                    console.log("Successfully offered applicant, ticket is pending acceptence");
                 })
                 .catch(error => {
-                    console.log('ERROR in offerApplicant ' + error);
+                    console.log("ERROR in offerApplicant " + error);
                 });
         }
     };
@@ -351,16 +338,14 @@ export function rejectApplicant(tID) {
         console.log('Offering applicant with ID: ' + tID);
         if (tID != null) {
             axios
-                .patch('/tickets/' + tID, [
-                    { fieldName: 'status', value: 'offer-pending' }
+                .patch("/tickets/" + tID, [
+                    { "fieldName": "status", "value": "refused" }
                 ])
                 .then(response => {
-                    console.log(
-                        'Successfully offered applicant, ticket is pending acceptence'
-                    );
+                    console.log("Applicant rejected");
                 })
                 .catch(error => {
-                    console.log('ERROR in offerApplicant ' + error);
+                    console.log("ERROR in offerApplicant " + error);
                 });
         }
     };
@@ -368,14 +353,40 @@ export function rejectApplicant(tID) {
 
 export function acceptedOfferApplicant(tID) {
     return dispatch => {
-        console.log('Accepted offer from applicant with ID: ' + tID);
+        console.log('Offering applicant with ID: ' + tID);
+        if (tID != null) {
+            axios
+                .patch("/tickets/" + tID, [
+                    { "fieldName": "status", "value": "accepted" }
+                ])
+                .then(response => {
+                    console.log("Applicant accepted offer");
+                })
+                .catch(error => {
+                    console.log("ERROR in offerApplicant " + error);
+                });
+        }
     };
+
 }
 
 export function declinedOfferApplicant(tID) {
     return dispatch => {
-        console.log('Declined offer from applicant with ID: ' + tID);
+        console.log('Offering applicant with ID: ' + tID);
+        if (tID != null) {
+            axios
+                .patch("/tickets/" + tID, [
+                    { "fieldName": "status", "value": "refused" }
+                ])
+                .then(response => {
+                    console.log("Applicant declined offer");
+                })
+                .catch(error => {
+                    console.log("ERROR in offerApplicant " + error);
+                });
+        }
     };
+
 }
 
 // Auth Data
