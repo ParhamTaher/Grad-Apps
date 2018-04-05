@@ -80,7 +80,7 @@ exports.create = (req, res, next) => {
 		creation_date: req.body.date,
 		ticket_type: req.body.ticket_type
 	});
-	if (req.session.role == 'Budget Director') {
+	if (req.session.role == 'Budget Director' || req.session.role == 'Associate Chair graduate') {
 		ticket
 			.save() // Store data into the DB
 			.then(result => {
@@ -106,10 +106,10 @@ exports.create = (req, res, next) => {
 				});
 			});
 	} else {
-		const err = new Error('Unauthorized User');
-		err.status = 'Unauthorized User';
 		res.status(401).json({
-			error: err
+			error: {
+				message: 'Unauthorized User'
+			}
 		});
 	}
 };
@@ -129,7 +129,7 @@ exports.create_batch = (req, res, next) => {
 		});
 		ticket_batch.push(ticket);
 	}
-	if (req.session.role == 'Budget Director') {
+	if (req.session.role == 'Budget Director' || req.session.role == 'Associate Chair graduate') {
 		Ticket
 			.insertMany(ticket_batch)
 			.then(results => {
@@ -158,10 +158,10 @@ exports.create_batch = (req, res, next) => {
 				});
 			});
 	} else {
-		const err = new Error('Unauthorized User');
-		err.status = 'Unauthorized User';
 		res.status(401).json({
-			error: err
+			error: {
+				message: 'Unauthorized User'
+			}
 		});
 	}
 };
@@ -302,10 +302,10 @@ exports.delete = (req, res, next) => {
 				});
 			});
 	} else {
-		const err = new Error('Unauthorized User');
-		err.status = 'Unauthorized User';
 		res.status(401).json({
-			error: err
+			error: {
+				message: 'Unauthorized User'
+			}
 		});
 	}
 };
@@ -330,10 +330,10 @@ exports.delete_all = (req, res, next) => {
 				});
 			});
 	} else {
-		const err = new Error('Unauthorized User');
-		err.message = 'Unauthorized User';
 		res.status(401).json({
-			error: err
+			error: {
+				message: 'Unauthorized User'
+			}
 		});
 	}
 };

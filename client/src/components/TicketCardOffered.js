@@ -39,7 +39,7 @@ class TicketCardOffered extends React.Component {
 
     handleDeclinedOfferSubmit = () => {
         console.log('Clicked Declined Offer button! ');
-        this.props.actions.declinedOfferApplicant(this.props.TID);
+        this.props.actions.rejectApplicant(this.props.TID, this.props.facultyID, this.props.ticketType);
     };
 
     renderField = ({ input, label, type, meta: { touched, error } }) => (

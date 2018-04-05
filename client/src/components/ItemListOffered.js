@@ -27,9 +27,10 @@ class ItemListOffered extends Component {
                     numberLabel={i + 1}
                     TID={ticket._id}
                     applicantID={ticket.applicant_id}
+                    facultyID={ticket.faculty_id}
                     ticketStatus={ticket.status}
                     ticketType={ticket.ticket_type}
-                    notes={ticket.notes}
+                    note={ticket.note}
                 />
             );
         });

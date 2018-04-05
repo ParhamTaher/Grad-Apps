@@ -25,7 +25,11 @@ export const REQUEST_ACCEPTED_TICKETS = 'REQUEST_ACCEPTED_TICKETS';
 export const UPLOAD_GAPF = 'UPLOAD_GAPF';
 export const SAVE_NOTE = 'SAVE_NOTE';
 export const REQUEST_APPLICANTS = 'REQUEST_APPLICANTS';
+export const REQUEST_APP_NAME = 'REQUEST_APP_NAME';
+export const REQUEST_FACULTY_NAME_FROM_ID = 'REQUEST_FACULTY_NAME_FROM_ID';
 export const REQUEST_APPLICANT_NAME_FROM_ID = 'REQUEST_APPLICANT_NAME_FROM_ID';
+export const REQUEST_ALL_FACULTY = 'REQUEST_ALL_FACULTY';
+export const CREATE_TICKET = 'CREATE_TICKET';
 
 export function uploadDocumentRequest(file) {
     console.log('uploading GAPF... ' + file.name);
@@ -233,12 +237,47 @@ export function requestTicketsAC(
                         type: REQUEST_OFFER_PENDING_TICKETS,
                         payload: response.data
                     });
+                } else if (ticketStatus == 'accepted') {
+                    dispatch({
+                        type: REQUEST_ACCEPTED_TICKETS,
+                        payload: response.data
+                    });
+                } else if (ticketStatus == 'refused') {
+                    dispatch({
+                        type: REQUEST_REFUSED_TICKETS,
+                        payload: response.data
+                    });
                 } else {
                     dispatch({
                         type: REQUEST_TICKETS,
                         payload: response.data
                     });
                 }
+            });
+    };
+}
+
+export function requestTicketsBD(
+    ticketType = ''
+) {
+
+    let ticketTypeUrl = ticketType == '' ? '' : 'ticket_type=' + ticketType;
+    console.log("HERE");
+    return dispatch => {
+        axios
+            .get(
+                '/tickets?'+
+                ticketTypeUrl
+            )
+            .then(function(response) {
+                console.log(
+                    'Successfully connected to tickets route!: ',
+                    response.data
+                );
+                dispatch({
+                    type: REQUEST_TICKETS,
+                    payload: response.data
+                });
             });
     };
 }
@@ -293,6 +332,35 @@ export function getApplicantNameFromId(iD) {
     };
 }
 
+export function getAllFaculty() {
+    return dispatch => {
+        console.log("getting all faculty... ");
+        axios.get('/faculty/').then(function(response) {
+            console.log('faculty: ' + response.data);
+            dispatch({
+                type: REQUEST_ALL_FACULTY,
+                payload: response.data
+            });
+        });
+    };
+}
+
+export function getFacultyNameFromId(iD) {
+    return dispatch => {
+        console.log("getting faculty name with id... " + iD);
+        axios.get('/faculty?facultyId=' + iD).then(function(response) {
+            console.log('faculty name: ' + response.data.faculty.fname);
+            dispatch({
+                type: REQUEST_FACULTY_NAME_FROM_ID,
+                payload: {
+                    fName: response.data.faculty.fname + ' ' + response.data.faculty.lname
+                }
+            });
+
+        });
+    };
+}
+
 export function offerRequest(tID, aID) {
     return dispatch => {
         console.log(
@@ -310,7 +378,7 @@ export function offerRequest(tID, aID) {
                     );
                 })
                 .catch(error => {
-                    console.log('ERROR in offerApplicant ' + error);
+                    console.log('ERROR in offerRequest ' + error);
                 });
         }
     };
@@ -359,10 +427,10 @@ export function offerApplicant(tID) {
     };
 }
 
-export function rejectApplicant(tID) {
+export function rejectApplicant(tID, fID, type) {
     return dispatch => {
         console.log('Rejecting applicant with ID: ' + tID);
-        if (tID != null) {
+        if (tID != null && fID != null) {
             axios
                 .patch("/tickets/" + tID, [
                     { "fieldName": "status", "value": "refused" }
@@ -371,7 +439,20 @@ export function rejectApplicant(tID) {
                     console.log("Applicant rejected");
                 })
                 .catch(error => {
-                    console.log("ERROR in offerApplicant " + error);
+                    console.log("ERROR in rejectApplicant " + error);
+                });
+            axios
+                .post("/tickets", 
+                {   
+                    "faculty_id": fID,
+                    "ticket_type": type,
+                    "status": "granted"
+                })
+                .then(response => {
+                    console.log("New ticket granted for " + fID);
+                })
+                .catch(error => {
+                    console.log("ERROR in creating new ticket after rejecting: " + error);
                 });
         }
     };
@@ -379,42 +460,95 @@ export function rejectApplicant(tID) {
 
 export function acceptedOfferApplicant(tID) {
     return dispatch => {
-        console.log('Accepting applicant offer with ID: ' + tID);
+        console.log('Applicant accepting offer with ID: ' + tID);
         if (tID != null) {
             axios
                 .patch("/tickets/" + tID, [
                     { "fieldName": "status", "value": "accepted" }
                 ])
                 .then(response => {
-                    console.log("Applicant accepted offer");
+                    console.log("Applicant accepted offer.");
                 })
                 .catch(error => {
-                    console.log("ERROR in offerApplicant " + error);
+                    console.log("ERROR in acceptedOfferApplicant " + error);
                 });
         }
     };
 
 }
 
-export function declinedOfferApplicant(tID) {
+export function declinedOfferApplicant(tID, fID, type) {
     return dispatch => {
-        console.log('Declining applicant offer with ID: ' + tID);
-        if (tID != null) {
+        console.log('Applicant declined offer with ID: ' + tID);
+        if (tID != null && fID != null) {
             axios
                 .patch("/tickets/" + tID, [
                     { "fieldName": "status", "value": "refused" }
                 ])
                 .then(response => {
-                    console.log("Applicant declined offer");
+                    console.log("Applicant declined offer.");
                 })
                 .catch(error => {
-                    console.log("ERROR in offerApplicant " + error);
+                    console.log("ERROR in declinedOfferApplicant " + error);
+                });
+            axios
+                .post("/tickets", 
+                {   
+                    "faculty_id": fID,
+                    "ticket_type": type,
+                    "status": "granted"
+                })
+                .then(response => {
+                    console.log("New ticket granted for " + fID);
+                })
+                .catch(error => {
+                    console.log("ERROR in creating new ticket after refusal: " + error);
                 });
         }
     };
 
 }
+// Create Ticket
+export function createTicket(faculty_id, ticket_type, status, quantity) {
+    let ticketNum = '';
+    if(quantity > 1){
+        ticketNum = '/'+quantity;
+    }
+    return dispatch => {
+        axios
+            .post("/tickets"+ticketNum, 
+                {   
+                    "faculty_id": faculty_id,
+                    "ticket_type": ticket_type,
+                    "status": status
+                })
+                .then(response => {
+                    console.log("New ticket granted for " + faculty_id);
+                })
+                .catch(error => {
+                    console.log("ERROR in creating new ticket after rejecting: " + error);
+});
+    };
+}
+//change status to granted
+export function grantTicket(tID) {
+    return dispatch => {
+        console.log('Granting ticket with ID: ' + tID);
+        if (tID != null) {
+            axios
+                .patch("/tickets/" + tID, [
+                    { "fieldName": "status", "value": "granted" }
+                ])
+                .then(response => {
+                    console.log("Ticket has been granted");
+                })
+                .catch(error => {
+                    console.log("ERROR in grantTicket " + error);
+                });
+        }
+    };
 
+}
 // Auth Data
 export function signUpUser(fname, lname, email, password) {
     return dispatch => {

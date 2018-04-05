@@ -2,23 +2,43 @@ import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom'
+import * as Actions from '../actions';
+import { bindActionCreators } from 'redux';
+import {
+    Button,
+    Panel,
+    FormControl,
+    FormGroup,
+    ControlLabel,
+    HelpBlock,
+    DropdownButton,
+    MenuItem
+} from 'react-bootstrap';
 
 class BDDcreate extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {name: '',
-                  type: 'domestic',
-                  status: 'initial'};
+                  type: 'D',
+                  faculty: '',
+                  status: 'initial',
+                  number: '1'};
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.props.actions.getAllFaculty();
   }
 
   handleInputChange(event) {
     const target = event.target;
-    const value = target.value;
+    let value = target.value;
     const name = target.name;
+    if(value === 'domestic'){
+      value='D'
+    }else if(value==='international'){
+      value='I'
+    }
     //alert(value);
 
     this.setState({
@@ -32,7 +52,24 @@ class BDDcreate extends React.Component {
       + this.state.type + ' ' + this.state.status );
     //alert(this.state.type);
     event.preventDefault();
+    console.log(this.state.faculty);
+    console.log(this.state.type);
+    console.log(this.state.status);
+    console.log(this.state.number);
+    this.props.actions.createTicket(this.state.faculty,
+      this.state.type,this.state.status,this.state.number);
   }
+
+    renderFaculty(){
+      console.log("HERE");
+        console.log('fac list: ' + this.props.facultyList.faculty);
+        return this.props.facultyList.faculty.map((faculty, i) => {
+            return (
+                <option id={faculty._id} value={faculty._id}>
+                {faculty.fname + ' ' + faculty.lname}</option>
+            );
+        });
+    }
 
   render() {
     return (
@@ -41,16 +78,20 @@ class BDDcreate extends React.Component {
           <h2 className="text-center">Create Ticket</h2>
             <form onSubmit={this.handleSubmit}>
             <div class="form-group row">
-              <label for="example-text-input" class="col-2 col-form-label">Name:</label>
+              <label for="example-text-input" class="col-2 col-form-label">Faculty Name:</label>
               <div class="col-10">
-                <input class="form-control" name='name' type="text" onChange={this.handleInputChange}  id="example-text-input"/>
+                <div class="form-group row">
+                <select name='status' class="form-control" id="faculty" name='faculty' onChange={this.handleInputChange}>
+                  {this.renderFaculty()}
+                </select>
+            </div>
               </div>
             </div>
             <div class="form-group row">
                 <label for="exampleSelect1">Ticket Type</label>
                 <select class="form-control" id="exampleSelect1" name='type'  onChange={this.handleInputChange}>
-                  <option value='domestic'>Domestic</option>
-                  <option value='international'>International</option>
+                  <option value='D'>Domestic</option>
+                  <option value='I'>International</option>
                 </select>
             </div>
             <div class="form-group row">
@@ -60,6 +101,12 @@ class BDDcreate extends React.Component {
                   <option value='granted'>Granted</option>
                 </select>
             </div>
+            <div class="form-group row">
+              <label for="example-number-input" class="col-2 col-form-label" >Number of tickets:</label>
+              <div class="col-10">
+              <input class="form-control" name='number' type="text" onChange={this.handleInputChange} id="example-text-input"/>
+              </div>
+            </div>
             <input className="btn btn-primary" type="submit" value="Submit" />
           </form>
         </div>
@@ -68,4 +115,17 @@ class BDDcreate extends React.Component {
   }
 }
 
-export default BDDcreate;
+function mapStateToProps(state) {
+    // Whatever is returned will show up as props
+    return {
+        facultyList: state.faculty
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        actions: bindActionCreators(Actions, dispatch)
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BDDcreate);

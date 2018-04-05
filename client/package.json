@@ -15,8 +15,8 @@
         "/applicants": {
             "target": "http://localhost:3002"
         },
-        "/gapf": {
-            "target": "http://localhost:3001"
+        "/faculty": {
+            "target": "http://localhost:3002"
         }
     },
     "dependencies": {

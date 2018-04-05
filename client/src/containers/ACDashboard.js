@@ -11,7 +11,8 @@ class ACDashboard extends Component {
         console.log('Requesting tickets...');
         this.props.actions.requestTicketsAC('', 'offer-request', '');
         this.props.actions.requestTicketsAC('', 'offer-pending', '');
-
+        this.props.actions.requestTicketsAC('', 'accepted', '');
+        this.props.actions.requestTicketsAC('', 'refused', '');
     }
 
     render() {
@@ -23,19 +24,19 @@ class ACDashboard extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-sm-6 col-sm-push-6">
-                        <h4>Offered Tickets</h4>
-                        <ItemListOffered
-                            ticketList={
-                                this.props.offerPendingTicketList.tickets
-                            }
-                        />
-                    </div>
-                    <div className="col-sm-6 col-sm-pull-6">
+                    <div className="col-sm-6">
                         <h4>Requested Tickets</h4>
                         <ItemListAC
                             ticketList={
                                 this.props.offerRequestTicketList.tickets
+                            }
+                        />
+                    </div>
+                    <div className="col-sm-6">
+                        <h4>Offered Tickets</h4>
+                        <ItemListOffered
+                            ticketList={
+                                this.props.offerPendingTicketList.tickets
                             }
                         />
                     </div>
@@ -50,6 +51,8 @@ function mapStateToProps(state) {
     return {
         offerRequestTicketList: state.offerRequestTickets,
         offerPendingTicketList: state.offerPendingTickets,
+        acceptedTicketList: state.acceptedTickets,
+        refusedTicketList: state.refusedTickets
     };
 }
 
