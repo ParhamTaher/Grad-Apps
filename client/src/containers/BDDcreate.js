@@ -20,7 +20,7 @@ class BDDcreate extends React.Component {
   constructor(props) {
     super(props);
     this.state = {name: '',
-                  type: 'domestic',
+                  type: 'D',
                   faculty: '',
                   status: 'initial',
                   number: '1'};
@@ -32,8 +32,13 @@ class BDDcreate extends React.Component {
 
   handleInputChange(event) {
     const target = event.target;
-    const value = target.value;
+    let value = target.value;
     const name = target.name;
+    if(value === 'domestic'){
+      value='D'
+    }else if(value==='international'){
+      value='I'
+    }
     //alert(value);
 
     this.setState({
@@ -53,8 +58,6 @@ class BDDcreate extends React.Component {
     console.log(this.state.number);
     this.props.actions.createTicket(this.state.faculty,
       this.state.type,this.state.status,this.state.number);
-    this.props.actions.createTicket('5ac5e63b3c2e984b77535b08', 'domestic'
-      ,'initial', '1');
   }
 
     renderFaculty(){
@@ -87,8 +90,8 @@ class BDDcreate extends React.Component {
             <div class="form-group row">
                 <label for="exampleSelect1">Ticket Type</label>
                 <select class="form-control" id="exampleSelect1" name='type'  onChange={this.handleInputChange}>
-                  <option value='domestic'>Domestic</option>
-                  <option value='international'>International</option>
+                  <option value='D'>Domestic</option>
+                  <option value='I'>International</option>
                 </select>
             </div>
             <div class="form-group row">
