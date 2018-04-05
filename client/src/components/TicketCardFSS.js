@@ -169,7 +169,7 @@ class TicketCardFSS extends React.Component {
                                 }}
                               />
                               <FormControl.Feedback />
-                              <HelpBlock>Validation is based on string length.</HelpBlock>
+                              <HelpBlock>Enter a note to display below</HelpBlock>
                             </FormGroup>
                             <Button
                                 bsStyle="primary"
@@ -179,6 +179,7 @@ class TicketCardFSS extends React.Component {
                             </Button>
                         </form>
                         <div>
+                            Notes:
                             {this.renderNotes()}
                         </div>
                         <DropdownButton
