@@ -13,6 +13,8 @@ import ticketReducerRefused from './ticketReducerRefused';
 import authReducer from './authReducer';
 import applicantReducer from './applicantReducer';
 import appNameReducer from './appNameReducer';
+import fNameReducer from './fNameReducer';
+import facultyReducer from './facultyReducer';
 
 // Keep track of our current location, in the store
 import { routerReducer } from 'react-router-redux';
@@ -30,7 +32,9 @@ const rootReducer = combineReducers({
     refusedTickets: ticketReducerRefused,
     applicants: applicantReducer,
     appName: appNameReducer,
-    router: routerReducer
+    router: routerReducer,
+    fName: fNameReducer,
+    faculty: facultyReducer
 });
 
 export default rootReducer;

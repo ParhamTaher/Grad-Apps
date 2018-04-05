@@ -28,6 +28,7 @@ export const REQUEST_APPLICANTS = 'REQUEST_APPLICANTS';
 export const REQUEST_APP_NAME = 'REQUEST_APP_NAME';
 export const REQUEST_FACULTY_NAME_FROM_ID = 'REQUEST_FACULTY_NAME_FROM_ID';
 export const REQUEST_APPLICANT_NAME_FROM_ID = 'REQUEST_APPLICANT_NAME_FROM_ID';
+export const REQUEST_ALL_FACULTY = 'REQUEST_ALL_FACULTY';
 
 export function uploadDocumentRequest(file) {
     console.log('uploading GAPF... ' + file.name);
@@ -320,11 +321,24 @@ export function getApplicantNameFromId(iD) {
     };
 }
 
+export function getAllFaculty() {
+    return dispatch => {
+        console.log("getting all faculty... ");
+        axios.get('/faculty/').then(function(response) {
+            console.log('faculty: ' + response.data);
+            dispatch({
+                type: REQUEST_ALL_FACULTY,
+                payload: response.data
+            });
+        });
+    };
+}
+
 export function getFacultyNameFromId(iD) {
     return dispatch => {
         console.log("getting faculty name with id... " + iD);
         axios.get('/faculty?facultyId=' + iD).then(function(response) {
-            console.log('faculty name: ' + response.data.faculty.fname);
+            console.log('faculty name: ' + response.data.faculty.email);
             dispatch({
                 type: REQUEST_FACULTY_NAME_FROM_ID,
                 payload: {

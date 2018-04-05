@@ -2,6 +2,8 @@ import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom'
+import * as Actions from '../actions';
+import { bindActionCreators } from 'redux';
 
 class BDDcreate extends React.Component {
 
@@ -13,6 +15,7 @@ class BDDcreate extends React.Component {
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.props.actions.getAllFaculty();
   }
 
   handleInputChange(event) {
@@ -68,4 +71,22 @@ class BDDcreate extends React.Component {
   }
 }
 
-export default BDDcreate;
+function mapStateToProps(state) {
+    // Whatever is returned will show up as props
+    return {
+        initialTicketList: state.initialTickets,
+        offerRequestTicketList: state.offerRequestTickets,
+        offerPendingTicketList: state.offerPendingTickets,
+        offerAcceptedTicketList: state.acceptedTickets,
+        offerRejectedTicketList: state.refusedTickets,
+        allTickets: state.tickets
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        actions: bindActionCreators(Actions, dispatch)
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BDDcreate);

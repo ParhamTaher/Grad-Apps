@@ -57,7 +57,7 @@ class TicketCardBD extends React.Component {
                         </div>
                         <div>
                             &nbsp;&nbsp;&nbsp;&nbsp;Assigned to{' '}
-                            {this.props.faculty || 'No one'}
+                            {this.props.facultyName.fName || this.props.faculty}
                         </div>
                     </Panel.Title>
                 </Panel.Heading>
