@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import * as Actions from '../actions';
 import { bindActionCreators } from 'redux';
 import ItemListFSS from '../components/ItemListFSS';
+import ItemListViewFSS from '../components/ItemListViewFSS';
 import { Button } from 'react-bootstrap';
 
 class FacultyDashboard extends Component {
@@ -30,6 +31,12 @@ class FacultyDashboard extends Component {
                     </div>
                 </div>
                 <div className="row">
+                    <div className="col-sm-12">
+                        <h4>Upload GAPF</h4>
+                        <input type="file" onChange={this.handleFileUpload} />
+                    </div>
+                </div>
+                <div className="row">
                     <div className="col-sm-4">
                         <h4>Available Tickets</h4>
                         <ItemListFSS
@@ -43,7 +50,7 @@ class FacultyDashboard extends Component {
 
                     <div className="col-sm-4">
                         <h4>Offers Pending</h4>
-                        <ItemListFSS
+                        <ItemListViewFSS
                             ticketList={
                                 this.props.offerPendingTicketList.tickets
                             }
@@ -55,7 +62,7 @@ class FacultyDashboard extends Component {
                     </div>
                     <div className="col-sm-4">
                         <h4>Final Offers</h4>
-                        <ItemListFSS
+                        <ItemListViewFSS
                             ticketList={
                                 this.props.offerAcceptedTicketList.tickets
                             }
@@ -64,7 +71,7 @@ class FacultyDashboard extends Component {
                             ticketStatus="offer-pending"
                             ticketType=""
                         />
-                        <ItemListFSS
+                        <ItemListViewFSS
                             ticketList={
                                 this.props.offerRejectedTicketList.tickets
                             }
@@ -73,12 +80,6 @@ class FacultyDashboard extends Component {
                             ticketStatus="offer-pending"
                             ticketType=""
                         />
-                    </div>
-                </div>
-
-                <div className="row">
-                    <div className="col-sm-12">
-                        <input type="file" onChange={this.handleFileUpload} />
                     </div>
                 </div>
             </div>

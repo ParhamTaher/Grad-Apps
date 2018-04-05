@@ -29,11 +29,11 @@ export const REQUEST_APPLICANT_NAME_FROM_ID = 'REQUEST_APPLICANT_NAME_FROM_ID';
 
 export function uploadDocumentRequest(file) {
     console.log('uploading GAPF... ' + file.name);
-    return function(dispatch) {
-        dispatch({
-            type: UPLOAD_GAPF
+    return dispatch => {
+        axios.post('/gapf', { file }).then(function(response) {
+            console.log("Successfully uploaded GAPF Form");
         });
-    };
+    }
 }
 
 
