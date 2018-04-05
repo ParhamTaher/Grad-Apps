@@ -32,7 +32,7 @@ class TicketCardAC extends React.Component {
 
     handleRejectSubmit = () => {
         console.log('Clicked Reject Offer button! ');
-        this.props.actions.rejectApplicant(this.props.TID);
+        this.props.actions.rejectApplicant(this.props.TID, this.props.facultyID, this.props.ticketType);
     };
 
     renderField = ({ input, label, type, meta: { touched, error } }) => (

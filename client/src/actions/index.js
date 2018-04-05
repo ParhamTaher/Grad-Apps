@@ -233,6 +233,16 @@ export function requestTicketsAC(
                         type: REQUEST_OFFER_PENDING_TICKETS,
                         payload: response.data
                     });
+                } else if (ticketStatus == 'accepted') {
+                    dispatch({
+                        type: REQUEST_ACCEPTED_TICKETS,
+                        payload: response.data
+                    });
+                } else if (ticketStatus == 'refused') {
+                    dispatch({
+                        type: REQUEST_REFUSED_TICKETS,
+                        payload: response.data
+                    });
                 } else {
                     dispatch({
                         type: REQUEST_TICKETS,
@@ -310,7 +320,7 @@ export function offerRequest(tID, aID) {
                     );
                 })
                 .catch(error => {
-                    console.log('ERROR in offerApplicant ' + error);
+                    console.log('ERROR in offerRequest ' + error);
                 });
         }
     };
@@ -359,10 +369,10 @@ export function offerApplicant(tID) {
     };
 }
 
-export function rejectApplicant(tID) {
+export function rejectApplicant(tID, fID, type) {
     return dispatch => {
         console.log('Rejecting applicant with ID: ' + tID);
-        if (tID != null) {
+        if (tID != null && fID != null) {
             axios
                 .patch("/tickets/" + tID, [
                     { "fieldName": "status", "value": "refused" }
@@ -371,7 +381,20 @@ export function rejectApplicant(tID) {
                     console.log("Applicant rejected");
                 })
                 .catch(error => {
-                    console.log("ERROR in offerApplicant " + error);
+                    console.log("ERROR in rejectApplicant " + error);
+                });
+            axios
+                .post("/tickets", 
+                {   
+                    "faculty_id": fID,
+                    "ticket_type": type,
+                    "status": "granted"
+                })
+                .then(response => {
+                    console.log("New ticket granted for " + fID);
+                })
+                .catch(error => {
+                    console.log("ERROR in creating new ticket after rejecting: " + error);
                 });
         }
     };
@@ -379,36 +402,49 @@ export function rejectApplicant(tID) {
 
 export function acceptedOfferApplicant(tID) {
     return dispatch => {
-        console.log('Accepting applicant offer with ID: ' + tID);
+        console.log('Applicant accepting offer with ID: ' + tID);
         if (tID != null) {
             axios
                 .patch("/tickets/" + tID, [
                     { "fieldName": "status", "value": "accepted" }
                 ])
                 .then(response => {
-                    console.log("Applicant accepted offer");
+                    console.log("Applicant accepted offer.");
                 })
                 .catch(error => {
-                    console.log("ERROR in offerApplicant " + error);
+                    console.log("ERROR in acceptedOfferApplicant " + error);
                 });
         }
     };
 
 }
 
-export function declinedOfferApplicant(tID) {
+export function declinedOfferApplicant(tID, fID, type) {
     return dispatch => {
-        console.log('Declining applicant offer with ID: ' + tID);
-        if (tID != null) {
+        console.log('Applicant declined offer with ID: ' + tID);
+        if (tID != null && fID != null) {
             axios
                 .patch("/tickets/" + tID, [
                     { "fieldName": "status", "value": "refused" }
                 ])
                 .then(response => {
-                    console.log("Applicant declined offer");
+                    console.log("Applicant declined offer.");
                 })
                 .catch(error => {
-                    console.log("ERROR in offerApplicant " + error);
+                    console.log("ERROR in declinedOfferApplicant " + error);
+                });
+            axios
+                .post("/tickets", 
+                {   
+                    "faculty_id": fID,
+                    "ticket_type": type,
+                    "status": "granted"
+                })
+                .then(response => {
+                    console.log("New ticket granted for " + fID);
+                })
+                .catch(error => {
+                    console.log("ERROR in creating new ticket after refusal: " + error);
                 });
         }
     };
