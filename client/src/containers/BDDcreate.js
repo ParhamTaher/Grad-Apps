@@ -4,16 +4,6 @@ import { connect } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom'
 import * as Actions from '../actions';
 import { bindActionCreators } from 'redux';
-import {
-    Button,
-    Panel,
-    FormControl,
-    FormGroup,
-    ControlLabel,
-    HelpBlock,
-    DropdownButton,
-    MenuItem
-} from 'react-bootstrap';
 
 class BDDcreate extends React.Component {
 
@@ -39,7 +29,6 @@ class BDDcreate extends React.Component {
     }else if(value==='international'){
       value='I'
     }
-    //alert(value);
 
     this.setState({
       [name]: value
@@ -48,22 +37,13 @@ class BDDcreate extends React.Component {
 
 
   handleSubmit(event) {
-    alert('A ticket form was submitted: ' + this.state.name + ' ' 
-      + this.state.type + ' ' + this.state.status );
-    //alert(this.state.type);
     event.preventDefault();
-    console.log(this.state.faculty);
-    console.log(this.state.type);
-    console.log(this.state.status);
-    console.log(this.state.number);
     this.props.actions.createTicket(this.state.faculty,
-      this.state.type,this.state.status,this.state.number);
+    this.state.type,this.state.status,this.state.number);
     this.props.history.push("/BDDashboard");
   }
 
     renderFaculty(){
-      console.log("HERE");
-        console.log('fac list: ' + this.props.facultyList.faculty);
         return this.props.facultyList.faculty.map((faculty, i) => {
             return (
                 <option id={faculty._id} value={faculty._id}>
