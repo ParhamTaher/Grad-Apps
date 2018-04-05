@@ -3,6 +3,7 @@ import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import * as Actions from '../actions';
 import { bindActionCreators } from 'redux';
+import axios from 'axios';
 import {
     Button,
     Panel,
@@ -16,13 +17,19 @@ class TicketCardFSS extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            applicantName: 'No One',
             noteValue: ''
         };
     }
 
     componentDidMount() {
         if (this.props.applicantID) {
-            this.props.actions.getApplicantNameFromId(this.props.applicantID);
+            var self = this;
+            //this.props.actions.getApplicantNameFromId(this.props.applicantID);
+            axios.get('/applicants/' + this.props.applicantID).then(function(response) {
+                console.log('applicant name: ' + response.data.applicant);
+                self.setState({ applicantName: response.data.applicant.fname + ' ' + response.data.applicant.lname })
+            });
         }
 
         console.log('Requesting applicants...');
@@ -94,7 +101,7 @@ class TicketCardFSS extends React.Component {
                         </div>
                         <div>
                             &nbsp;&nbsp;&nbsp;&nbsp;Assigned to{' '}
-                            {this.props.applicantName.appName || 'No one'}
+                            {this.state.applicantName}
                         </div>
                     </Panel.Title>
                 </Panel.Heading>

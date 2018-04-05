@@ -317,10 +317,10 @@ export function requestApplicants() {
     };
 }
 
-export function getApplicantNameFromId(iD) {
+export function getApplicantNameFromId(aID) {
     return dispatch => {
-        console.log("getting applicant name with id... " + iD);
-        axios.get('/applicants/' + iD).then(function(response) {
+        console.log("getting applicant name with id... " + aID);
+        axios.get('/applicants/' + aID).then(function(response) {
             console.log('applicant name: ' + response.data.applicant);
             dispatch({
                 type: REQUEST_APPLICANT_NAME_FROM_ID,
@@ -391,14 +391,9 @@ export function approveApplicant(tID) {
 
 export function saveNote(tID, values, notesList) {
     return dispatch => {
-        console.log(typeof notesList);
-        let notesArray = [];
-        let today = new Date;
-        notesArray.push({comment: values, post_date: today})
-
         axios
             .patch('/tickets/' + tID, [
-                {"fieldName": "note", "value": notesArray.toString()}
+                {"fieldName": "note", "value": values}
             ])
             .then(response => {
                 console.log('Successfully saved a note!: ' + values.note);
