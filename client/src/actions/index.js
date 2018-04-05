@@ -260,22 +260,19 @@ export function requestApplicants() {
 
 export function getApplicantNameFromId(iD) {
     return dispatch => {
-        axios.get('/applicants/applicantId=' + iD).then(function(response) {
-            console.log('applicant name: ' + response.data);
+        console.log("getting applicant name with id... " + iD);
+        axios.get('/applicants?applicantId=' + iD).then(function(response) {
+            console.log('applicant name: ' + response.data.applicants.fname);
             dispatch({
                 type: REQUEST_TICKETS,
                 payload: {
-                    appName: {
-                        fname: response.data.fname,
-                        lname: response.data.lname
-                    }
+                    appName: response.data.applicants.fname + ' ' + response.data.applicants.lname
                 }
             });
         });
     };
 }
 
-// Peter and Alex please review!
 export function offerRequest(tID, aID) {
     return dispatch => {
         console.log(
