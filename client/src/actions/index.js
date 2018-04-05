@@ -28,6 +28,8 @@ export const REQUEST_APPLICANTS = 'REQUEST_APPLICANTS';
 export const REQUEST_APP_NAME = 'REQUEST_APP_NAME';
 export const REQUEST_FACULTY_NAME_FROM_ID = 'REQUEST_FACULTY_NAME_FROM_ID';
 export const REQUEST_APPLICANT_NAME_FROM_ID = 'REQUEST_APPLICANT_NAME_FROM_ID';
+export const REQUEST_ALL_FACULTY = 'REQUEST_ALL_FACULTY';
+export const CREATE_TICKET = 'CREATE_TICKET';
 
 export function uploadDocumentRequest(file) {
     console.log('uploading GAPF... ' + file.name);
@@ -330,11 +332,24 @@ export function getApplicantNameFromId(iD) {
     };
 }
 
+export function getAllFaculty() {
+    return dispatch => {
+        console.log("getting all faculty... ");
+        axios.get('/faculty/').then(function(response) {
+            console.log('faculty: ' + response.data);
+            dispatch({
+                type: REQUEST_ALL_FACULTY,
+                payload: response.data
+            });
+        });
+    };
+}
+
 export function getFacultyNameFromId(iD) {
     return dispatch => {
         console.log("getting faculty name with id... " + iD);
         axios.get('/faculty?facultyId=' + iD).then(function(response) {
-            console.log('faculty name: ' + response.data.faculty.fname);
+            console.log('faculty name: ' + response.data.faculty.email);
             dispatch({
                 type: REQUEST_FACULTY_NAME_FROM_ID,
                 payload: {
@@ -493,7 +508,47 @@ export function declinedOfferApplicant(tID, fID, type) {
     };
 
 }
+// Create Ticket
+export function createTicket(faculty_id, ticket_type, status, quantity) {
+    let ticketNum = '';
+    if(quantity > 0){
+        ticketNum = '/'+quantity;
+    }
+    return dispatch => {
+        axios
+            .post("/tickets", 
+                {   
+                    "faculty_id": faculty_id,
+                    "ticket_type": ticket_type,
+                    "status": status
+                })
+                .then(response => {
+                    console.log("New ticket granted for " + faculty_id);
+                })
+                .catch(error => {
+                    console.log("ERROR in creating new ticket after rejecting: " + error);
+});
+    };
+}
+//change status to granted
+export function grantTicket(tID) {
+    return dispatch => {
+        console.log('Granting ticket with ID: ' + tID);
+        if (tID != null) {
+            axios
+                .patch("/tickets/" + tID, [
+                    { "fieldName": "status", "value": "granted" }
+                ])
+                .then(response => {
+                    console.log("Ticket has been granted");
+                })
+                .catch(error => {
+                    console.log("ERROR in grantTicket " + error);
+                });
+        }
+    };
 
+}
 // Auth Data
 export function signUpUser(fname, lname, email, password) {
     return dispatch => {
